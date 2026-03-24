@@ -1,0 +1,17 @@
+[     160ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://www.tripadvisor.com/Restaurant_Review-g57704-d23575919-Reviews-Old_33_Beer_Burger_Grill-Elkton_Virginia.html:0
+[    1244ms] [WARNING] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing. @ https://www.tripadvisor.com/Restaurant_Review-g57704-d23575919-Reviews-Old_33_Beer_Burger_Grill-Elkton_Virginia.html:0
+[    1834ms] Error: Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+    at ao (https://static.tacdn.com/assets/j1hx8xit1yux-c.js:334:24098)
+    at https://static.tacdn.com/assets/j1hx8xit1yux-c.js:334:105064
+    at i6 (https://static.tacdn.com/assets/j1hx8xit1yux-c.js:334:108381)
+    at i2 (https://static.tacdn.com/assets/j1hx8xit1yux-c.js:334:100155)
+    at https://static.tacdn.com/assets/j1hx8xit1yux-c.js:334:99939
+    at i1 (https://static.tacdn.com/assets/j1hx8xit1yux-c.js:334:99947)
+    at iH (https://static.tacdn.com/assets/j1hx8xit1yux-c.js:334:95332)
+    at sE (https://static.tacdn.com/assets/j1hx8xit1yux-c.js:334:118589)
+    at sv (https://static.tacdn.com/assets/j1hx8xit1yux-c.js:334:116811)
+    at sk (https://static.tacdn.com/assets/j1hx8xit1yux-c.js:334:117155)
+[    2404ms] [WARNING] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing. @ https://www.tripadvisor.com/assets/s/b2f8c708.html?gtmParams=&parentDomain=https%3A%2F%2Fwww.tripadvisor.com&gclid=null&gbraid=null&wbraid=null&targetingConsent=granted&analyticsConsent=granted:0
+[    2425ms] [WARNING] [GSI_LOGGER]: Your client application uses one of the Google One Tap prompt UI status methods that may stop functioning when FedCM becomes mandatory. Refer to the migration guide to update your code accordingly and opt-in to FedCM to test your changes. Learn more: https://developers.google.com/identity/gsi/web/guides/fedcm-migration?s=dc#display_moment and https://developers.google.com/identity/gsi/web/guides/fedcm-migration?s=dc#skipped_moment @ https://accounts.google.com/gsi/client:80
+[    2430ms] [ERROR] Not signed in with the identity provider. @ https://www.tripadvisor.com/Restaurant_Review-g57704-d23575919-Reviews-Old_33_Beer_Burger_Grill-Elkton_Virginia.html:0
+[    2623ms] [WARNING] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing. @ https://micro.rubiconproject.com/prebid/dynamic/13406.js:23

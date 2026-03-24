@@ -1,0 +1,37 @@
+<svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- Outer ring -->
+  <circle cx="110" cy="110" r="106" stroke="#d4a020" stroke-width="2"/>
+  <circle cx="110" cy="110" r="98"  stroke="#d4a020" stroke-width="0.6"/>
+
+  <!-- Top wheat-style decorative bars -->
+  <line x1="38" y1="72" x2="182" y2="72" stroke="#d4a020" stroke-width="0.8"/>
+
+  <!-- OLD text area -->
+  <text x="110" y="62" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="13" font-weight="normal" fill="#d4a020"
+        letter-spacing="10">OLD</text>
+
+  <!-- Star / diamond accents -->
+  <polygon points="34,80 38,84 34,88 30,84" fill="#d4a020" opacity="0.7"/>
+  <polygon points="186,80 190,84 186,88 182,84" fill="#d4a020" opacity="0.7"/>
+
+  <!-- Big 33 -->
+  <text x="110" y="148" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="86" font-weight="bold" fill="#f0ebe0"
+        letter-spacing="-6">33</text>
+
+  <!-- Bottom divider -->
+  <line x1="38" y1="160" x2="182" y2="160" stroke="#d4a020" stroke-width="0.8"/>
+
+  <!-- BEER & BURGER -->
+  <text x="110" y="175" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="10.5" fill="#d4a020" letter-spacing="3.5">BEER &amp; BURGER</text>
+
+  <!-- GRILL · ELKTON VA -->
+  <text x="110" y="191" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="9" fill="#9a8870" letter-spacing="2.5">GRILL · ELKTON, VA</text>
+</svg>
