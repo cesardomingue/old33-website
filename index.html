@@ -544,6 +544,7 @@
     var btn = form.querySelector('button');
     btn.disabled = true;
     btn.textContent = '...';
+    var WELCOME_URL = 'https://script.google.com/macros/s/AKfycbyhjFeZLwMt12RQhzd5fbSSgv94Ligh0lv_88-nyu-svJXfIJa68LuuvKglRY0R8pzk/exec';
     fetch(SUPA_URL + '/rest/v1/subscribers', {
       method: 'POST',
       headers: {
@@ -557,6 +558,12 @@
       form.style.display = 'none';
       var s = document.getElementById('ecSuccess');
       if (s) s.style.display = 'block';
+      // Send welcome email
+      fetch(WELCOME_URL, {
+        method: 'POST',
+        body: JSON.stringify({ email: email }),
+        headers: { 'Content-Type': 'text/plain' }
+      }).catch(function() {});
     }).catch(function() {
       btn.disabled = false;
       btn.textContent = 'Subscribe';
