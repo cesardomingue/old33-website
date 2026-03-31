@@ -289,7 +289,16 @@ const Checkout = (() => {
         order_time: payload.orderTime,
         ready_time: payload.readyTime
       })
-    }).catch(() => {}); /* silent — don't block order if Supabase fails */
+    }).catch(() => {});
+
+    /* Also add to subscribers if they gave an email — source: 'order' */
+    if (payload.email) {
+      fetch(SUPA_URL + '/rest/v1/subscribers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ email: payload.email, name: payload.name, phone: payload.phone, source: 'order' })
+      }).catch(() => {});
+    }
 
     try {
       const res  = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain' } });
