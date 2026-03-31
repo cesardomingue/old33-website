@@ -255,6 +255,28 @@ const Checkout = (() => {
     const btn = document.getElementById('ckSubmit');
     if (btn) { btn.disabled = true; btn.textContent = 'Sending order…'; }
 
+    /* Save to Supabase for dashboard */
+    const SUPA_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
+    const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
+    fetch(SUPA_URL + '/rest/v1/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Prefer': 'return=minimal' },
+      body: JSON.stringify({
+        order_num: payload.orderNum,
+        customer_name: payload.name,
+        customer_phone: payload.phone,
+        customer_email: payload.email || null,
+        notes: payload.notes || null,
+        items: payload.items,
+        subtotal: parseFloat(payload.subtotal),
+        tax: parseFloat(payload.tax),
+        tip: parseFloat(payload.tip),
+        total: parseFloat(payload.total),
+        order_time: payload.orderTime,
+        ready_time: payload.readyTime
+      })
+    }).catch(() => {}); /* silent — don't block order if Supabase fails */
+
     try {
       const res  = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain' } });
       const json = await res.json();

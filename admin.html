@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Old 33 — Admin Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg:     #0d0d0d;
+      --bg2:    #141414;
+      --bg3:    #1a1a1a;
+      --border: #2a2a2a;
+      --gold:   #d4941a;
+      --gold2:  #f0b429;
+      --red:    #c0392b;
+      --white:  #f5f5f5;
+      --dim:    #888;
+      --green:  #27ae60;
+      --r:      10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--white); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; min-height: 100vh; }
+
+    /* ---- LOGIN ---- */
+    #loginScreen {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; background: var(--bg);
+    }
+    .login-box {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 48px 40px; width: 360px; text-align: center;
+    }
+    .login-logo { font-size: 32px; font-weight: 900; letter-spacing: -1px; margin-bottom: 4px; }
+    .login-logo span { color: var(--gold); }
+    .login-sub { color: var(--dim); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px; }
+    .login-label { display: block; text-align: left; font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .login-input {
+      width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--white); font-size: 15px; padding: 12px 14px; outline: none; margin-bottom: 20px;
+      transition: border-color .2s;
+    }
+    .login-input:focus { border-color: var(--gold); }
+    .login-btn {
+      width: 100%; background: var(--gold); color: #000; font-size: 14px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase; border: none; border-radius: 6px;
+      padding: 13px; cursor: pointer; transition: background .2s;
+    }
+    .login-btn:hover { background: var(--gold2); }
+    .login-err { color: var(--red); font-size: 12px; margin-top: 12px; display: none; }
+
+    /* ---- DASHBOARD ---- */
+    #dashboard { display: none; }
+    .topbar {
+      background: var(--bg2); border-bottom: 1px solid var(--border);
+      padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-brand { display: flex; align-items: center; gap: 10px; }
+    .topbar-logo { font-size: 18px; font-weight: 900; }
+    .topbar-logo span { color: var(--gold); }
+    .topbar-tag { font-size: 10px; color: var(--dim); letter-spacing: 2px; text-transform: uppercase; }
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+    .live-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .live-label { font-size: 11px; color: var(--green); }
+    .logout-btn { font-size: 12px; color: var(--dim); cursor: pointer; background: none; border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; }
+    .logout-btn:hover { color: var(--white); border-color: var(--dim); }
+
+    .main { padding: 28px; max-width: 1200px; margin: 0 auto; }
+    .page-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .page-date { font-size: 12px; color: var(--dim); margin-bottom: 28px; }
+
+    /* ---- STATS ---- */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .stat-card {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 20px 22px;
+    }
+    .stat-label { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .stat-value { font-size: 28px; font-weight: 800; color: var(--white); }
+    .stat-value.gold { color: var(--gold); }
+    .stat-value.green { color: var(--green); }
+    .stat-sub { font-size: 11px; color: var(--dim); margin-top: 4px; }
+
+    /* ---- CHARTS ROW ---- */
+    .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 28px; }
+    .card {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 22px;
+    }
+    .card-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--dim); margin-bottom: 18px; }
+
+    /* ---- TABLES ---- */
+    .tables-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+    .full-row { margin-bottom: 28px; }
+    table { width: 100%; border-collapse: collapse; }
+    th { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; padding: 0 12px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+    td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,.02); }
+    .badge {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .5px;
+      padding: 3px 8px; border-radius: 4px; text-transform: uppercase;
+    }
+    .badge-green { background: rgba(39,174,96,.15); color: var(--green); }
+    .badge-gold  { background: rgba(212,148,26,.15); color: var(--gold); }
+    .empty-state { text-align: center; color: var(--dim); padding: 32px; font-size: 13px; }
+
+    /* ---- LOADING ---- */
+    .loading { text-align: center; padding: 40px; color: var(--dim); }
+    .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin .6s linear infinite; margin-right: 8px; vertical-align: middle; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .charts-row, .tables-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 500px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .main { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">OLD <span>33</span></div>
+    <div class="login-sub">Admin Dashboard</div>
+    <label class="login-label">Password</label>
+    <input type="password" class="login-input" id="loginPwd" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()" />
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-err" id="loginErr">Incorrect password.</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div>
+        <div class="topbar-logo">OLD <span>33</span></div>
+        <div class="topbar-tag">Admin Dashboard</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="live-dot"></div>
+      <span class="live-label">Live</span>
+      <button class="logout-btn" onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="page-title">Overview</div>
+    <div class="page-date" id="pageDate"></div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Today's Orders</div>
+        <div class="stat-value gold" id="statTodayOrders"><span class="spinner"></span></div>
+        <div class="stat-sub" id="statTodaySub"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Today's Revenue</div>
+        <div class="stat-value gold" id="statTodayRev"><span class="spinner"></span></div>
+        <div class="stat-sub" id="statTodayRevSub"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">This Week's Revenue</div>
+        <div class="stat-value" id="statWeekRev"><span class="spinner"></span></div>
+        <div class="stat-sub" id="statWeekSub"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Email Subscribers</div>
+        <div class="stat-value green" id="statSubs"><span class="spinner"></span></div>
+        <div class="stat-sub">Total list size</div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-row">
+      <div class="card">
+        <div class="card-title">Revenue — Last 7 Days</div>
+        <canvas id="revenueChart" height="90"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Top Items</div>
+        <div id="topItemsList"><div class="loading"><span class="spinner"></span>Loading…</div></div>
+      </div>
+    </div>
+
+    <!-- Orders + Subscribers -->
+    <div class="tables-row">
+      <div class="card full-row">
+        <div class="card-title">Recent Orders</div>
+        <div id="ordersTable"><div class="loading"><span class="spinner"></span>Loading…</div></div>
+      </div>
+      <div class="card full-row">
+        <div class="card-title">Subscribers</div>
+        <div id="subsTable"><div class="loading"><span class="spinner"></span>Loading…</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const SUPA_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
+  const ADMIN_PASS = 'old33admin2026';
+
+  function supa(path) {
+    return fetch(SUPA_URL + '/rest/v1/' + path, {
+      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
+    }).then(r => r.json());
+  }
+
+  /* ---- AUTH ---- */
+  function doLogin() {
+    const pwd = document.getElementById('loginPwd').value;
+    if (pwd === ADMIN_PASS) {
+      sessionStorage.setItem('old33admin', '1');
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      loadDashboard();
+    } else {
+      document.getElementById('loginErr').style.display = 'block';
+    }
+  }
+  function doLogout() {
+    sessionStorage.removeItem('old33admin');
+    location.reload();
+  }
+  if (sessionStorage.getItem('old33admin') === '1') {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+  }
+
+  /* ---- DASHBOARD ---- */
+  async function loadDashboard() {
+    const now = new Date();
+    document.getElementById('pageDate').textContent =
+      now.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+    const [orders, subs] = await Promise.all([
+      supa('orders?select=*&order=created_at.desc'),
+      supa('subscribers?select=*&order=subscribed_at.desc')
+    ]);
+
+    renderStats(orders, subs);
+    renderChart(orders);
+    renderTopItems(orders);
+    renderOrdersTable(orders);
+    renderSubsTable(subs);
+  }
+
+  function renderStats(orders, subs) {
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const weekAgo  = new Date(Date.now() - 7 * 864e5).toISOString();
+
+    const todayOrders = orders.filter(o => o.created_at && o.created_at.startsWith(todayStr));
+    const weekOrders  = orders.filter(o => o.created_at && o.created_at >= weekAgo);
+
+    const todayRev = todayOrders.reduce((s, o) => s + parseFloat(o.total || 0), 0);
+    const weekRev  = weekOrders.reduce((s, o)  => s + parseFloat(o.total || 0), 0);
+    const totalRev = orders.reduce((s, o) => s + parseFloat(o.total || 0), 0);
+
+    document.getElementById('statTodayOrders').textContent = todayOrders.length;
+    document.getElementById('statTodaySub').textContent    = orders.length + ' total orders';
+    document.getElementById('statTodayRev').textContent    = '$' + todayRev.toFixed(2);
+    document.getElementById('statTodayRevSub').textContent = '$' + totalRev.toFixed(2) + ' all time';
+    document.getElementById('statWeekRev').textContent     = '$' + weekRev.toFixed(2);
+    document.getElementById('statWeekSub').textContent     = weekOrders.length + ' orders this week';
+    document.getElementById('statSubs').textContent        = subs.length;
+  }
+
+  function renderChart(orders) {
+    const days = [];
+    const revByDay = {};
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(Date.now() - i * 864e5).toISOString().slice(0, 10);
+      days.push(d);
+      revByDay[d] = 0;
+    }
+    orders.forEach(o => {
+      const d = o.created_at && o.created_at.slice(0, 10);
+      if (revByDay[d] !== undefined) revByDay[d] += parseFloat(o.total || 0);
+    });
+    const labels = days.map(d => new Date(d + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }));
+    const data   = days.map(d => revByDay[d]);
+
+    new Chart(document.getElementById('revenueChart'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Revenue',
+          data,
+          backgroundColor: 'rgba(212,148,26,0.7)',
+          borderColor: '#d4941a',
+          borderWidth: 1,
+          borderRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { color: '#1f1f1f' }, ticks: { color: '#888', font: { size: 10 } } },
+          y: { grid: { color: '#1f1f1f' }, ticks: { color: '#888', font: { size: 10 }, callback: v => '$' + v } }
+        }
+      }
+    });
+  }
+
+  function renderTopItems(orders) {
+    const counts = {};
+    orders.forEach(o => {
+      (o.items || []).forEach(item => {
+        counts[item.name] = (counts[item.name] || 0) + (item.qty || 1);
+      });
+    });
+    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+    if (!sorted.length) {
+      document.getElementById('topItemsList').innerHTML = '<div class="empty-state">No orders yet</div>';
+      return;
+    }
+    const max = sorted[0][1];
+    document.getElementById('topItemsList').innerHTML = sorted.map(([name, count]) => `
+      <div style="margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+          <span style="font-size:12px;color:var(--white)">${name}</span>
+          <span style="font-size:12px;color:var(--gold);font-weight:700">${count}x</span>
+        </div>
+        <div style="background:var(--border);border-radius:4px;height:4px;">
+          <div style="background:var(--gold);height:4px;border-radius:4px;width:${Math.round(count/max*100)}%"></div>
+        </div>
+      </div>`).join('');
+  }
+
+  function renderOrdersTable(orders) {
+    if (!orders.length) {
+      document.getElementById('ordersTable').innerHTML = '<div class="empty-state">No orders yet</div>';
+      return;
+    }
+    const rows = orders.slice(0, 20).map(o => {
+      const items = (o.items || []).map(i => i.name).join(', ');
+      const date  = o.created_at ? new Date(o.created_at).toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' }) : '—';
+      return `<tr>
+        <td><span class="badge badge-gold">${o.order_num || '—'}</span></td>
+        <td>${o.customer_name || '—'}</td>
+        <td style="color:var(--dim);font-size:12px">${o.customer_phone || '—'}</td>
+        <td style="color:var(--dim);font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${items}</td>
+        <td style="color:var(--gold);font-weight:700">$${parseFloat(o.total||0).toFixed(2)}</td>
+        <td style="color:var(--dim);font-size:11px">${date}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('ordersTable').innerHTML = `
+      <table>
+        <thead><tr>
+          <th>Order #</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Time</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  }
+
+  function renderSubsTable(subs) {
+    if (!subs.length) {
+      document.getElementById('subsTable').innerHTML = '<div class="empty-state">No subscribers yet</div>';
+      return;
+    }
+    const rows = subs.slice(0, 20).map(s => {
+      const date = s.subscribed_at ? new Date(s.subscribed_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
+      return `<tr>
+        <td>${s.email}</td>
+        <td style="color:var(--dim);font-size:11px">${date}</td>
+        <td><span class="badge badge-green">Website</span></td>
+      </tr>`;
+    }).join('');
+    document.getElementById('subsTable').innerHTML = `
+      <table>
+        <thead><tr><th>Email</th><th>Subscribed</th><th>Source</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  }
+
+  /* Auto-start if already logged in */
+  if (sessionStorage.getItem('old33admin') === '1') loadDashboard();
+</script>
+</body>
+</html>
