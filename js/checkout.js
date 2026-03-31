@@ -101,6 +101,8 @@ const Checkout = (() => {
         </div>`;
     }).join('');
 
+    const saved = (() => { try { return JSON.parse(localStorage.getItem('ol33_info') || '{}'); } catch(e) { return {}; } })();
+
     /* Ready time banner — open or closed */
     const timeBanner = status.open
       ? `<div class="ck-ready-banner">
@@ -162,19 +164,23 @@ const Checkout = (() => {
             <div class="ck-fields">
               <div class="ck-field">
                 <label class="ck-label">Name <span class="ck-tag-req">Required</span></label>
-                <input type="text"  id="ckName"  class="ck-input" placeholder="First & Last Name" autocomplete="name" />
+                <input type="text"  id="ckName"  class="ck-input" placeholder="First & Last Name" autocomplete="name" value="${sanitize(saved.name||'')}" />
               </div>
               <div class="ck-field">
                 <label class="ck-label">Phone <span class="ck-tag-req">Required</span></label>
-                <input type="tel"   id="ckPhone" class="ck-input" placeholder="(540) 000-0000" autocomplete="tel" />
+                <input type="tel"   id="ckPhone" class="ck-input" placeholder="(540) 000-0000" autocomplete="tel" value="${sanitize(saved.phone||'')}" />
               </div>
               <div class="ck-field">
                 <label class="ck-label">Email <span class="ck-tag-opt">Optional — for confirmation</span></label>
-                <input type="email" id="ckEmail" class="ck-input" placeholder="you@email.com" autocomplete="email" />
+                <input type="email" id="ckEmail" class="ck-input" placeholder="you@email.com" autocomplete="email" value="${sanitize(saved.email||'')}" />
               </div>
               <div class="ck-field">
                 <label class="ck-label">Order Notes <span class="ck-tag-opt">Optional</span></label>
                 <textarea id="ckNotes" class="ck-textarea" placeholder="Allergies, special requests for the whole order…" maxlength="300"></textarea>
+              </div>
+              <div class="ck-field" style="flex-direction:row;align-items:center;gap:10px;padding-top:4px;">
+                <input type="checkbox" id="ckRemember" style="width:16px;height:16px;accent-color:var(--gold);cursor:pointer;flex-shrink:0;" ${saved.name ? 'checked' : ''} />
+                <label for="ckRemember" style="font-size:13px;color:var(--dim);cursor:pointer;font-weight:400;margin:0;">Remember my info for next time</label>
               </div>
             </div>
             <input type="text" id="ckHp" tabindex="-1" autocomplete="off" style="opacity:0;position:absolute;height:0;pointer-events:none;" />
@@ -251,6 +257,14 @@ const Checkout = (() => {
       total:      total.toFixed(2),
       timestamp:  new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })
     };
+
+    // Save info to localStorage if "remember me" checked
+    const remember = document.getElementById('ckRemember')?.checked;
+    if (remember) {
+      localStorage.setItem('ol33_info', JSON.stringify({ name, phone, email }));
+    } else {
+      localStorage.removeItem('ol33_info');
+    }
 
     const btn = document.getElementById('ckSubmit');
     if (btn) { btn.disabled = true; btn.textContent = 'Sending order…'; }

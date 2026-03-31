@@ -114,6 +114,7 @@
       <li><a href="about.html">About</a></li>
       <li><a href="gallery.html">Gallery</a></li>
       <li><a href="contact.html">Contact</a></li>
+      <li><a href="account.html">My Orders</a></li>
       <li><a href="menu.html" class="nav-order">Order Online</a></li>
     </ul>
     <button class="nav-ham" id="navHam" aria-label="Open menu">
@@ -127,6 +128,7 @@
   <a href="about.html">About</a>
   <a href="gallery.html">Gallery</a>
   <a href="contact.html">Contact</a>
+  <a href="account.html">My Orders</a>
   <a href="menu.html" class="mob-order">Order Online</a>
 </div>
 
@@ -582,6 +584,8 @@
     }).then(function() {
       if (form) form.style.display = 'none';
       if (successEl) successEl.style.display = 'block';
+      // Mark subscribed in localStorage so popup never shows again
+      localStorage.setItem('ol33_subscribed', '1');
       fetch(WELCOME_URL, { method: 'POST', body: JSON.stringify({ email: email }), headers: { 'Content-Type': 'text/plain' } }).catch(function(){});
     });
   }
@@ -601,6 +605,7 @@
   }
   function showEmailPopup() {
     if (sessionStorage.getItem('popupSeen')) return;
+    if (localStorage.getItem('ol33_subscribed')) return;
     var el = document.getElementById('emailPopupOverlay');
     if (!el) return;
     el.style.display = 'flex'; el.style.opacity = '0';
