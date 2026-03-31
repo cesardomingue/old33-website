@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://old33bbg.com/sitemap.xml

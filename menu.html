@@ -3,10 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Menu | Old 33 Beer &amp; Burger Grill</title>
-  <meta name="description" content="Full menu for Old 33 Beer & Burger Grill in Elkton, VA. Signature burgers, appetizers, sides, drinks, and desserts." />
+  <title>Menu | Old 33 Beer &amp; Burger Grill — Burgers, Wings &amp; More in Elkton, VA</title>
+  <meta name="description" content="Full menu for Old 33 Beer & Burger Grill in Elkton, VA. 100% grass-fed burgers, wings, appetizers, sides, drinks, and desserts. Order online for pickup." />
+
+  <link rel="canonical" href="https://old33bbg.com/menu.html" />
+
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://old33bbg.com/menu.html" />
+  <meta property="og:title"       content="Menu | Old 33 Beer &amp; Burger Grill" />
+  <meta property="og:description" content="100% grass-fed burgers, wings, apps, and cold beers on tap. Order online for pickup — no platform fees." />
+  <meta property="og:image"       content="https://old33bbg.com/images/photo1.jpg" />
+  <meta property="og:site_name"   content="Old 33 Beer &amp; Burger Grill" />
+
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Menu | Old 33 Beer &amp; Burger Grill" />
+  <meta name="twitter:description" content="Grass-fed burgers, wings, and cold beers. Order online, pay at the counter." />
+  <meta name="twitter:image"       content="https://old33bbg.com/images/photo1.jpg" />
+
+  <meta name="geo.region"    content="US-VA" />
+  <meta name="geo.placename" content="Elkton, Virginia" />
+
   <link rel="icon" type="image/png" href="images/logo-clean.png" />
   <link rel="stylesheet" href="css/styles.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-M4X8E48D0W"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-M4X8E48D0W');</script>
 </head>
 <body>
 
@@ -26,7 +46,7 @@
       <li><a href="about.html">About</a></li>
       <li><a href="gallery.html">Gallery</a></li>
       <li><a href="contact.html">Contact</a></li>
-      <li><a href="https://order.toasttab.com/online/old-33-beer-and-burger" target="_blank" rel="noopener" class="nav-order">Order Online</a></li>
+      <li><a href="menu.html" class="nav-order">Order Online</a></li>
     </ul>
     <button class="nav-ham" id="navHam" aria-label="Open menu">
       <span></span><span></span><span></span>
@@ -39,12 +59,12 @@
   <a href="about.html">About</a>
   <a href="gallery.html">Gallery</a>
   <a href="contact.html">Contact</a>
-  <a href="https://order.toasttab.com/online/old-33-beer-and-burger" target="_blank" rel="noopener" class="mob-order">Order Online</a>
+  <a href="menu.html" class="mob-order">Order Online</a>
 </div>
 
 <!-- ========== PAGE HERO ========== -->
 <div class="page-hero">
-  <div class="page-hero-bg" style="background-image:url('images/photo6.jpg');"></div>
+  <div class="page-hero-bg" style="background-image:url('images/menu-hero.jpg');"></div>
   <div class="container">
     <span class="lbl">Old 33</span>
     <h1 class="page-hero-title">Our Menu</h1>
@@ -56,40 +76,308 @@
 <section class="menu-sec">
   <div class="container">
 
-    <div class="menu-topbar reveal">
-      <div>
-        <h3>Order ahead &amp; skip the wait</h3>
-        <p>Available for pickup, curbside, or delivery through DoorDash via Toast.</p>
+    <!-- Order Direct Strip -->
+    <div class="direct-strip reveal">
+      <div class="direct-strip-left">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" style="color:var(--gold);flex-shrink:0"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <div>
+          <div class="direct-strip-title">Order Direct &amp; Save</div>
+          <div class="direct-strip-sub">Skip the DoorDash &amp; Toast fees — you pay less, we earn more. Add to cart below.</div>
+        </div>
       </div>
-      <a href="https://order.toasttab.com/online/old-33-beer-and-burger" target="_blank" rel="noopener" class="btn btn-red">Order Online Now</a>
+      <a href="tel:5407139050" class="direct-strip-res">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.68A2 2 0 012 .84h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.35a16 16 0 006.29 6.29l1.58-1.16a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        Call Us
+      </a>
+    </div>
+
+  </div><!-- /container -->
+
+  <!-- STICKY FILTER BAR -->
+  <div class="menu-sticky-bar" id="menuFilterWrap">
+    <div class="container">
+      <div class="menu-filter-inner">
+        <button class="mf-tab active" data-filter="burgers">Burgers</button>
+        <button class="mf-tab" data-filter="apps">Wings &amp; Apps</button>
+        <button class="mf-tab" data-filter="sides">Sides</button>
+        <button class="mf-tab" data-filter="salads">Salads &amp; Wraps</button>
+        <button class="mf-tab" data-filter="drinks">Drinks</button>
+        <button class="mf-tab" data-filter="desserts">Desserts</button>
+        <button class="mf-tab" data-filter="kids">Kids</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- POPULAR PICKS -->
+    <div class="popular-section">
+      <div class="popular-hdr">
+        <span class="lbl">Order These First</span>
+        <h2 class="popular-title">Most Popular</h2>
+      </div>
+      <div class="popular-grid">
+
+        <div class="popular-card" data-name="Hawaiian Burger" data-price="13.00">
+          <div class="popular-img-wrap">
+            <img src="images/hawaiian-burger.jpg" alt="Hawaiian Burger" loading="lazy" />
+            <div class="popular-overlay"></div>
+            <div class="popular-badge">Burger</div>
+          </div>
+          <div class="popular-body">
+            <div class="popular-name">Hawaiian Burger</div>
+            <div class="mi-desc">Pepper jack cheese, grilled pineapple, jalapeños, lettuce, tomato &amp; onions</div>
+            <div class="popular-footer">
+              <span class="popular-price">$13.00</span>
+              <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="popular-card" data-name="Traditional Wings (Small 6pc)" data-price="9.30">
+          <div class="popular-img-wrap">
+            <img src="images/wings.jpg" alt="Traditional Wings" loading="lazy" />
+            <div class="popular-overlay"></div>
+            <div class="popular-badge">Wings</div>
+          </div>
+          <div class="popular-body">
+            <div class="popular-name">Traditional Wings</div>
+            <div class="mi-desc">Bone-in wings tossed in your choice of sauce — 6pc</div>
+            <div class="popular-footer">
+              <span class="popular-price">from $9.30</span>
+              <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="popular-card" data-name="Copper Head Jalapeño Bites" data-price="9.85">
+          <div class="popular-img-wrap">
+            <img src="images/jalapeno-bites.jpg" alt="Copperhead Jalapeño Bites" loading="lazy" />
+            <div class="popular-overlay"></div>
+            <div class="popular-badge">App</div>
+          </div>
+          <div class="popular-body">
+            <div class="popular-name">Copper Head Jalapeño Bites</div>
+            <div class="mi-desc">Jalapeños stuffed with sausage, cream cheese &amp; cheddar, wrapped in bacon</div>
+            <div class="popular-footer">
+              <span class="popular-price">$9.85</span>
+              <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="popular-card" data-name="Soft Baked Pretzel" data-price="8.45">
+          <div class="popular-img-wrap">
+            <img src="images/pretzel.jpg" alt="Soft Baked Pretzel" loading="lazy" />
+            <div class="popular-overlay"></div>
+            <div class="popular-badge">App</div>
+          </div>
+          <div class="popular-body">
+            <div class="popular-name">Soft Baked Pretzel</div>
+            <div class="mi-desc">Served with homemade beer cheese sauce</div>
+            <div class="popular-footer">
+              <span class="popular-price">$8.45</span>
+              <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
     <!-- SIGNATURE BURGERS -->
-    <div class="menu-cat reveal">
+    <div class="menu-cat reveal" data-cat="burgers">
       <div class="menu-cat-hdr">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28" style="color:var(--gold);flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
         <div>
           <div class="menu-cat-title">Signature Burgers</div>
-          <div class="menu-cat-note">100% grass-fed beef, made with fresh ingredients</div>
+          <div class="menu-cat-note">100% grass-fed beef · served with your choice of side</div>
         </div>
       </div>
-      <div class="menu-note">All burgers served with fries. Bun options: Brioche, Gluten Free, Potato Bread, or Multi Grain.</div>
-      <div class="menu-grid">
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Classic Cheeseburger</div><div class="mi-desc">American cheese, lettuce, tomato &amp; onions</div></div><div class="mi-price">$8.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Tex Mex</div><div class="mi-desc">Beef &amp; chorizo burger, melted pepper jack cheese, lettuce, tomato, avocado &amp; chipotle mayo sauce</div><div class="mi-tags"><span class="badge b-spicy">Spicy</span></div></div><div class="mi-price">$10.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Shenandoah</div><div class="mi-desc">Beef burger, grilled onions and mushrooms, swiss cheese, lettuce &amp; tomato</div></div><div class="mi-price">$10.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Route 33</div><div class="mi-desc">Beef burger, bacon, cheddar cheese, fried eggs, lettuce, tomato &amp; house sauce</div><div class="mi-tags"><span class="badge b-pop">House Special</span></div></div><div class="mi-price">$12.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Rockingham</div><div class="mi-desc">Beef burger topped with our homemade chili, red onions &amp; cheddar cheese</div></div><div class="mi-price">$10.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">The Valley</div><div class="mi-desc">Grilled chicken, bacon, sliced avocado, swiss cheese, mayo, lettuce &amp; tomato</div></div><div class="mi-price">$10.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Vegan Burger</div><div class="mi-desc">Veggie patty, topped with mushrooms, red onions, avocado, spinach &amp; tomato</div><div class="mi-tags"><span class="badge b-gf">Vegan</span></div></div><div class="mi-price">$10.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">The Meat Lover</div><div class="mi-desc">Beef burger, grilled chicken, bacon, jack cheese, red onions, lettuce &amp; tomato</div><div class="mi-tags"><span class="badge b-pop">Popular</span></div></div><div class="mi-price">$12.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Country Road</div><div class="mi-desc">Beef patty topped with mac &amp; cheese and bacon</div></div><div class="mi-price">$9.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Hawaiian Burger</div><div class="mi-desc">Beef patty topped with pepper jack cheese, grilled pineapple ring, jalapeños, lettuce, tomato &amp; onions</div></div><div class="mi-price">$10.00</div></div>
+      <div class="menu-note">Sides: French Fries, Curly Fries, Sweet Potato Fries, Onion Rings, Potato Salad, Coleslaw, or Mac n' Cheese &nbsp;·&nbsp; Buns: Brioche, Gluten Free, Potato Bread, or Multi Grain</div>
+
+      <div class="photo-card-grid">
+
+        <div class="photo-card" data-name="Classic Cheeseburger" data-price="10.90">
+          <div class="pc-img-wrap">
+            <img src="images/classic-cheeseburger.avif" alt="Classic Cheeseburger" loading="lazy" class="pc-img" />
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Classic Cheeseburger</div>
+            <div class="pc-desc">American cheese, lettuce, tomato &amp; onions</div>
+            <div class="pc-footer">
+              <div class="pc-price">$10.90</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card" data-name="Rodeo Burger" data-price="13.00">
+          <div class="pc-img-wrap">
+            <img src="images/rodeo-burger.avif" alt="Rodeo Burger" loading="lazy" class="pc-img" />
+            <div class="pc-badge-wrap"><span class="badge b-pop">Popular</span></div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Rodeo Burger</div>
+            <div class="pc-desc">Cheddar, bacon, onion straws, lettuce, pickles &amp; barbecue sauce</div>
+            <div class="pc-footer">
+              <div class="pc-price">$13.00</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card" data-name="Tex Mex" data-price="13.00">
+          <div class="pc-img-wrap">
+            <img src="images/tex-mex-burger.avif" alt="Tex Mex Burger" loading="lazy" class="pc-img" />
+            <div class="pc-badge-wrap"><span class="badge b-spicy">Spicy</span></div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Tex Mex</div>
+            <div class="pc-desc">Beef &amp; chorizo patty, pepper jack, lettuce, tomato, avocado &amp; chipotle mayo</div>
+            <div class="pc-footer">
+              <div class="pc-price">$13.00</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card" data-name="Shenandoah" data-price="13.00">
+          <div class="pc-img-wrap">
+            <img src="images/shenandoah-burger.avif" alt="Shenandoah Burger" loading="lazy" class="pc-img" />
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Shenandoah</div>
+            <div class="pc-desc">Grilled onions &amp; mushrooms, swiss cheese, lettuce &amp; tomato</div>
+            <div class="pc-footer">
+              <div class="pc-price">$13.00</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card" data-name="Route 33" data-price="14.00">
+          <div class="pc-img-wrap">
+            <img src="images/route-33-burger.avif" alt="Route 33 Burger" loading="lazy" class="pc-img" />
+            <div class="pc-badge-wrap"><span class="badge b-chef">Chef's Pick</span></div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Route 33</div>
+            <div class="pc-desc">Fried egg, bacon, cheddar, lettuce, tomato &amp; house sauce</div>
+            <div class="pc-footer">
+              <div class="pc-price">$14.00</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card" data-name="Rockingham" data-price="13.00">
+          <div class="pc-img-wrap">
+            <img src="images/rockingham-burger.avif" alt="Rockingham Burger" loading="lazy" class="pc-img" />
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Rockingham</div>
+            <div class="pc-desc">Cheddar cheese, red onions &amp; homemade chili</div>
+            <div class="pc-footer">
+              <div class="pc-price">$13.00</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card" data-name="The Valley" data-price="14.00">
+          <div class="pc-img-wrap">
+            <img src="images/valley-burger.avif" alt="The Valley Burger" loading="lazy" class="pc-img" />
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">The Valley</div>
+            <div class="pc-desc">Grilled chicken breast, swiss, bacon, avocado, lettuce, tomato &amp; mayo</div>
+            <div class="pc-footer">
+              <div class="pc-price">$14.00</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card" data-name="Vegan Burger" data-price="13.00">
+          <div class="pc-img-wrap">
+            <img src="images/vegan-burger.avif" alt="Vegan Burger" loading="lazy" class="pc-img" />
+            <div class="pc-badge-wrap"><span class="badge b-gf">Vegan</span></div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Vegan Burger</div>
+            <div class="pc-desc">Black bean patty, grilled mushrooms &amp; onions, avocado, spinach &amp; tomato</div>
+            <div class="pc-footer">
+              <div class="pc-price">$13.00</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card" data-name="The Meat Lover" data-price="15.00">
+          <div class="pc-img-wrap">
+            <img src="images/meat-lover-burger.avif" alt="The Meat Lover Burger" loading="lazy" class="pc-img" />
+            <div class="pc-badge-wrap"><span class="badge b-chef">Chef's Pick</span></div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">The Meat Lover</div>
+            <div class="pc-desc">Beef patty, grilled chicken, bacon, pepper jack, lettuce, tomato &amp; onions</div>
+            <div class="pc-footer">
+              <div class="pc-price">$15.00</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card" data-name="Country Road" data-price="13.00">
+          <div class="pc-img-wrap">
+            <img src="images/country-road-burger.avif" alt="Country Road Burger" loading="lazy" class="pc-img" />
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Country Road</div>
+            <div class="pc-desc">Beef patty topped with mac &amp; cheese and bacon</div>
+            <div class="pc-footer">
+              <div class="pc-price">$13.00</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card" data-name="Hawaiian Burger" data-price="13.00">
+          <div class="pc-img-wrap">
+            <img src="images/hawaiian-burger.avif" alt="Hawaiian Burger" loading="lazy" class="pc-img" />
+            <div class="pc-badge-wrap"><span class="badge b-spicy">Spicy</span></div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Hawaiian Burger</div>
+            <div class="pc-desc">Pepper jack, grilled pineapple, jalapeños, lettuce, tomato &amp; onion</div>
+            <div class="pc-footer">
+              <div class="pc-price">$13.00</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card" data-name="Brisket Burger" data-price="15.00">
+          <div class="pc-img-wrap">
+            <img src="images/brisket-burger.webp" alt="Brisket Burger" loading="lazy" class="pc-img" />
+            <div class="pc-badge-wrap"><span class="badge b-chef">Chef's Pick</span></div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Brisket Burger</div>
+            <div class="pc-desc">Smoked brisket, BBQ sauce, cheddar, pickled red onions &amp; coleslaw</div>
+            <div class="pc-footer">
+              <div class="pc-price">$15.00</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
     <!-- MAKE YOUR OWN BURGER -->
-    <div class="menu-cat reveal">
+    <div class="menu-cat reveal" data-cat="burgers">
       <div class="menu-cat-hdr">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28" style="color:var(--gold);flex-shrink:0;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         <div>
@@ -97,42 +385,284 @@
           <div class="menu-cat-note">Start with a patty and build it your way</div>
         </div>
       </div>
-      <div class="menu-note">Bun options: Brioche Bun, Gluten Free, Potato Bread, or Multi Grain.</div>
-      <div class="menu-grid">
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Beef Patty</div><div class="mi-desc">100% grass-fed beef base patty</div></div><div class="mi-price">$6.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Chicken Patty</div><div class="mi-desc">Grilled chicken breast base</div></div><div class="mi-price">$6.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Veggie Patty</div><div class="mi-desc">Plant-based base patty</div></div><div class="mi-price">$6.00</div></div>
+      <div class="menu-note">Bun options: Brioche, Gluten Free, Potato Bread, or Multi Grain &nbsp;·&nbsp; Add toppings: Lettuce, Tomato, Onions $1.25 · Mushrooms, Jalapeños $1.50 · Avocado, Grilled Onions, Chili, Coleslaw, Cheese, Bacon, Grilled Pineapple $1.00 · Egg, Chorizo $2.00 · Mac &amp; Cheese $1.00</div>
+      <div class="photo-card-grid">
+
+        <div class="photo-card" data-name="MYOB Beef Patty" data-price="7.50">
+          <div class="pc-img-wrap pc-img-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="40" height="40" style="color:var(--border);"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Beef Patty</div>
+            <div class="pc-desc">100% grass-fed beef base — build it your way</div>
+            <div class="pc-footer">
+              <div class="pc-price">$7.50</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card" data-name="MYOB Chicken Patty" data-price="7.50">
+          <div class="pc-img-wrap pc-img-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="40" height="40" style="color:var(--border);"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Chicken Patty</div>
+            <div class="pc-desc">Grilled chicken breast base — build it your way</div>
+            <div class="pc-footer">
+              <div class="pc-price">$7.50</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card" data-name="MYOB Veggie Patty" data-price="7.50">
+          <div class="pc-img-wrap pc-img-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="40" height="40" style="color:var(--border);"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Veggie Patty <span class="pc-size">Vegan</span></div>
+            <div class="pc-desc">Plant-based base — build it your way</div>
+            <div class="pc-footer">
+              <div class="pc-price">$7.50</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <div class="menu-note" style="margin-top:16px;">Add toppings: Lettuce, Tomato, Onions $1.25 each &nbsp;|&nbsp; Mushrooms, Jalapeños $1.50 each &nbsp;|&nbsp; Avocado, Grilled Onions, Chili, Coleslaw, Swiss Cheese, Jack Cheese, Cheddar Cheese, American Cheese, Blue Cheese, Bacon, Grilled Pineapple $1.00 each &nbsp;|&nbsp; Egg, Chorizo $2.00 each &nbsp;|&nbsp; Mac &amp; Cheese $1.00</div>
     </div>
 
     <!-- APPETIZERS -->
-    <div class="menu-cat reveal">
+    <div class="menu-cat reveal" data-cat="apps">
       <div class="menu-cat-hdr">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28" style="color:var(--gold);flex-shrink:0;"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
         <div>
-          <div class="menu-cat-title">Appetizers</div>
+          <div class="menu-cat-title">Wings &amp; Appetizers</div>
           <div class="menu-cat-note">Perfect starters to share at the table</div>
         </div>
       </div>
-      <div class="menu-grid">
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Traditional Wings (6 pc)</div><div class="mi-desc">Bone-in wings, tossed in your choice of sauce</div><div class="mi-tags"><span class="badge b-pop">Popular</span></div></div><div class="mi-price">$7.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Traditional Wings (12 pc)</div><div class="mi-desc">Bone-in wings, tossed in your choice of sauce</div></div><div class="mi-price">$12.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Boneless Wings (Small)</div><div class="mi-desc">Boneless wings, tossed in your choice of sauce</div></div><div class="mi-price">$7.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Boneless Wings (Large)</div><div class="mi-desc">Boneless wings, tossed in your choice of sauce</div><div class="mi-tags"><span class="badge b-pop">Popular</span></div></div><div class="mi-price">$12.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Loaded Cheeseburger Fries</div><div class="mi-desc">Fries topped with melted beer cheese, ground beef, crispy bacon bits &amp; green onions, served with our signature sauce</div><div class="mi-tags"><span class="badge b-pop">Popular</span></div></div><div class="mi-price">$8.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Onion Rings</div><div class="mi-desc">Ribbon style onion rings, served with our signature sauce</div></div><div class="mi-price">$6.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Copper Head Jalapeño Bites</div><div class="mi-desc">Jalapeños stuffed with sausage, cream and cheddar cheese, wrapped in bacon, served with sweet chili sauce</div><div class="mi-tags"><span class="badge b-spicy">Spicy</span></div></div><div class="mi-price">$7.25</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Fried Pickle Spears</div><div class="mi-desc">Pickle spears battered and fried, served with a side of ranch</div></div><div class="mi-price">$5.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Soft Baked Pretzel</div><div class="mi-desc">Served with homemade beer cheese sauce</div><div class="mi-tags"><span class="badge b-pop">Popular</span></div></div><div class="mi-price">$7.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Pork Riblets</div><div class="mi-desc">Served BBQ or plain</div></div><div class="mi-price">$9.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Sweet Potato Fries</div><div class="mi-desc">Waffle cut sweet potato fries, served with creamy maple syrup</div></div><div class="mi-price">$4.25</div></div>
+
+      <div class="photo-card-grid">
+
+        <!-- Traditional Wings -->
+        <div class="photo-card" data-name="Traditional Wings (Small 6pc)" data-price="9.30">
+          <div class="pc-img-wrap">
+            <img src="images/traditional-wings.avif" alt="Traditional Wings" loading="lazy" class="pc-img" />
+            <div class="pc-badge-wrap"><span class="badge b-pop">Popular</span></div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Traditional Wings</div>
+            <div class="pc-desc">Bone-in wings tossed in your choice of sauce</div>
+            <div class="pc-variants">
+              <button class="pc-variant active" data-name="Traditional Wings (Small 6pc)" data-price="9.30">Small 6pc · $9.30</button>
+              <button class="pc-variant" data-name="Traditional Wings (Large 12pc)" data-price="15.30">Large 12pc · $15.30</button>
+            </div>
+            <div class="pc-footer">
+              <div class="pc-price">$9.30</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Boneless Wings -->
+        <div class="photo-card" data-name="Boneless Wings (Small)" data-price="9.30">
+          <div class="pc-img-wrap">
+            <img src="images/boneless-wings.avif" alt="Boneless Wings" loading="lazy" class="pc-img" />
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Boneless Wings</div>
+            <div class="pc-desc">Crispy boneless wings tossed in your choice of sauce</div>
+            <div class="pc-variants">
+              <button class="pc-variant active" data-name="Boneless Wings (Small)" data-price="9.30">Small 6pc · $9.30</button>
+              <button class="pc-variant" data-name="Boneless Wings (Large)" data-price="15.30">Large 12pc · $15.30</button>
+            </div>
+            <div class="pc-footer">
+              <div class="pc-price">$9.30</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chicken Tender Basket -->
+        <div class="photo-card" data-name="Chicken Tender Basket" data-price="10.40">
+          <div class="pc-img-wrap">
+            <img src="images/chicken-tender-basket.avif" alt="Chicken Tender Basket" loading="lazy" class="pc-img" />
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Chicken Tender Basket</div>
+            <div class="pc-desc">Crispy golden tenders served with honey mustard</div>
+            <div class="pc-footer">
+              <div class="pc-price">$10.40</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loaded Cheeseburger Fries -->
+        <div class="photo-card" data-name="Loaded Cheeseburger Fries" data-price="10.40">
+          <div class="pc-img-wrap">
+            <img src="images/loaded-cheese-fries.avif" alt="Loaded Cheeseburger Fries" loading="lazy" class="pc-img" />
+            <div class="pc-badge-wrap"><span class="badge b-pop">Popular</span></div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Loaded Cheeseburger Fries</div>
+            <div class="pc-desc">Fries topped with queso, ground beef, bacon bits, green onions &amp; house sauce</div>
+            <div class="pc-footer">
+              <div class="pc-price">$10.40</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fried Shrimp -->
+        <div class="photo-card" data-name="Fried Shrimp" data-price="10.20">
+          <div class="pc-img-wrap">
+            <img src="images/fried-shrimp.avif" alt="Fried Shrimp" loading="lazy" class="pc-img" />
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Fried Shrimp</div>
+            <div class="pc-desc">Breaded &amp; deep-fried butterfly shrimp with sweet chili sauce</div>
+            <div class="pc-footer">
+              <div class="pc-price">$10.20</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fried Mozzarella Sticks -->
+        <div class="photo-card" data-name="Fried Mozzarella Sticks" data-price="10.20">
+          <div class="pc-img-wrap">
+            <img src="images/fried-mozzarella.avif" alt="Fried Mozzarella Sticks" loading="lazy" class="pc-img" />
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Fried Mozzarella Sticks</div>
+            <div class="pc-desc">Breaded mozzarella deep fried, served with marinara sauce</div>
+            <div class="pc-footer">
+              <div class="pc-price">$10.20</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Basket of Onion Rings -->
+        <div class="photo-card" data-name="Basket of Onion Rings" data-price="7.65">
+          <div class="pc-img-wrap">
+            <img src="images/onion-rings-basket.avif" alt="Basket of Onion Rings" loading="lazy" class="pc-img" />
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Basket of Onion Rings</div>
+            <div class="pc-desc">Ribbon style onion rings with our signature sauce</div>
+            <div class="pc-footer">
+              <div class="pc-price">$7.65</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fries Basket -->
+        <div class="photo-card" data-name="Basket of French Fries" data-price="7.10">
+          <div class="pc-img-wrap">
+            <img src="images/fries-basket.avif" alt="Basket of Fries" loading="lazy" class="pc-img" />
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Basket of Fries</div>
+            <div class="pc-desc">Choose your style — all golden crispy and served fresh</div>
+            <div class="pc-variants">
+              <button class="pc-variant active" data-name="Basket of French Fries" data-price="7.10">French · $7.10</button>
+              <button class="pc-variant" data-name="Basket of Curly Fries" data-price="7.10">Curly · $7.10</button>
+              <button class="pc-variant" data-name="Basket of Sweet Potato Fries" data-price="7.10">Sweet Potato · $7.10</button>
+            </div>
+            <div class="pc-footer">
+              <div class="pc-price">$7.10</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Copper Head Jalapeño Bites -->
+        <div class="photo-card" data-name="Copper Head Jalapeño Bites" data-price="9.85">
+          <div class="pc-img-wrap">
+            <img src="images/jalapeno-bites-menu.avif" alt="Copper Head Jalapeño Bites" loading="lazy" class="pc-img" />
+            <div class="pc-badge-wrap"><span class="badge b-spicy">Spicy</span></div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Copper Head Jalapeño Bites</div>
+            <div class="pc-desc">Jalapeños stuffed with sausage, cream &amp; cheddar, wrapped in bacon, sweet chili sauce</div>
+            <div class="pc-footer">
+              <div class="pc-price">$9.85</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fried Pickle Spears -->
+        <div class="photo-card" data-name="Fried Pickle Spears" data-price="7.00">
+          <div class="pc-img-wrap">
+            <img src="images/fried-pickle-spears.avif" alt="Fried Pickle Spears" loading="lazy" class="pc-img" />
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Fried Pickle Spears</div>
+            <div class="pc-desc">Pickle spears battered and fried, served with ranch</div>
+            <div class="pc-footer">
+              <div class="pc-price">$7.00</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Soft Baked Pretzel -->
+        <div class="photo-card" data-name="Soft Baked Pretzel" data-price="8.45">
+          <div class="pc-img-wrap">
+            <img src="images/pretzel-menu.avif" alt="Soft Baked Pretzel" loading="lazy" class="pc-img" />
+            <div class="pc-badge-wrap"><span class="badge b-pop">Popular</span></div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Soft Baked Pretzel</div>
+            <div class="pc-desc">Served with homemade beer cheese sauce</div>
+            <div class="pc-footer">
+              <div class="pc-price">$8.45</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chili Bean Soup -->
+        <div class="photo-card" data-name="Chili Bean Soup" data-price="7.25">
+          <div class="pc-img-wrap">
+            <img src="images/chili-bean-soup.avif" alt="Chili Bean Soup" loading="lazy" class="pc-img" />
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Chili Bean Soup</div>
+            <div class="pc-desc">Hearty chili bean soup served with crackers</div>
+            <div class="pc-footer">
+              <div class="pc-price">$7.25</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hush Puppies -->
+        <div class="photo-card" data-name="Hush Puppies" data-price="7.25">
+          <div class="pc-img-wrap pc-img-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="40" height="40" style="color:var(--border);"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Hush Puppies</div>
+            <div class="pc-desc">Golden fried hush puppies</div>
+            <div class="pc-footer">
+              <div class="pc-price">$7.25</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <div class="menu-note" style="margin-top:16px;">Wing sauces: Buffalo, Sweet &amp; Bold BBQ, Spicy, Honey, Sweet Chili, Carolina Reaper (Hot), Lemon Pepper, Garlic Parmesan, Mango Habanero</div>
+      <div class="menu-note" style="margin-top:20px;">Wing sauces: Buffalo · Sweet &amp; Bold BBQ · Spicy · Honey · Sweet Chili · Carolina Reaper · Lemon Pepper · Garlic Parmesan · Mango Habanero</div>
     </div>
 
     <!-- SIDES -->
-    <div class="menu-cat reveal">
+    <div class="menu-cat reveal" data-cat="sides">
       <div class="menu-cat-hdr">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28" style="color:var(--gold);flex-shrink:0;"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
         <div>
@@ -141,34 +671,98 @@
         </div>
       </div>
       <div class="menu-grid">
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">French Fries</div><div class="mi-desc">Classic golden crispy fries. Add bacon +$1.00, Add cheese +$1.00</div></div><div class="mi-price">$3.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Onion Rings</div><div class="mi-desc">Ribbon style onion rings</div></div><div class="mi-price">$4.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Coleslaw</div><div class="mi-desc">Creamy house-made coleslaw</div></div><div class="mi-price">$2.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Potato Salad</div><div class="mi-desc">House-made classic potato salad</div></div><div class="mi-price">$2.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Macaroni &amp; Cheese</div><div class="mi-desc">Creamy, cheesy comfort side</div></div><div class="mi-price">$2.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Side Salad</div><div class="mi-desc">Fresh side salad</div></div><div class="mi-price">$4.00</div></div>
+        <div class="menu-item" data-name="Side of French Fries" data-price="4.90">
+          <div class="mi-info"><div class="mi-name">Side of French Fries</div><div class="mi-desc">Classic golden crispy fries</div></div>
+          <div class="mi-right"><div class="mi-price">$4.90</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
+        <div class="menu-item" data-name="Side of Curly Fries" data-price="4.90">
+          <div class="mi-info"><div class="mi-name">Side of Curly Fries</div><div class="mi-desc">Seasoned curly fries</div></div>
+          <div class="mi-right"><div class="mi-price">$4.90</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
+        <div class="menu-item" data-name="Side of Sweet Potato Fries" data-price="4.90">
+          <div class="mi-info"><div class="mi-name">Side of Sweet Potato Fries</div><div class="mi-desc">Waffle cut sweet potato fries</div></div>
+          <div class="mi-right"><div class="mi-price">$4.90</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
+        <div class="menu-item" data-name="Side of Cheese Fries" data-price="6.40">
+          <div class="mi-info"><div class="mi-name">Side of Cheese Fries</div><div class="mi-desc">Fries topped with melted cheese</div></div>
+          <div class="mi-right"><div class="mi-price">$6.40</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
+        <div class="menu-item" data-name="Side of Bacon Cheese Fries" data-price="7.40">
+          <div class="mi-info"><div class="mi-name">Side of Bacon Cheese Fries</div><div class="mi-desc">Fries with melted cheese and crispy bacon</div></div>
+          <div class="mi-right"><div class="mi-price">$7.40</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
+        <div class="menu-item" data-name="Side of Onion Rings" data-price="4.95">
+          <div class="mi-info"><div class="mi-name">Side of Onion Rings</div><div class="mi-desc">Ribbon style onion rings</div></div>
+          <div class="mi-right"><div class="mi-price">$4.95</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
+        <div class="menu-item" data-name="Side Salad" data-price="5.00">
+          <div class="mi-info"><div class="mi-name">Side Salad</div><div class="mi-desc">Fresh garden side salad</div></div>
+          <div class="mi-right"><div class="mi-price">$5.00</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
+        <div class="menu-item" data-name="Side of Coleslaw" data-price="2.90">
+          <div class="mi-info"><div class="mi-name">Side of Coleslaw</div><div class="mi-desc">Creamy house-made coleslaw</div></div>
+          <div class="mi-right"><div class="mi-price">$2.90</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
+        <div class="menu-item" data-name="Side of Potato Salad" data-price="3.00">
+          <div class="mi-info"><div class="mi-name">Side of Potato Salad</div><div class="mi-desc">House-made classic potato salad</div></div>
+          <div class="mi-right"><div class="mi-price">$3.00</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
+        <div class="menu-item" data-name="Side of Mac &amp; Cheese" data-price="4.25">
+          <div class="mi-info"><div class="mi-name">Side of Mac &amp; Cheese</div><div class="mi-desc">Creamy, cheesy comfort side</div></div>
+          <div class="mi-right"><div class="mi-price">$4.25</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
       </div>
     </div>
 
-    <!-- SALADS -->
-    <div class="menu-cat reveal">
+    <!-- SALADS & WRAPS -->
+    <div class="menu-cat reveal" data-cat="salads">
       <div class="menu-cat-hdr">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28" style="color:var(--gold);flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         <div>
-          <div class="menu-cat-title">Salads</div>
-          <div class="menu-cat-note">Available in small or large</div>
+          <div class="menu-cat-title">Salads &amp; Wraps</div>
+          <div class="menu-cat-note">Fresh salads and wraps</div>
         </div>
       </div>
-      <div class="menu-note">Dressings: Ranch, French, Blue Cheese, Honey Mustard, Italian, Raspberry Vinaigrette</div>
+      <div class="menu-note">Dressings: Ranch, Bleu Cheese, Honey Mustard, Italian, Thousand Island &amp; Raspberry Vinaigrette</div>
+      <div class="menu-note">Add Grilled Chicken or Grilled Shrimp to any salad +$5.00 each</div>
       <div class="menu-grid">
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Old 33 House Salad</div><div class="mi-desc">Spring mix, spinach, dried apple chips, red onions, tomatoes, candied pecans &amp; blue cheese</div></div><div class="mi-price">Sm $6 / Lg $10</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Caesar Salad</div><div class="mi-desc">Romaine lettuce, croutons, traditional caesar dressing, topped with freshly grated parmesan cheese</div></div><div class="mi-price">Sm $6 / Lg $10</div></div>
+        <div class="menu-item" data-name="Old 33 House Salad" data-price="10.00">
+          <div class="mi-info">
+            <div class="mi-name">Old 33 House Salad</div>
+            <div class="mi-desc">Spring mix, spinach, apple chips, diced onions, cherry tomatoes, candied pecans &amp; blue cheese crumbles</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$10.00</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
+        <div class="menu-item" data-name="Caesar Salad" data-price="9.00">
+          <div class="mi-info">
+            <div class="mi-name">Caesar Salad</div>
+            <div class="mi-desc">Romaine lettuce, croutons, caesar dressing, topped with freshly grated parmesan cheese</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$9.00</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
+        <div class="menu-item" data-name="Grilled Chicken Wrap" data-price="10.50">
+          <div class="mi-info"><div class="mi-name">Grilled Chicken Wrap</div><div class="mi-desc">Grilled chicken, lettuce, tomato &amp; mayo wrapped in a tortilla, served with fries</div></div>
+          <div class="mi-right"><div class="mi-price">$10.50</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
+        <div class="menu-item" data-name="Buffalo Chicken Wrap" data-price="10.50">
+          <div class="mi-info"><div class="mi-name">Buffalo Chicken Wrap</div><div class="mi-desc">Crispy chicken in buffalo sauce, lettuce, cheddar cheese &amp; tomato wrapped in a tortilla, served with fries</div><div class="mi-tags"><span class="badge b-spicy">Spicy</span></div></div>
+          <div class="mi-right"><div class="mi-price">$10.50</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
+        <div class="menu-item" data-name="Smoked Brisket Platter" data-price="15.00">
+          <div class="mi-info"><div class="mi-name">Smoked Brisket Platter</div><div class="mi-desc">Two tender slices of smoked brisket with fries, coleslaw, pickled onions &amp; BBQ sauce</div><div class="mi-tags"><span class="badge b-chef">Chef's Pick</span></div></div>
+          <div class="mi-right"><div class="mi-price">$15.00</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
       </div>
-      <div class="menu-note" style="margin-top:16px;">Add to any salad: Grilled Chicken, Beef Patty, or Grilled Shrimp +$4.00 each</div>
     </div>
 
     <!-- HOMEMADE SOUP -->
-    <div class="menu-cat reveal">
+    <div class="menu-cat reveal" data-cat="sides">
       <div class="menu-cat-hdr">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28" style="color:var(--gold);flex-shrink:0;"><path d="M12 2a10 10 0 0 1 10 10H2A10 10 0 0 1 12 2z"/><path d="M12 12v6"/><path d="M8 18h8"/></svg>
         <div>
@@ -177,48 +771,141 @@
         </div>
       </div>
       <div class="menu-grid">
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Vegetable Beef Soup</div><div class="mi-desc">Hearty homemade vegetable beef soup, served with crackers</div></div><div class="mi-price">$7.25</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Chili Bean Soup</div><div class="mi-desc">House-made chili bean soup, served with crackers</div></div><div class="mi-price">$7.25</div></div>
+        <div class="menu-item" data-name="Chili Bean Soup" data-price="8.00">
+          <div class="mi-info">
+            <div class="mi-name">Chili Bean Soup</div>
+            <div class="mi-desc">House-made chili bean soup, served with crackers</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$8.00</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- DRINKS -->
-    <div class="menu-cat reveal">
+    <div class="menu-cat reveal" data-cat="drinks">
       <div class="menu-cat-hdr">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28" style="color:var(--gold);flex-shrink:0;"><path d="M17 2H7l-2 6h14l-2-6z"/><path d="M5 8c0 6.627 3.134 12 7 12s7-5.373 7-12"/><line x1="12" y1="2" x2="12" y2="8"/></svg>
         <div>
           <div class="menu-cat-title">Drinks &amp; Beers</div>
-          <div class="menu-cat-note">Local craft taps, spirits &amp; soft drinks</div>
+          <div class="menu-cat-note">Available in-restaurant only — not available for online ordering</div>
         </div>
       </div>
+
       <div class="menu-grid">
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Local Draft Beers</div><div class="mi-desc">Rotating selection of local &amp; regional craft beers on tap. Ask your server for today's lineup.</div><div class="mi-tags"><span class="badge b-new">Local</span></div></div><div class="mi-price">Ask Us</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Bottled Beer &amp; Cans</div><div class="mi-desc">Full selection of domestic and imported bottles and cans</div></div><div class="mi-price">Ask Us</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Spirits &amp; Cocktails</div><div class="mi-desc">Full bar — ask your server for available cocktails and spirits</div></div><div class="mi-price">Ask Us</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Soft Drinks</div><div class="mi-desc">Pepsi, Diet Pepsi, Sierra Mist, Iced Tea, Lemonade &amp; more</div></div><div class="mi-price">Ask Us</div></div>
+        <div class="menu-item">
+          <div class="mi-info">
+            <div class="mi-name">Draft Beers</div>
+            <div class="mi-desc">Blue Moon, Basic City 6 Lord IPA, Coors Light, Miller Lite, Michelob Ultra, Devils Backbone Vienna Lager</div>
+            <div class="mi-tags"><span class="badge b-new">On Tap</span></div>
+          </div>
+          <div class="mi-price">From $4.50</div>
+        </div>
+        <div class="menu-item">
+          <div class="mi-info">
+            <div class="mi-name">Bottled Beer</div>
+            <div class="mi-desc">Three Notch'd, Starr Hill, Heineken, Yuengling, Corona, Guinness, Budweiser &amp; more</div>
+          </div>
+          <div class="mi-price">From $4.25</div>
+        </div>
+        <div class="menu-item">
+          <div class="mi-info">
+            <div class="mi-name">Seltzers &amp; Ciders</div>
+            <div class="mi-desc">Angry Orchard Hard Cider, Bold Rock Hard Cider, Three Notch'd Lemon Drop Cocktail</div>
+          </div>
+          <div class="mi-price">From $5.25</div>
+        </div>
+        <div class="menu-item" data-name="Soft Drink" data-price="3.35">
+          <div class="mi-info">
+            <div class="mi-name">Soft Drink</div>
+            <div class="mi-desc">Pepsi, Diet Pepsi, Sierra Mist, Dr. Pepper, Mountain Dew, Pink Lemonade, Root Beer</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$3.35</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
+        <div class="menu-item" data-name="Juice" data-price="3.25">
+          <div class="mi-info">
+            <div class="mi-name">Juice</div>
+            <div class="mi-desc">Cranberry Juice or Orange Juice — no free refills</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$3.25</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
+        <div class="menu-item" data-name="Hot Coffee" data-price="2.50">
+          <div class="mi-info">
+            <div class="mi-name">Hot Coffee</div>
+            <div class="mi-desc">Freshly brewed hot coffee</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$2.50</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
+        <div class="menu-item" data-name="Milk" data-price="2.00">
+          <div class="mi-info">
+            <div class="mi-name">Milk</div>
+            <div class="mi-desc">White milk — no free refills</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$2.00</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
+        <div class="menu-item" data-name="Chocolate Milk" data-price="2.50">
+          <div class="mi-info">
+            <div class="mi-name">Chocolate Milk</div>
+            <div class="mi-desc">Chocolate milk — no free refills</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$2.50</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- MILKSHAKES -->
-    <div class="menu-cat reveal">
+    <div class="menu-cat reveal" data-cat="drinks">
       <div class="menu-cat-hdr">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28" style="color:var(--gold);flex-shrink:0;"><path d="M8 2h8l2 6H6L8 2z"/><path d="M6 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"/><line x1="12" y1="12" x2="12" y2="18"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28" style="color:var(--gold);flex-shrink:0;"><path d="M8 2h8l1 6H7L8 2z"/><path d="M7 8c0 7 2 12 5 12s5-5 5-12"/></svg>
         <div>
           <div class="menu-cat-title">Milkshakes</div>
           <div class="menu-cat-note">16 oz hand-spun shakes</div>
         </div>
       </div>
       <div class="menu-grid">
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Vanilla</div><div class="mi-desc">Classic creamy vanilla milkshake</div></div><div class="mi-price">$5.25</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Chocolate</div><div class="mi-desc">Rich chocolate milkshake</div></div><div class="mi-price">$5.25</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Strawberry</div><div class="mi-desc">Fresh strawberry milkshake</div></div><div class="mi-price">$5.25</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Banana</div><div class="mi-desc">Creamy banana milkshake</div></div><div class="mi-price">$5.25</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Nutella</div><div class="mi-desc">Indulgent Nutella milkshake</div><div class="mi-tags"><span class="badge b-pop">Popular</span></div></div><div class="mi-price">$5.25</div></div>
+        <div class="menu-item" data-name="Vanilla Milkshake" data-price="7.25">
+          <div class="mi-info"><div class="mi-name">Vanilla Milkshake</div><div class="mi-desc">Classic creamy vanilla — 16 oz</div></div>
+          <div class="mi-right"><div class="mi-price">$7.25</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
+        <div class="menu-item" data-name="Chocolate Milkshake" data-price="7.25">
+          <div class="mi-info"><div class="mi-name">Chocolate Milkshake</div><div class="mi-desc">Rich chocolate — 16 oz</div></div>
+          <div class="mi-right"><div class="mi-price">$7.25</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
+        <div class="menu-item" data-name="Strawberry Milkshake" data-price="7.25">
+          <div class="mi-info"><div class="mi-name">Strawberry Milkshake</div><div class="mi-desc">Fresh strawberry — 16 oz</div></div>
+          <div class="mi-right"><div class="mi-price">$7.25</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
+        <div class="menu-item" data-name="Banana Milkshake" data-price="7.25">
+          <div class="mi-info"><div class="mi-name">Banana Milkshake</div><div class="mi-desc">Creamy banana — 16 oz</div></div>
+          <div class="mi-right"><div class="mi-price">$7.25</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
+        <div class="menu-item" data-name="Nutella Milkshake" data-price="7.25">
+          <div class="mi-info"><div class="mi-name">Nutella Milkshake</div><div class="mi-desc">Nutella hazelnut chocolate — 16 oz</div></div>
+          <div class="mi-right"><div class="mi-price">$7.25</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        </div>
       </div>
     </div>
 
+
     <!-- DESSERTS -->
-    <div class="menu-cat reveal">
+    <div class="menu-cat reveal" data-cat="desserts">
       <div class="menu-cat-hdr">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28" style="color:var(--gold);flex-shrink:0;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
         <div>
@@ -227,36 +914,130 @@
         </div>
       </div>
       <div class="menu-grid">
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Bananas Foster</div><div class="mi-desc">Sautéed in butter, rum and brown sugar, served over vanilla ice cream and berries, topped with whipped cream</div><div class="mi-tags"><span class="badge b-pop">Must Try</span></div></div><div class="mi-price">$7.00</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Lava Cake</div><div class="mi-desc">Rich molten chocolate lava cake served with vanilla ice cream</div><div class="mi-tags"><span class="badge b-pop">Popular</span></div></div><div class="mi-price">$6.50</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Ice Cream Sundae</div><div class="mi-desc">Vanilla ice cream, topped with chocolate sauce, peanuts, whipped cream and a cherry</div></div><div class="mi-price">$6.50</div></div>
+        <div class="menu-item" data-name="Baked Apple Tart" data-price="8.50">
+          <div class="mi-info">
+            <div class="mi-name">Baked Apple Tart</div>
+            <div class="mi-desc">Sweet and tangy apples baked in a soft pastry crust, topped with caramel glaze, served with vanilla ice cream</div>
+            <div class="mi-tags"><span class="badge b-chef">Chef's Pick</span></div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$8.50</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
+        <div class="menu-item" data-name="Chocolate Lava Cake" data-price="8.50">
+          <div class="mi-info">
+            <div class="mi-name">Chocolate Lava Cake</div>
+            <div class="mi-desc">Warm chocolate bundt cake with a gooey fudge center, served with vanilla ice cream &amp; chocolate syrup</div>
+            <div class="mi-tags"><span class="badge b-pop">Popular</span></div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$8.50</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
+        <div class="menu-item" data-name="Blueberry Cobbler Cheesecake" data-price="8.00">
+          <div class="mi-info">
+            <div class="mi-name">Blueberry Cobbler Cheesecake</div>
+            <div class="mi-desc">Rich cheesecake with blueberry cobbler topping</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$8.00</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
+        <div class="menu-item" data-name="Scoop of Ice Cream" data-price="1.50">
+          <div class="mi-info">
+            <div class="mi-name">Scoop of Ice Cream</div>
+            <div class="mi-desc">Single scoop of vanilla ice cream</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$1.50</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- KIDS MENU -->
-    <div class="menu-cat reveal">
+    <div class="menu-cat reveal" data-cat="kids">
       <div class="menu-cat-hdr">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28" style="color:var(--gold);flex-shrink:0;"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>
         <div>
           <div class="menu-cat-title">Kids Menu</div>
-          <div class="menu-cat-note">For kids 12 and under. Comes with a choice of fries or fruit cup.</div>
+          <div class="menu-cat-note">For kids 12 and under</div>
         </div>
       </div>
       <div class="menu-grid">
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Grilled Cheese</div><div class="mi-desc">Classic grilled cheese sandwich, served with fries or fruit cup</div></div><div class="mi-price">$5.25</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Boneless Wings</div><div class="mi-desc">4 boneless wings served in a choice of sauce, with fries or fruit cup</div></div><div class="mi-price">$5.25</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Cheeseburger</div><div class="mi-desc">Kids cheeseburger, served with fries or fruit cup</div></div><div class="mi-price">$5.50</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Mac &amp; Cheese</div><div class="mi-desc">Creamy macaroni and cheese, served with fries or fruit cup</div></div><div class="mi-price">$5.25</div></div>
-        <div class="menu-item"><div class="mi-info"><div class="mi-name">Chicken Tenders</div><div class="mi-desc">Crispy chicken tenders, served with fries or fruit cup</div></div><div class="mi-price">$6.00</div></div>
+        <div class="menu-item" data-name="Kids Hot Dog" data-price="8.00">
+          <div class="mi-info">
+            <div class="mi-name">Kids Hot Dog</div>
+            <div class="mi-desc">Classic kids hot dog</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$8.00</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
+        <div class="menu-item" data-name="Kids Four Piece Boneless Wings" data-price="7.85">
+          <div class="mi-info">
+            <div class="mi-name">Kids Four Piece Boneless Wings</div>
+            <div class="mi-desc">Four boneless wings tossed in your choice of sauce</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$7.85</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
+        <div class="menu-item" data-name="Kids Three Piece Chicken Tenders" data-price="8.00">
+          <div class="mi-info">
+            <div class="mi-name">Kids Three Piece Chicken Tenders</div>
+            <div class="mi-desc">Crispy breaded tenders</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$8.00</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
+        <div class="menu-item" data-name="Kids Grilled Cheese" data-price="7.85">
+          <div class="mi-info">
+            <div class="mi-name">Kids Grilled Cheese</div>
+            <div class="mi-desc">Toasted buns with melted cheese in-between</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$7.85</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
+        <div class="menu-item" data-name="Kids Mac &amp; Cheese" data-price="7.85">
+          <div class="mi-info">
+            <div class="mi-name">Kids Mac &amp; Cheese</div>
+            <div class="mi-desc">Rich &amp; cheesy goodness</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$7.85</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
+        <div class="menu-item" data-name="Fruit Cup" data-price="1.50">
+          <div class="mi-info">
+            <div class="mi-name">Fruit Cup</div>
+            <div class="mi-desc">Fresh seasonal fruit cup</div>
+          </div>
+          <div class="mi-right">
+            <div class="mi-price">$1.50</div>
+            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Live menu CTA -->
+    <!-- Bottom CTA -->
     <div style="text-align:center;padding:36px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);" class="reveal">
-      <span class="lbl">Always Up To Date</span>
-      <h3 style="font-family:var(--fh);font-size:22px;color:var(--white);margin-bottom:8px;">See the Full Live Menu on Toast</h3>
-      <p style="font-size:14px;color:var(--dim);margin-bottom:20px;">Prices &amp; availability are confirmed on our live ordering platform.</p>
-      <a href="https://order.toasttab.com/online/old-33-beer-and-burger" target="_blank" rel="noopener" class="btn btn-red">View Live Menu &amp; Order</a>
+      <span class="lbl">Ready to Order?</span>
+      <h3 style="font-family:var(--fh);font-size:22px;color:var(--white);margin-bottom:8px;">Order Direct — No Fees, No Middleman</h3>
+      <p style="font-size:14px;color:var(--dim);margin-bottom:20px;">Add items to your cart above and pick up fresh. Pay at the counter — cash or card.</p>
+      <a href="tel:5407139050" class="btn btn-outline">Call to Order — (540) 713-9050</a>
     </div>
 
   </div>
@@ -275,17 +1056,47 @@
           <a href="https://www.tripadvisor.com/Restaurant_Review-g57704-d23575919-Reviews-Old_33_Beer_Burger_Grill-Elkton_Virginia.html" target="_blank" rel="noopener" title="TripAdvisor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--gray)"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></a><a href="https://www.instagram.com/old33bbg/" target="_blank" rel="noopener" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--gray)"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
         </div>
       </div>
-      <div class="ftr-col"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="menu.html">Menu</a></li><li><a href="about.html">About Us</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="contact.html">Contact</a></li><li><a href="https://order.toasttab.com/online/old-33-beer-and-burger" target="_blank" rel="noopener">Order Online</a></li></ul></div>
+      <div class="ftr-col"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="menu.html">Menu</a></li><li><a href="about.html">About Us</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="contact.html">Contact</a></li><li><a href="menu.html">Order Online</a></li></ul></div>
       <div class="ftr-col"><h4>Hours</h4><div class="ftr-hrs"><div class="fhr"><span class="fd-col">Mon – Tue</span><span class="ft">11AM – 10PM</span></div><div class="fhr"><span class="fd-col">Wednesday</span><span class="fc">Closed</span></div><div class="fhr"><span class="fd-col">Thursday</span><span class="ft">11AM – 10PM</span></div><div class="fhr"><span class="fd-col">Fri – Sat</span><span class="ft">11AM – 11PM</span></div><div class="fhr"><span class="fd-col">Sunday</span><span class="ft">12PM – 10PM</span></div></div></div>
       <div class="ftr-col"><h4>Contact</h4><ul><li><a href="tel:5407139050">(540) 713-9050</a></li><li><a href="mailto:Route33bbg@gmail.com">Route33bbg@gmail.com</a></li><li><a href="https://maps.google.com/?q=159+W+Rockingham+St,+Elkton,+VA+22827" target="_blank" rel="noopener">159 W Rockingham St, Elkton VA</a></li></ul></div>
     </div>
     <div class="footer-btm">
-      <p class="footer-btm-l">© 2025 Old 33 Beer &amp; Burger Grill, Inc. All rights reserved.</p>
-      <div class="footer-btm-r"><a href="https://order.toasttab.com/online/old-33-beer-and-burger" target="_blank" rel="noopener">Order Online</a><a href="contact.html">Find Us</a><a href="tel:5407139050">Call Us</a></div>
+      <p class="footer-btm-l">© 2026 Old 33 Beer &amp; Burger Grill, Inc. All rights reserved.</p>
+      <div class="footer-btm-r"><a href="menu.html">Order Online</a><a href="contact.html">Find Us</a><a href="tel:5407139050">Call Us</a></div>
     </div>
   </div>
 </footer>
 
+<script src="js/cart.js?v=2"></script>
+<script src="js/checkout.js"></script>
+
 <script src="js/main.js"></script>
+<script>
+  /* --- Menu Category Filter --- */
+  function applyFilter(filter) {
+    document.querySelectorAll('.mf-tab').forEach(b => b.classList.remove('active'));
+    document.querySelector('.mf-tab[data-filter="' + filter + '"]')?.classList.add('active');
+    document.querySelectorAll('.menu-cat').forEach(cat => {
+      cat.style.display = (cat.dataset.cat === filter) ? '' : 'none';
+    });
+  }
+
+  document.querySelectorAll('.mf-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      applyFilter(btn.dataset.filter);
+      // Scroll to first visible category, accounting for sticky nav + bar
+      setTimeout(() => {
+        const firstCat = document.querySelector('.menu-cat:not([style*="none"])');
+        if (firstCat) {
+          const top = firstCat.getBoundingClientRect().top + window.scrollY - 140;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      }, 50);
+    });
+  });
+
+  // Default: show Burgers on load
+  applyFilter('burgers');
+</script>
 </body>
 </html>

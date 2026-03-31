@@ -75,6 +75,32 @@ if (revEls.length) {
   revEls.forEach(el => ro.observe(el));
 }
 
+/* --- Photo Card Variant Picker --- */
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.pc-variant');
+  if (!btn) return;
+  const card = btn.closest('.photo-card');
+  card.querySelectorAll('.pc-variant').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  card.dataset.name  = btn.dataset.name;
+  card.dataset.price = btn.dataset.price;
+  card.querySelector('.pc-price').textContent = '$' + parseFloat(btn.dataset.price).toFixed(2);
+});
+
+/* --- Floating Call Button (mobile only) --- */
+(function() {
+  const fab = document.createElement('a');
+  fab.href = 'tel:5407139050';
+  fab.className = 'float-call';
+  fab.setAttribute('aria-label', 'Call to Order');
+  fab.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20">
+      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.68A2 2 0 012 .84h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.35a16 16 0 006.29 6.29l1.58-1.16a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+    </svg>
+    <span>Call to Order</span>`;
+  document.body.appendChild(fab);
+})();
+
 /* --- Highlight Today's Hours Row --- */
 const dayNames = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
 const todayName = dayNames[new Date().getDay()];
