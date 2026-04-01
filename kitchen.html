@@ -819,14 +819,14 @@
         body: JSON.stringify({ status: 'done' })
       });
 
-      // 2. Send SMS to customer
-      const smsRes = await fetch(SMS_URL, {
+      // 2. Send SMS to customer (no-cors required for Apps Script from browser)
+      console.log('Sending SMS to:', phone, '| name:', name);
+      fetch(SMS_URL, {
         method: 'POST',
+        mode: 'no-cors',
         body: JSON.stringify({ name, phone }),
         headers: { 'Content-Type': 'text/plain' }
-      });
-      const smsText = await smsRes.text();
-      console.log('SMS result:', smsText, '| phone sent:', phone);
+      }).then(() => console.log('SMS fetch fired')).catch(e => console.error('SMS fetch error:', e));
 
       // 3. Remove card from screen
       if (card) {
