@@ -801,7 +801,10 @@
     // Get customer info from card
     const card = document.querySelector(`[data-id="${id}"]`);
     const name  = card?.querySelector('.card-customer-name')?.textContent || '';
-    const phone = card?.querySelector('.card-customer-phone')?.textContent || '';
+    const rawPhone = card?.querySelector('.card-customer-phone')?.textContent || '';
+    // Normalize to E.164 (+1XXXXXXXXXX) for Twilio
+    const digits = rawPhone.replace(/\D/g, '');
+    const phone = digits.length === 10 ? '+1' + digits : (digits.length === 11 && digits[0] === '1' ? '+' + digits : rawPhone);
 
     try {
       // 1. Mark order done in Supabase
@@ -817,11 +820,13 @@
       });
 
       // 2. Send SMS to customer
-      fetch(SMS_URL, {
+      const smsRes = await fetch(SMS_URL, {
         method: 'POST',
         body: JSON.stringify({ name, phone }),
         headers: { 'Content-Type': 'text/plain' }
-      }).catch(() => {});
+      });
+      const smsText = await smsRes.text();
+      console.log('SMS result:', smsText, '| phone sent:', phone);
 
       // 3. Remove card from screen
       if (card) {
