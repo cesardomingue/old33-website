@@ -5,372 +5,710 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kitchen Display | Old 33</title>
   <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
-      background: #0a0a0a;
-      font-family: 'Arial', sans-serif;
-      color: #fff;
-      min-height: 100vh;
+    :root {
+      --gold: #d4941a;
+      --gold-light: #f0a820;
+      --bg: #080808;
+      --bg2: #101010;
+      --bg3: #161616;
+      --bg4: #1e1e1e;
+      --border: #242424;
+      --white: #f5f2ec;
+      --dim: #888;
+      --red: #ef4444;
+      --yellow: #f59e0b;
+      --green: #22c55e;
     }
 
-    /* ── PIN SCREEN ── */
+    body {
+      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ══════════════════════════════
+       PIN SCREEN
+    ══════════════════════════════ */
     #pinScreen {
       position: fixed;
       inset: 0;
-      background: #0a0a0a;
+      background: var(--bg);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 9999;
+    }
+    .pin-wrap {
+      display: flex;
       flex-direction: column;
-      gap: 24px;
+      align-items: center;
+      gap: 28px;
     }
-    .pin-logo {
-      font-size: 13px;
-      color: #d4941a;
-      letter-spacing: 3px;
+    .pin-logo-wrap {
+      text-align: center;
+    }
+    .pin-logo-tag {
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 4px;
       text-transform: uppercase;
-      font-weight: 700;
+      font-weight: 600;
+      margin-bottom: 8px;
     }
-    .pin-title {
-      font-size: 28px;
+    .pin-logo-name {
+      font-family: 'Oswald', sans-serif;
+      font-size: 42px;
       font-weight: 700;
-      color: #fff;
+      color: var(--white);
+      letter-spacing: 3px;
+    }
+    .pin-logo-sub {
+      font-size: 12px;
+      color: var(--dim);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .pin-divider {
+      width: 60px;
+      height: 2px;
+      background: var(--gold);
+      margin: 0 auto;
+    }
+    .pin-label {
+      font-size: 14px;
+      color: var(--dim);
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
     .pin-dots {
       display: flex;
-      gap: 16px;
-      margin: 8px 0;
+      gap: 14px;
     }
     .pin-dot {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
-      border: 2px solid #444;
+      border: 2px solid #333;
       background: transparent;
-      transition: background .15s;
+      transition: all .15s;
     }
-    .pin-dot.filled { background: #d4941a; border-color: #d4941a; }
+    .pin-dot.filled {
+      background: var(--gold);
+      border-color: var(--gold);
+      box-shadow: 0 0 10px rgba(212,148,26,.4);
+    }
+    .pin-error {
+      font-size: 13px;
+      color: var(--red);
+      height: 18px;
+      text-align: center;
+    }
     .pin-pad {
       display: grid;
-      grid-template-columns: repeat(3, 80px);
-      gap: 12px;
+      grid-template-columns: repeat(3, 72px);
+      gap: 10px;
     }
     .pin-btn {
-      width: 80px;
-      height: 80px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
-      border: 1px solid #2a2a2a;
-      background: #141414;
-      color: #fff;
-      font-size: 24px;
-      font-weight: 700;
+      border: 1px solid var(--border);
+      background: var(--bg3);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background .15s, transform .1s;
+      transition: all .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .pin-btn:active { background: #d4941a; color: #000; transform: scale(.95); }
+    .pin-btn:hover { background: var(--bg4); border-color: #333; }
+    .pin-btn:active { background: var(--gold); color: #000; transform: scale(.94); }
     .pin-btn.zero { grid-column: 2; }
-    .pin-btn.del { background: transparent; border-color: transparent; font-size: 18px; color: #666; }
-    .pin-error { color: #ef4444; font-size: 14px; height: 20px; }
+    .pin-btn.del { background: transparent; border-color: transparent; color: var(--dim); font-size: 20px; }
+    .pin-btn.del:hover { color: var(--white); background: transparent; }
 
-    /* ── HEADER ── */
+    /* ══════════════════════════════
+       HEADER
+    ══════════════════════════════ */
     .kds-header {
-      background: #111;
-      border-bottom: 2px solid #d4941a;
-      padding: 16px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      height: 64px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 20px;
     }
-    .kds-header-left {
+    .kds-brand {
       display: flex;
       align-items: center;
       gap: 16px;
     }
-    .kds-brand {
+    .kds-brand-badge {
+      width: 38px;
+      height: 38px;
+      background: var(--gold);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #000;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+    }
+    .kds-brand-text {}
+    .kds-brand-name {
+      font-family: 'Oswald', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: 1px;
+    }
+    .kds-brand-sub {
       font-size: 11px;
-      color: #d4941a;
-      letter-spacing: 3px;
+      color: var(--dim);
+      letter-spacing: 1px;
       text-transform: uppercase;
-      font-weight: 700;
     }
-    .kds-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: #fff;
+
+    .kds-center {
+      display: flex;
+      align-items: center;
+      gap: 20px;
     }
-    .kds-status {
+    .kds-live {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 13px;
-      color: #888;
-    }
-    .kds-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #22c55e;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: .4; }
-    }
-    .kds-count {
-      background: #d4941a;
-      color: #000;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 4px 12px;
+      background: rgba(34,197,94,.08);
+      border: 1px solid rgba(34,197,94,.2);
       border-radius: 20px;
+      padding: 6px 14px;
     }
-    .kds-time {
-      font-size: 24px;
-      font-weight: 700;
-      color: #fff;
-      font-variant-numeric: tabular-nums;
+    .kds-live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: livepulse 2s infinite;
+    }
+    @keyframes livepulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34,197,94,.4); }
+      50% { opacity: .7; box-shadow: 0 0 0 4px rgba(34,197,94,0); }
+    }
+    .kds-live-txt {
+      font-size: 12px;
+      color: var(--green);
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
-    /* ── EMPTY STATE ── */
+    .kds-pending {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .kds-pending-num {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .kds-pending-lbl {
+      font-size: 10px;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .kds-clock {
+      text-align: right;
+    }
+    .kds-clock-time {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: 2px;
+      line-height: 1;
+    }
+    .kds-clock-date {
+      font-size: 11px;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    /* ══════════════════════════════
+       STATUS BAR
+    ══════════════════════════════ */
+    .kds-statusbar {
+      background: var(--bg3);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 28px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 12px;
+      color: var(--dim);
+    }
+    .kds-statusbar-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .kds-statusbar-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    /* ══════════════════════════════
+       EMPTY STATE
+    ══════════════════════════════ */
     #emptyState {
       display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: calc(100vh - 70px);
-      gap: 16px;
+      min-height: calc(100vh - 120px);
+      gap: 20px;
+    }
+    .empty-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: #333;
     }
-    #emptyState svg { color: #1f1f1f; }
-    #emptyState h2 { font-size: 28px; color: #2a2a2a; }
-    #emptyState p { font-size: 16px; color: #2a2a2a; }
+    .empty-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: #2a2a2a;
+      letter-spacing: 1px;
+    }
+    .empty-sub {
+      font-size: 14px;
+      color: #222;
+      text-align: center;
+    }
+    .empty-refresh {
+      font-size: 12px;
+      color: #1a1a1a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-    /* ── ORDERS GRID ── */
+    /* ══════════════════════════════
+       ORDERS GRID
+    ══════════════════════════════ */
     #ordersGrid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 16px;
-      padding: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 20px;
+      padding: 24px 28px;
+      align-items: start;
     }
 
-    /* ── ORDER CARD ── */
+    /* ══════════════════════════════
+       ORDER CARD
+    ══════════════════════════════ */
     .order-card {
-      background: #141414;
-      border: 2px solid #2a2a2a;
-      border-radius: 12px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
       overflow: hidden;
-      animation: slideIn .3s ease;
+      animation: cardIn .35s cubic-bezier(.34,1.56,.64,1);
+      transition: border-color .3s;
     }
     .order-card.new-order {
-      border-color: #d4941a;
-      animation: slideIn .3s ease, glow 1s ease 3;
+      border-color: var(--gold);
+      animation: cardIn .35s cubic-bezier(.34,1.56,.64,1), newGlow 2s ease 3;
     }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-12px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .order-card.urgent-card { border-color: rgba(239,68,68,.5); }
+    .order-card.warning-card { border-color: rgba(245,158,11,.4); }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(-16px) scale(.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
-    @keyframes glow {
+    @keyframes newGlow {
       0%, 100% { box-shadow: none; }
-      50% { box-shadow: 0 0 24px rgba(212,148,26,.5); }
+      50% { box-shadow: 0 0 30px rgba(212,148,26,.35); }
     }
 
-    .order-card-hdr {
-      background: #1a1a1a;
-      padding: 14px 18px;
+    /* Card top strip */
+    .card-strip {
+      height: 4px;
+      background: var(--gold);
+      transition: background .3s;
+    }
+    .order-card.urgent-card .card-strip { background: var(--red); }
+    .order-card.warning-card .card-strip { background: var(--yellow); }
+
+    /* Card header */
+    .card-hdr {
+      padding: 14px 18px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #2a2a2a;
+      border-bottom: 1px solid var(--border);
     }
-    .order-num {
+    .card-hdr-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-order-num {
+      font-family: 'Oswald', sans-serif;
       font-size: 13px;
-      color: #d4941a;
+      color: var(--gold);
+      letter-spacing: 2px;
+      font-weight: 500;
+    }
+    .card-new-badge {
+      background: var(--gold);
+      color: #000;
+      font-size: 9px;
       font-weight: 700;
       letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 20px;
     }
-    .order-time-badge {
-      font-size: 12px;
-      color: #666;
+    .card-time {
+      font-size: 13px;
+      color: var(--dim);
     }
 
-    .order-name {
-      padding: 16px 18px 8px;
-      font-size: 26px;
+    /* Customer */
+    .card-customer {
+      padding: 16px 18px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-customer-left {}
+    .card-customer-name {
+      font-family: 'Oswald', sans-serif;
+      font-size: 30px;
       font-weight: 700;
-      color: #fff;
+      color: var(--white);
+      letter-spacing: .5px;
+      line-height: 1;
     }
-    .order-phone {
-      padding: 0 18px 14px;
+    .card-customer-phone {
       font-size: 14px;
-      color: #888;
+      color: var(--dim);
+      margin-top: 5px;
+      letter-spacing: .5px;
     }
+    .card-timer-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg4);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 14px;
+      min-width: 72px;
+      text-align: center;
+    }
+    .card-timer-num {
+      font-family: 'Oswald', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .card-timer-lbl {
+      font-size: 10px;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+    .timer-ok { color: var(--white); }
+    .timer-warn { color: var(--yellow); }
+    .timer-urgent { color: var(--red); }
 
-    .order-items {
-      padding: 0 18px 16px;
-      border-top: 1px solid #1f1f1f;
-      padding-top: 14px;
+    /* Items */
+    .card-items-hdr {
+      padding: 12px 18px 8px;
+      font-size: 10px;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
     }
-    .order-item {
+    .card-items {
+      padding: 0 18px 14px;
+    }
+    .card-item {
       display: flex;
       align-items: flex-start;
-      gap: 10px;
-      padding: 8px 0;
-      border-bottom: 1px solid #1f1f1f;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,.04);
     }
-    .order-item:last-child { border-bottom: none; }
-    .order-item-qty {
-      background: #d4941a;
-      color: #000;
-      font-size: 12px;
+    .card-item:last-child { border-bottom: none; }
+    .card-item-qty {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: rgba(212,148,26,.15);
+      border: 1px solid rgba(212,148,26,.3);
+      color: var(--gold);
+      font-size: 14px;
       font-weight: 700;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
       margin-top: 1px;
     }
-    .order-item-info { flex: 1; }
-    .order-item-name {
-      font-size: 16px;
+    .card-item-info { flex: 1; }
+    .card-item-name {
+      font-size: 17px;
       font-weight: 600;
-      color: #fff;
+      color: var(--white);
+      line-height: 1.2;
     }
-    .order-item-mods {
+    .card-item-mods {
       font-size: 13px;
-      color: #888;
-      margin-top: 3px;
-      line-height: 1.4;
+      color: #777;
+      margin-top: 4px;
+      line-height: 1.5;
     }
-
-    .order-notes {
-      margin: 0 18px 14px;
-      background: rgba(212,148,26,.08);
-      border: 1px solid rgba(212,148,26,.2);
-      border-radius: 8px;
-      padding: 10px 14px;
+    .card-item-price {
       font-size: 14px;
-      color: #d4941a;
+      color: var(--dim);
+      font-weight: 500;
+      flex-shrink: 0;
+      margin-top: 3px;
     }
-    .order-notes-lbl {
+
+    /* Notes */
+    .card-notes {
+      margin: 0 18px 14px;
+      background: rgba(212,148,26,.06);
+      border: 1px solid rgba(212,148,26,.15);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .card-notes-hdr {
       font-size: 10px;
-      letter-spacing: 1px;
+      color: var(--gold);
       text-transform: uppercase;
+      letter-spacing: 2px;
       font-weight: 700;
-      margin-bottom: 4px;
-      opacity: .7;
-    }
-
-    .order-total {
-      padding: 12px 18px;
-      border-top: 1px solid #1f1f1f;
+      margin-bottom: 5px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      font-size: 15px;
-      color: #666;
+      gap: 6px;
     }
-    .order-total strong { color: #fff; font-size: 18px; }
+    .card-notes-txt {
+      font-size: 14px;
+      color: #ccc;
+      line-height: 1.5;
+    }
 
-    .order-ready-btn {
-      display: block;
-      width: calc(100% - 36px);
-      margin: 0 18px 18px;
-      background: #d4941a;
+    /* Footer */
+    .card-footer {
+      border-top: 1px solid var(--border);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg3);
+    }
+    .card-totals {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .card-total-row {
+      display: flex;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--dim);
+    }
+    .card-total-main {
+      font-family: 'Oswald', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-top: 2px;
+    }
+
+    .card-ready-btn {
+      background: var(--gold);
       color: #000;
       border: none;
-      border-radius: 8px;
-      padding: 16px;
-      font-size: 16px;
+      border-radius: 10px;
+      padding: 14px 24px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
       font-weight: 700;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
       text-transform: uppercase;
       cursor: pointer;
-      transition: background .15s, transform .1s;
+      transition: all .15s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .order-ready-btn:hover { background: #e8a520; }
-    .order-ready-btn:active { transform: scale(.98); }
-    .order-ready-btn.marking {
-      background: #2a2a2a;
-      color: #666;
+    .card-ready-btn:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(212,148,26,.3);
+    }
+    .card-ready-btn:active { transform: scale(.97); }
+    .card-ready-btn.marking {
+      background: var(--bg4);
+      color: var(--dim);
       pointer-events: none;
+      box-shadow: none;
+      transform: none;
     }
 
-    /* ── TIMER ── */
-    .order-timer {
-      padding: 0 18px 10px;
-      font-size: 13px;
-      color: #666;
-    }
-    .order-timer.urgent { color: #ef4444; font-weight: 700; }
-    .order-timer.warning { color: #f59e0b; font-weight: 600; }
+    /* ══════════════════════════════
+       SCROLLBAR
+    ══════════════════════════════ */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
 
-    @media (max-width: 400px) {
-      #ordersGrid { grid-template-columns: 1fr; padding: 12px; }
-      .order-name { font-size: 22px; }
+    @media (max-width: 480px) {
+      #ordersGrid { grid-template-columns: 1fr; padding: 12px 16px; }
+      .kds-header { padding: 0 16px; }
+      .card-customer-name { font-size: 24px; }
+      .kds-statusbar { display: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- PIN SCREEN -->
+<!-- ══ PIN SCREEN ══ -->
 <div id="pinScreen">
-  <div class="pin-logo">Old 33 Beer &amp; Burger Grill</div>
-  <div class="pin-title">Kitchen Display</div>
-  <div class="pin-dots">
-    <div class="pin-dot" id="d0"></div>
-    <div class="pin-dot" id="d1"></div>
-    <div class="pin-dot" id="d2"></div>
-    <div class="pin-dot" id="d3"></div>
-  </div>
-  <div class="pin-error" id="pinError"></div>
-  <div class="pin-pad">
-    <button class="pin-btn" onclick="pinPress('1')">1</button>
-    <button class="pin-btn" onclick="pinPress('2')">2</button>
-    <button class="pin-btn" onclick="pinPress('3')">3</button>
-    <button class="pin-btn" onclick="pinPress('4')">4</button>
-    <button class="pin-btn" onclick="pinPress('5')">5</button>
-    <button class="pin-btn" onclick="pinPress('6')">6</button>
-    <button class="pin-btn" onclick="pinPress('7')">7</button>
-    <button class="pin-btn" onclick="pinPress('8')">8</button>
-    <button class="pin-btn" onclick="pinPress('9')">9</button>
-    <button class="pin-btn zero" onclick="pinPress('0')">0</button>
-    <button class="pin-btn del" onclick="pinDel()">⌫</button>
-  </div>
-</div>
-
-<!-- HEADER -->
-<div class="kds-header">
-  <div class="kds-header-left">
-    <div>
-      <div class="kds-brand">Old 33 — Kitchen</div>
-      <div class="kds-title">Live Orders</div>
+  <div class="pin-wrap">
+    <div class="pin-logo-wrap">
+      <div class="pin-logo-tag">Kitchen Display System</div>
+      <div class="pin-logo-name">OLD 33</div>
+      <div class="pin-logo-sub">Beer &amp; Burger Grill &nbsp;·&nbsp; Elkton, VA</div>
+    </div>
+    <div class="pin-divider"></div>
+    <div class="pin-label">Enter PIN to continue</div>
+    <div class="pin-dots">
+      <div class="pin-dot" id="d0"></div>
+      <div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div>
+      <div class="pin-dot" id="d3"></div>
+    </div>
+    <div class="pin-error" id="pinError"></div>
+    <div class="pin-pad">
+      <button class="pin-btn" onclick="pinPress('1')">1</button>
+      <button class="pin-btn" onclick="pinPress('2')">2</button>
+      <button class="pin-btn" onclick="pinPress('3')">3</button>
+      <button class="pin-btn" onclick="pinPress('4')">4</button>
+      <button class="pin-btn" onclick="pinPress('5')">5</button>
+      <button class="pin-btn" onclick="pinPress('6')">6</button>
+      <button class="pin-btn" onclick="pinPress('7')">7</button>
+      <button class="pin-btn" onclick="pinPress('8')">8</button>
+      <button class="pin-btn" onclick="pinPress('9')">9</button>
+      <button class="pin-btn zero" onclick="pinPress('0')">0</button>
+      <button class="pin-btn del" onclick="pinDel()">⌫</button>
     </div>
   </div>
-  <div class="kds-status">
-    <div class="kds-dot"></div>
-    <span id="statusText">Live</span>
-    <div class="kds-count" id="orderCount">0</div>
+</div>
+
+<!-- ══ HEADER ══ -->
+<div class="kds-header">
+  <div class="kds-brand">
+    <div class="kds-brand-badge">33</div>
+    <div class="kds-brand-text">
+      <div class="kds-brand-name">OLD 33</div>
+      <div class="kds-brand-sub">Kitchen Display</div>
+    </div>
   </div>
-  <div class="kds-time" id="clock">--:--</div>
+  <div class="kds-center">
+    <div class="kds-live">
+      <div class="kds-live-dot"></div>
+      <span class="kds-live-txt" id="liveText">Live</span>
+    </div>
+    <div class="kds-pending">
+      <div class="kds-pending-num" id="orderCount">0</div>
+      <div class="kds-pending-lbl">Pending</div>
+    </div>
+  </div>
+  <div class="kds-clock">
+    <div class="kds-clock-time" id="clock">--:--</div>
+    <div class="kds-clock-date" id="clockDate">---</div>
+  </div>
 </div>
 
-<!-- EMPTY STATE -->
+<!-- ══ STATUS BAR ══ -->
+<div class="kds-statusbar">
+  <div class="kds-statusbar-item">
+    <div class="kds-statusbar-dot" style="background:var(--gold)"></div>
+    <span>New order</span>
+  </div>
+  <div class="kds-statusbar-item">
+    <div class="kds-statusbar-dot" style="background:var(--yellow)"></div>
+    <span>15+ mins — check soon</span>
+  </div>
+  <div class="kds-statusbar-item">
+    <div class="kds-statusbar-dot" style="background:var(--red)"></div>
+    <span>25+ mins — urgent</span>
+  </div>
+  <div style="margin-left:auto;font-size:11px;color:#333;" id="lastRefresh">Refreshing every 15s</div>
+</div>
+
+<!-- ══ EMPTY STATE ══ -->
 <div id="emptyState">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="80" height="80">
-    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
-    <path d="M16 10a4 4 0 01-8 0"/>
-  </svg>
-  <h2>No Pending Orders</h2>
-  <p>New orders will appear here automatically</p>
+  <div class="empty-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="36" height="36">
+      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+      <path d="M16 10a4 4 0 01-8 0"/>
+    </svg>
+  </div>
+  <div class="empty-title">All Clear</div>
+  <div class="empty-sub">No pending orders right now.<br>New orders will appear here automatically.</div>
+  <div class="empty-refresh">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+    Refreshing every 15 seconds
+  </div>
 </div>
 
-<!-- ORDERS -->
+<!-- ══ ORDERS ══ -->
 <div id="ordersGrid"></div>
 
 <script>
@@ -387,12 +725,15 @@
     if (pinEntry.length === 4) {
       setTimeout(() => {
         if (pinEntry === PIN) {
-          document.getElementById('pinScreen').style.display = 'none';
+          document.getElementById('pinScreen').style.opacity = '0';
+          document.getElementById('pinScreen').style.transition = 'opacity .4s';
+          setTimeout(() => document.getElementById('pinScreen').style.display = 'none', 400);
           startKDS();
         } else {
-          document.getElementById('pinError').textContent = 'Wrong PIN. Try again.';
+          document.getElementById('pinError').textContent = 'Incorrect PIN. Try again.';
           pinEntry = '';
           for (let i = 0; i < 4; i++) document.getElementById('d' + i).classList.remove('filled');
+          setTimeout(() => document.getElementById('pinError').textContent = '', 2000);
         }
       }, 200);
     }
@@ -406,8 +747,12 @@
 
   /* ── CLOCK ── */
   function updateClock() {
-    document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-US', {
+    const now = new Date();
+    document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', {
       hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/New_York'
+    });
+    document.getElementById('clockDate').textContent = now.toLocaleDateString('en-US', {
+      weekday: 'short', month: 'short', day: 'numeric', timeZone: 'America/New_York'
     });
   }
 
@@ -417,106 +762,43 @@
       ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
-  function timeAgo(iso) {
-    const mins = Math.floor((Date.now() - new Date(iso)) / 60000);
-    if (mins < 1) return 'Just now';
-    if (mins === 1) return '1 min ago';
-    return mins + ' mins ago';
+  function getMins(iso) {
+    return Math.floor((Date.now() - new Date(iso)) / 60000);
   }
 
-  function timerClass(iso) {
-    const mins = Math.floor((Date.now() - new Date(iso)) / 60000);
-    if (mins >= 25) return 'urgent';
-    if (mins >= 15) return 'warning';
+  function timerColor(mins) {
+    if (mins >= 25) return 'timer-urgent';
+    if (mins >= 15) return 'timer-warn';
+    return 'timer-ok';
+  }
+
+  function cardClass(mins) {
+    if (mins >= 25) return 'urgent-card';
+    if (mins >= 15) return 'warning-card';
     return '';
-  }
-
-  /* ── RENDER ── */
-  let knownIds = new Set();
-
-  function renderOrders(orders) {
-    const grid = document.getElementById('ordersGrid');
-    const empty = document.getElementById('emptyState');
-    document.getElementById('orderCount').textContent = orders.length;
-
-    if (!orders.length) {
-      grid.innerHTML = '';
-      empty.style.display = 'flex';
-      return;
-    }
-    empty.style.display = 'none';
-
-    // Remove cards for completed orders
-    grid.querySelectorAll('.order-card').forEach(card => {
-      if (!orders.find(o => o.id === card.dataset.id)) card.remove();
-    });
-
-    orders.forEach(order => {
-      const isNew = !knownIds.has(order.id);
-      if (isNew) knownIds.add(order.id);
-
-      // Update timer on existing card
-      const existing = grid.querySelector(`[data-id="${order.id}"]`);
-      if (existing) {
-        const timer = existing.querySelector('.order-timer');
-        if (timer) {
-          timer.textContent = timeAgo(order.created_at);
-          timer.className = 'order-timer ' + timerClass(order.created_at);
-        }
-        return;
-      }
-
-      // Build items HTML
-      const items = Array.isArray(order.items) ? order.items : [];
-      const itemsHtml = items.map(it => `
-        <div class="order-item">
-          <div class="order-item-qty">${esc(it.qty)}</div>
-          <div class="order-item-info">
-            <div class="order-item-name">${esc(it.name)}</div>
-            ${it.mods ? `<div class="order-item-mods">${esc(it.mods)}</div>` : ''}
-          </div>
-        </div>`).join('');
-
-      const card = document.createElement('div');
-      card.className = 'order-card' + (isNew ? ' new-order' : '');
-      card.dataset.id = order.id;
-      card.innerHTML = `
-        <div class="order-card-hdr">
-          <span class="order-num">${esc(order.order_num)}</span>
-          <span class="order-time-badge">${new Date(order.created_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' })}</span>
-        </div>
-        <div class="order-name">${esc(order.customer_name)}</div>
-        <div class="order-phone">${esc(order.customer_phone)}</div>
-        <div class="order-items">${itemsHtml}</div>
-        ${order.notes ? `<div class="order-notes"><div class="order-notes-lbl">Note</div>${esc(order.notes)}</div>` : ''}
-        <div class="order-total"><span>Total</span><strong>$${parseFloat(order.total || 0).toFixed(2)}</strong></div>
-        <div class="order-timer ${timerClass(order.created_at)}">${timeAgo(order.created_at)}</div>
-        <button class="order-ready-btn" onclick="markReady('${order.id}', this)">ORDER READY</button>`;
-
-      // Play sound for new orders
-      if (isNew && knownIds.size > 0) playBeep();
-
-      grid.prepend(card);
-    });
   }
 
   /* ── SOUND ── */
   function playBeep() {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.frequency.value = 880;
-      gain.gain.setValueAtTime(0.3, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-      osc.start(); osc.stop(ctx.currentTime + 0.4);
+      [880, 1100].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.15);
+        gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + i * 0.15 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.3);
+        osc.start(ctx.currentTime + i * 0.15);
+        osc.stop(ctx.currentTime + i * 0.15 + 0.3);
+      });
     } catch(e) {}
   }
 
   /* ── MARK READY ── */
   async function markReady(id, btn) {
-    btn.textContent = 'Marking...';
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> Marking...';
     btn.classList.add('marking');
     try {
       await fetch(SUPA_URL + '/rest/v1/orders?id=eq.' + id, {
@@ -533,19 +815,138 @@
       if (card) {
         card.style.transition = 'opacity .3s, transform .3s';
         card.style.opacity = '0';
-        card.style.transform = 'scale(.95)';
-        setTimeout(() => card.remove(), 300);
+        card.style.transform = 'scale(.95) translateY(8px)';
+        setTimeout(() => { card.remove(); updateCount(); }, 320);
       }
       knownIds.delete(id);
-      document.getElementById('orderCount').textContent =
-        parseInt(document.getElementById('orderCount').textContent) - 1;
     } catch(e) {
-      btn.textContent = 'ORDER READY';
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> ORDER READY';
       btn.classList.remove('marking');
     }
   }
 
-  /* ── FETCH ORDERS ── */
+  function updateCount() {
+    const count = document.querySelectorAll('.order-card').length;
+    document.getElementById('orderCount').textContent = count;
+    document.getElementById('emptyState').style.display = count === 0 ? 'flex' : 'none';
+    document.getElementById('ordersGrid').style.display = count === 0 ? 'none' : 'grid';
+  }
+
+  /* ── RENDER ── */
+  let knownIds = new Set();
+
+  function renderOrders(orders) {
+    const grid = document.getElementById('ordersGrid');
+    const empty = document.getElementById('emptyState');
+
+    document.getElementById('orderCount').textContent = orders.length;
+
+    if (!orders.length) {
+      grid.style.display = 'none';
+      empty.style.display = 'flex';
+      return;
+    }
+    grid.style.display = 'grid';
+    empty.style.display = 'none';
+
+    // Remove cards no longer in results
+    grid.querySelectorAll('.order-card').forEach(card => {
+      if (!orders.find(o => o.id === card.dataset.id)) card.remove();
+    });
+
+    orders.forEach(order => {
+      const mins = getMins(order.created_at);
+      const isNew = !knownIds.has(order.id);
+      if (isNew) knownIds.add(order.id);
+
+      // Update existing card timers
+      const existing = grid.querySelector(`[data-id="${order.id}"]`);
+      if (existing) {
+        const timerNum = existing.querySelector('.card-timer-num');
+        const timerLbl = existing.querySelector('.card-timer-lbl');
+        if (timerNum) { timerNum.textContent = mins; timerNum.className = 'card-timer-num ' + timerColor(mins); }
+        // Update card border class
+        existing.className = 'order-card ' + (isNew ? 'new-order ' : '') + cardClass(mins);
+        existing.querySelector('.card-strip').style.background =
+          mins >= 25 ? 'var(--red)' : mins >= 15 ? 'var(--yellow)' : 'var(--gold)';
+        return;
+      }
+
+      if (isNew && knownIds.size > 1) playBeep();
+
+      const items = Array.isArray(order.items) ? order.items : [];
+      const itemsHtml = items.map(it => `
+        <div class="card-item">
+          <div class="card-item-qty">${esc(it.qty)}</div>
+          <div class="card-item-info">
+            <div class="card-item-name">${esc(it.name)}</div>
+            ${it.mods ? `<div class="card-item-mods">${esc(it.mods)}</div>` : ''}
+          </div>
+          <div class="card-item-price">$${parseFloat(it.price || 0).toFixed(2)}</div>
+        </div>`).join('');
+
+      const card = document.createElement('div');
+      card.className = 'order-card ' + (isNew ? 'new-order ' : '') + cardClass(mins);
+      card.dataset.id = order.id;
+      card.innerHTML = `
+        <div class="card-strip"></div>
+
+        <div class="card-hdr">
+          <div class="card-hdr-left">
+            <span class="card-order-num">${esc(order.order_num)}</span>
+            ${isNew ? '<span class="card-new-badge">New</span>' : ''}
+          </div>
+          <span class="card-time">${new Date(order.created_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' })}</span>
+        </div>
+
+        <div class="card-customer">
+          <div class="card-customer-left">
+            <div class="card-customer-name">${esc(order.customer_name)}</div>
+            <div class="card-customer-phone">${esc(order.customer_phone)}</div>
+          </div>
+          <div class="card-timer-badge">
+            <div class="card-timer-num ${timerColor(mins)}">${mins}</div>
+            <div class="card-timer-lbl">mins</div>
+          </div>
+        </div>
+
+        <div class="card-items-hdr">Order Items</div>
+        <div class="card-items">${itemsHtml}</div>
+
+        ${order.notes ? `
+        <div class="card-notes">
+          <div class="card-notes-hdr">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Customer Note
+          </div>
+          <div class="card-notes-txt">${esc(order.notes)}</div>
+        </div>` : ''}
+
+        <div class="card-footer">
+          <div class="card-totals">
+            <div class="card-total-row">
+              <span>Subtotal $${parseFloat(order.subtotal || 0).toFixed(2)}</span>
+              <span>·</span>
+              <span>Tax $${parseFloat(order.tax || 0).toFixed(2)}</span>
+              ${parseFloat(order.tip || 0) > 0 ? `<span>· Tip $${parseFloat(order.tip).toFixed(2)}</span>` : ''}
+            </div>
+            <div class="card-total-main">$${parseFloat(order.total || 0).toFixed(2)}</div>
+          </div>
+          <button class="card-ready-btn" onclick="markReady('${order.id}', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>
+            ORDER READY
+          </button>
+        </div>`;
+
+      grid.prepend(card);
+    });
+
+    // Update last refresh time
+    document.getElementById('lastRefresh').textContent =
+      'Last updated ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', timeZone: 'America/New_York' });
+  }
+
+  /* ── FETCH ── */
   async function fetchOrders() {
     try {
       const res = await fetch(
@@ -554,9 +955,9 @@
       );
       const orders = await res.json();
       renderOrders(Array.isArray(orders) ? orders : []);
-      document.getElementById('statusText').textContent = 'Live';
+      document.getElementById('liveText').textContent = 'Live';
     } catch(e) {
-      document.getElementById('statusText').textContent = 'Reconnecting...';
+      document.getElementById('liveText').textContent = 'Reconnecting...';
     }
   }
 
@@ -565,7 +966,7 @@
     updateClock();
     setInterval(updateClock, 1000);
     fetchOrders();
-    setInterval(fetchOrders, 15000); // refresh every 15 seconds
+    setInterval(fetchOrders, 15000);
   }
 </script>
 </body>
