@@ -11,31 +11,32 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --gold: #d4941a;
-      --gold-light: #f0a820;
-      --bg: #080808;
-      --bg2: #101010;
-      --bg3: #161616;
-      --bg4: #1e1e1e;
-      --border: #242424;
-      --white: #f5f2ec;
-      --dim: #888;
-      --red: #ef4444;
-      --yellow: #f59e0b;
-      --green: #22c55e;
+      --gold:    #c8881a;
+      --gold-lt: #e09a20;
+      --amber:   #d97706;
+      --red:     #dc2626;
+      --green:   #16a34a;
+      --green-lt:#15803d;
+      --bg:      #0a0a0a;
+      --card:    #111111;
+      --border:  #1f1f1f;
+      --border2: #2a2a2a;
+      --white:   #f0ede8;
+      --gray:    #666;
+      --dim:     #444;
     }
 
-    body {
+    html, body {
+      height: 100%;
       background: var(--bg);
       font-family: 'Inter', sans-serif;
       color: var(--white);
-      min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* ══════════════════════════════
+    /* ─────────────────────────────
        PIN SCREEN
-    ══════════════════════════════ */
+    ───────────────────────────── */
     #pinScreen {
       position: fixed;
       inset: 0;
@@ -49,349 +50,319 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 28px;
+      gap: 32px;
     }
-    .pin-logo-wrap {
+    .pin-brand {
       text-align: center;
     }
-    .pin-logo-tag {
-      font-size: 11px;
+    .pin-brand-tag {
+      font-size: 10px;
       color: var(--gold);
       letter-spacing: 4px;
       text-transform: uppercase;
       font-weight: 600;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
-    .pin-logo-name {
+    .pin-brand-name {
       font-family: 'Oswald', sans-serif;
-      font-size: 42px;
+      font-size: 48px;
       font-weight: 700;
       color: var(--white);
-      letter-spacing: 3px;
+      letter-spacing: 4px;
+      line-height: 1;
     }
-    .pin-logo-sub {
-      font-size: 12px;
+    .pin-brand-rule {
+      width: 40px;
+      height: 2px;
+      background: var(--gold);
+      margin: 14px auto 0;
+    }
+    .pin-brand-sub {
+      font-size: 11px;
       color: var(--dim);
       letter-spacing: 2px;
       text-transform: uppercase;
-      margin-top: 4px;
-    }
-    .pin-divider {
-      width: 60px;
-      height: 2px;
-      background: var(--gold);
-      margin: 0 auto;
+      margin-top: 10px;
     }
     .pin-label {
-      font-size: 14px;
-      color: var(--dim);
-      letter-spacing: 1px;
+      font-size: 12px;
+      color: var(--gray);
+      letter-spacing: 2px;
       text-transform: uppercase;
     }
     .pin-dots {
       display: flex;
-      gap: 14px;
+      gap: 16px;
     }
     .pin-dot {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
-      border: 2px solid #333;
+      border: 1.5px solid var(--border2);
       background: transparent;
       transition: all .15s;
     }
     .pin-dot.filled {
       background: var(--gold);
       border-color: var(--gold);
-      box-shadow: 0 0 10px rgba(212,148,26,.4);
     }
     .pin-error {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--red);
-      height: 18px;
+      height: 16px;
       text-align: center;
+      letter-spacing: .5px;
     }
     .pin-pad {
       display: grid;
-      grid-template-columns: repeat(3, 72px);
+      grid-template-columns: repeat(3, 76px);
       gap: 10px;
     }
     .pin-btn {
-      width: 72px;
-      height: 72px;
+      width: 76px;
+      height: 76px;
       border-radius: 50%;
-      border: 1px solid var(--border);
-      background: var(--bg3);
+      border: 1px solid var(--border2);
+      background: #161616;
       color: var(--white);
       font-family: 'Inter', sans-serif;
-      font-size: 22px;
-      font-weight: 600;
+      font-size: 24px;
+      font-weight: 500;
       cursor: pointer;
-      transition: all .15s;
+      transition: background .12s, transform .1s;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .pin-btn:hover { background: var(--bg4); border-color: #333; }
-    .pin-btn:active { background: var(--gold); color: #000; transform: scale(.94); }
+    .pin-btn:active { background: var(--gold); color: #000; transform: scale(.93); }
     .pin-btn.zero { grid-column: 2; }
     .pin-btn.del { background: transparent; border-color: transparent; color: var(--dim); font-size: 20px; }
-    .pin-btn.del:hover { color: var(--white); background: transparent; }
+    .pin-btn.del:active { background: transparent; color: var(--white); }
 
-    /* ══════════════════════════════
+    /* ─────────────────────────────
        HEADER
-    ══════════════════════════════ */
+    ───────────────────────────── */
     .kds-header {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: var(--bg2);
+      background: #0d0d0d;
       border-bottom: 1px solid var(--border);
-      padding: 0 28px;
-      height: 64px;
+      height: 62px;
+      padding: 0 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
     }
     .kds-brand {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
-    .kds-brand-badge {
-      width: 38px;
-      height: 38px;
+    .kds-badge {
+      width: 36px;
+      height: 36px;
       background: var(--gold);
-      border-radius: 8px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: 'Oswald', sans-serif;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       color: #000;
       letter-spacing: 1px;
       flex-shrink: 0;
     }
-    .kds-brand-text {}
     .kds-brand-name {
       font-family: 'Oswald', sans-serif;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 600;
       color: var(--white);
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
+      line-height: 1;
     }
     .kds-brand-sub {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--dim);
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
+      margin-top: 3px;
     }
 
-    .kds-center {
+    .kds-mid {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 18px;
     }
     .kds-live {
       display: flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(34,197,94,.08);
-      border: 1px solid rgba(34,197,94,.2);
+      gap: 7px;
+      padding: 5px 12px;
       border-radius: 20px;
-      padding: 6px 14px;
+      border: 1px solid #1a2e1a;
+      background: #0d1a0d;
     }
     .kds-live-dot {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      background: var(--green);
-      animation: livepulse 2s infinite;
+      background: #22c55e;
+      animation: pulse 2s infinite;
     }
-    @keyframes livepulse {
-      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34,197,94,.4); }
-      50% { opacity: .7; box-shadow: 0 0 0 4px rgba(34,197,94,0); }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: .4; }
     }
     .kds-live-txt {
-      font-size: 12px;
-      color: var(--green);
+      font-size: 11px;
       font-weight: 600;
-      letter-spacing: 1px;
+      color: #22c55e;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
     }
-
-    .kds-pending {
+    .kds-count-wrap {
       display: flex;
       flex-direction: column;
       align-items: center;
-    }
-    .kds-pending-num {
-      font-family: 'Oswald', sans-serif;
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--gold);
       line-height: 1;
     }
-    .kds-pending-lbl {
-      font-size: 10px;
+    .kds-count-num {
+      font-family: 'Oswald', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .kds-count-lbl {
+      font-size: 9px;
       color: var(--dim);
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
     }
 
     .kds-clock {
       text-align: right;
     }
-    .kds-clock-time {
+    .kds-time {
       font-family: 'Oswald', sans-serif;
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 600;
       color: var(--white);
       letter-spacing: 2px;
       line-height: 1;
     }
-    .kds-clock-date {
-      font-size: 11px;
+    .kds-date {
+      font-size: 10px;
       color: var(--dim);
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-top: 2px;
+      letter-spacing: 1.5px;
+      margin-top: 3px;
     }
 
-    /* ══════════════════════════════
-       STATUS BAR
-    ══════════════════════════════ */
-    .kds-statusbar {
-      background: var(--bg3);
+    /* ─────────────────────────────
+       LEGEND BAR
+    ───────────────────────────── */
+    .kds-legend {
       border-bottom: 1px solid var(--border);
-      padding: 10px 28px;
+      padding: 8px 24px;
       display: flex;
       align-items: center;
-      gap: 24px;
-      font-size: 12px;
+      gap: 20px;
+      font-size: 11px;
       color: var(--dim);
     }
-    .kds-statusbar-item {
+    .kds-legend-item {
       display: flex;
       align-items: center;
       gap: 6px;
     }
-    .kds-statusbar-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
+    .kds-legend-pip {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+    .kds-legend-refresh {
+      margin-left: auto;
+      font-size: 10px;
+      color: var(--dim);
     }
 
-    /* ══════════════════════════════
+    /* ─────────────────────────────
        EMPTY STATE
-    ══════════════════════════════ */
+    ───────────────────────────── */
     #emptyState {
       display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: calc(100vh - 120px);
-      gap: 20px;
+      min-height: calc(100vh - 100px);
+      gap: 16px;
     }
-    .empty-icon {
-      width: 80px;
-      height: 80px;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #333;
-    }
+    .empty-icon { color: #1c1c1c; }
     .empty-title {
       font-family: 'Oswald', sans-serif;
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 600;
-      color: #2a2a2a;
-      letter-spacing: 1px;
+      color: #1e1e1e;
+      letter-spacing: 2px;
     }
-    .empty-sub {
-      font-size: 14px;
-      color: #222;
-      text-align: center;
-    }
-    .empty-refresh {
-      font-size: 12px;
-      color: #1a1a1a;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .empty-sub { font-size: 13px; color: #1a1a1a; text-align: center; line-height: 1.7; }
 
-    /* ══════════════════════════════
-       ORDERS GRID
-    ══════════════════════════════ */
+    /* ─────────────────────────────
+       GRID
+    ───────────────────────────── */
     #ordersGrid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 20px;
-      padding: 24px 28px;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 16px;
+      padding: 20px 24px;
       align-items: start;
     }
 
-    /* ══════════════════════════════
-       ORDER CARD
-    ══════════════════════════════ */
+    /* ─────────────────────────────
+       CARD
+    ───────────────────────────── */
     .order-card {
-      background: var(--bg2);
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 10px;
       overflow: hidden;
-      animation: cardIn .35s cubic-bezier(.34,1.56,.64,1);
-      transition: border-color .3s;
+      border-left: 4px solid var(--gold);
+      animation: cardIn .3s ease;
     }
-    .order-card.new-order {
-      border-color: var(--gold);
-      animation: cardIn .35s cubic-bezier(.34,1.56,.64,1), newGlow 2s ease 3;
-    }
-    .order-card.urgent-card { border-color: rgba(239,68,68,.5); }
-    .order-card.warning-card { border-color: rgba(245,158,11,.4); }
+    .order-card.warning-card { border-left-color: var(--amber); }
+    .order-card.urgent-card  { border-left-color: var(--red); }
+    .order-card.new-order    { animation: cardIn .3s ease, newFlash 1.2s ease 2; }
 
     @keyframes cardIn {
-      from { opacity: 0; transform: translateY(-16px) scale(.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-    @keyframes newGlow {
-      0%, 100% { box-shadow: none; }
-      50% { box-shadow: 0 0 30px rgba(212,148,26,.35); }
+    @keyframes newFlash {
+      0%, 100% { background: var(--card); }
+      50%      { background: #1a1500; }
     }
 
-    /* Card top strip */
-    .card-strip {
-      height: 4px;
-      background: var(--gold);
-      transition: background .3s;
-    }
-    .order-card.urgent-card .card-strip { background: var(--red); }
-    .order-card.warning-card .card-strip { background: var(--yellow); }
-
-    /* Card header */
-    .card-hdr {
-      padding: 14px 18px 12px;
+    /* Card top row */
+    .card-top {
+      padding: 12px 16px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid var(--border);
     }
-    .card-hdr-left {
+    .card-top-left {
       display: flex;
       align-items: center;
       gap: 10px;
     }
     .card-order-num {
       font-family: 'Oswald', sans-serif;
-      font-size: 13px;
+      font-size: 12px;
+      font-weight: 500;
       color: var(--gold);
       letter-spacing: 2px;
-      font-weight: 500;
     }
     .card-new-badge {
       background: var(--gold);
@@ -400,94 +371,85 @@
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
-      padding: 2px 8px;
-      border-radius: 20px;
+      padding: 2px 7px;
+      border-radius: 3px;
     }
-    .card-time {
-      font-size: 13px;
+    .card-placed-time {
+      font-size: 12px;
       color: var(--dim);
     }
 
-    /* Customer */
+    /* Customer row */
     .card-customer {
-      padding: 16px 18px 14px;
-      border-bottom: 1px solid var(--border);
+      padding: 14px 16px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      border-bottom: 1px solid var(--border);
     }
-    .card-customer-left {}
     .card-customer-name {
       font-family: 'Oswald', sans-serif;
-      font-size: 30px;
+      font-size: 36px;
       font-weight: 700;
       color: var(--white);
       letter-spacing: .5px;
       line-height: 1;
     }
     .card-customer-phone {
-      font-size: 14px;
-      color: var(--dim);
-      margin-top: 5px;
+      font-size: 13px;
+      color: var(--gray);
+      margin-top: 4px;
       letter-spacing: .5px;
     }
-    .card-timer-badge {
+    .card-timer {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      background: var(--bg4);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 8px 14px;
-      min-width: 72px;
+      background: #0d0d0d;
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 10px 16px;
+      min-width: 70px;
       text-align: center;
+      flex-shrink: 0;
     }
     .card-timer-num {
       font-family: 'Oswald', sans-serif;
-      font-size: 22px;
+      font-size: 28px;
       font-weight: 700;
       line-height: 1;
+      color: var(--white);
     }
+    .card-timer-num.warn { color: var(--amber); }
+    .card-timer-num.urgent { color: var(--red); }
     .card-timer-lbl {
-      font-size: 10px;
+      font-size: 9px;
       color: var(--dim);
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-top: 2px;
+      letter-spacing: 1.5px;
+      margin-top: 3px;
     }
-    .timer-ok { color: var(--white); }
-    .timer-warn { color: var(--yellow); }
-    .timer-urgent { color: var(--red); }
 
     /* Items */
-    .card-items-hdr {
-      padding: 12px 18px 8px;
-      font-size: 10px;
-      color: var(--dim);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-weight: 600;
-    }
     .card-items {
-      padding: 0 18px 14px;
+      padding: 4px 0;
     }
     .card-item {
       display: flex;
       align-items: flex-start;
       gap: 12px;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,.04);
+      padding: 11px 16px;
+      border-bottom: 1px solid #161616;
     }
     .card-item:last-child { border-bottom: none; }
     .card-item-qty {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      background: rgba(212,148,26,.15);
-      border: 1px solid rgba(212,148,26,.3);
+      width: 26px;
+      height: 26px;
+      border-radius: 5px;
+      background: rgba(200,136,26,.12);
+      border: 1px solid rgba(200,136,26,.25);
       color: var(--gold);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -495,134 +457,125 @@
       flex-shrink: 0;
       margin-top: 1px;
     }
-    .card-item-info { flex: 1; }
+    .card-item-info { flex: 1; min-width: 0; }
     .card-item-name {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 600;
       color: var(--white);
       line-height: 1.2;
     }
     .card-item-mods {
-      font-size: 13px;
-      color: #777;
-      margin-top: 4px;
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 3px;
       line-height: 1.5;
     }
     .card-item-price {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--dim);
       font-weight: 500;
       flex-shrink: 0;
-      margin-top: 3px;
+      margin-top: 2px;
     }
 
     /* Notes */
     .card-notes {
-      margin: 0 18px 14px;
-      background: rgba(212,148,26,.06);
-      border: 1px solid rgba(212,148,26,.15);
-      border-radius: 8px;
-      padding: 12px 14px;
+      margin: 0 16px 12px;
+      background: rgba(200,136,26,.05);
+      border-left: 2px solid var(--gold);
+      padding: 10px 12px;
+      border-radius: 0 4px 4px 0;
     }
-    .card-notes-hdr {
-      font-size: 10px;
+    .card-notes-lbl {
+      font-size: 9px;
       color: var(--gold);
       text-transform: uppercase;
       letter-spacing: 2px;
       font-weight: 700;
-      margin-bottom: 5px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      margin-bottom: 4px;
     }
     .card-notes-txt {
-      font-size: 14px;
-      color: #ccc;
+      font-size: 13px;
+      color: #bbb;
       line-height: 1.5;
     }
 
     /* Footer */
     .card-footer {
       border-top: 1px solid var(--border);
-      background: var(--bg3);
     }
     .card-totals {
-      padding: 12px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--border);
+      padding: 11px 16px;
     }
-    .card-total-row {
-      display: flex;
-      gap: 8px;
-      font-size: 12px;
+    .card-totals-detail {
+      font-size: 11px;
       color: var(--dim);
-      flex-wrap: wrap;
+      line-height: 1.7;
     }
-    .card-total-main {
+    .card-total-amount {
       font-family: 'Oswald', sans-serif;
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 700;
-      color: var(--gold);
+      color: var(--white);
     }
 
+    /* Ready button */
     .card-ready-btn {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       width: 100%;
-      background: var(--gold);
-      color: #000;
+      background: var(--green);
+      color: #fff;
       border: none;
-      border-radius: 0 0 13px 13px;
-      padding: 16px 24px;
+      padding: 17px 24px;
       font-family: 'Oswald', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: 2px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
       cursor: pointer;
-      transition: all .15s;
+      transition: background .15s;
     }
-    .card-ready-btn:hover {
-      background: var(--gold-light);
-    }
-    .card-ready-btn:active { opacity: .9; transform: scale(.99); }
+    .card-ready-btn:hover  { background: var(--green-lt); }
+    .card-ready-btn:active { opacity: .9; }
     .card-ready-btn.marking {
-      background: var(--bg4);
+      background: #1a1a1a;
       color: var(--dim);
       pointer-events: none;
     }
 
-    /* ══════════════════════════════
+    /* ─────────────────────────────
        SCROLLBAR
-    ══════════════════════════════ */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+    ───────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #1f1f1f; border-radius: 2px; }
 
-    @media (max-width: 480px) {
-      #ordersGrid { grid-template-columns: 1fr; padding: 12px 16px; }
+    @media (max-width: 500px) {
+      #ordersGrid { grid-template-columns: 1fr; padding: 12px; }
       .kds-header { padding: 0 16px; }
-      .card-customer-name { font-size: 24px; }
-      .kds-statusbar { display: none; }
+      .kds-legend { display: none; }
+      .card-customer-name { font-size: 28px; }
     }
   </style>
 </head>
 <body>
 
-<!-- ══ PIN SCREEN ══ -->
+<!-- PIN SCREEN -->
 <div id="pinScreen">
   <div class="pin-wrap">
-    <div class="pin-logo-wrap">
-      <div class="pin-logo-tag">Kitchen Display System</div>
-      <div class="pin-logo-name">OLD 33</div>
-      <div class="pin-logo-sub">Beer &amp; Burger Grill &nbsp;·&nbsp; Elkton, VA</div>
+    <div class="pin-brand">
+      <div class="pin-brand-tag">Kitchen Display System</div>
+      <div class="pin-brand-name">OLD 33</div>
+      <div class="pin-brand-rule"></div>
+      <div class="pin-brand-sub">Beer &amp; Burger Grill &nbsp;&middot;&nbsp; Elkton, VA</div>
     </div>
-    <div class="pin-divider"></div>
-    <div class="pin-label">Enter PIN to continue</div>
+    <div class="pin-label">Enter PIN</div>
     <div class="pin-dots">
       <div class="pin-dot" id="d0"></div>
       <div class="pin-dot" id="d1"></div>
@@ -641,79 +594,76 @@
       <button class="pin-btn" onclick="pinPress('8')">8</button>
       <button class="pin-btn" onclick="pinPress('9')">9</button>
       <button class="pin-btn zero" onclick="pinPress('0')">0</button>
-      <button class="pin-btn del" onclick="pinDel()">⌫</button>
+      <button class="pin-btn del" onclick="pinDel()">&#9003;</button>
     </div>
   </div>
 </div>
 
-<!-- ══ HEADER ══ -->
+<!-- HEADER -->
 <div class="kds-header">
   <div class="kds-brand">
-    <div class="kds-brand-badge">33</div>
-    <div class="kds-brand-text">
+    <div class="kds-badge">33</div>
+    <div>
       <div class="kds-brand-name">OLD 33</div>
       <div class="kds-brand-sub">Kitchen Display</div>
     </div>
   </div>
-  <div class="kds-center">
+  <div class="kds-mid">
     <div class="kds-live">
       <div class="kds-live-dot"></div>
       <span class="kds-live-txt" id="liveText">Live</span>
     </div>
-    <div class="kds-pending">
-      <div class="kds-pending-num" id="orderCount">0</div>
-      <div class="kds-pending-lbl">Pending</div>
+    <div class="kds-count-wrap">
+      <div class="kds-count-num" id="orderCount">0</div>
+      <div class="kds-count-lbl">Pending</div>
     </div>
   </div>
   <div class="kds-clock">
-    <div class="kds-clock-time" id="clock">--:--</div>
-    <div class="kds-clock-date" id="clockDate">---</div>
+    <div class="kds-time" id="clock">--:--</div>
+    <div class="kds-date" id="clockDate">---</div>
   </div>
 </div>
 
-<!-- ══ STATUS BAR ══ -->
-<div class="kds-statusbar">
-  <div class="kds-statusbar-item">
-    <div class="kds-statusbar-dot" style="background:var(--gold)"></div>
-    <span>New order</span>
+<!-- LEGEND -->
+<div class="kds-legend">
+  <div class="kds-legend-item">
+    <div class="kds-legend-pip" style="background:var(--gold)"></div>
+    <span>New</span>
   </div>
-  <div class="kds-statusbar-item">
-    <div class="kds-statusbar-dot" style="background:var(--yellow)"></div>
-    <span>15+ mins — check soon</span>
+  <div class="kds-legend-item">
+    <div class="kds-legend-pip" style="background:var(--amber)"></div>
+    <span>15+ min</span>
   </div>
-  <div class="kds-statusbar-item">
-    <div class="kds-statusbar-dot" style="background:var(--red)"></div>
-    <span>25+ mins — urgent</span>
+  <div class="kds-legend-item">
+    <div class="kds-legend-pip" style="background:var(--red)"></div>
+    <span>25+ min — urgent</span>
   </div>
-  <div style="margin-left:auto;font-size:11px;color:#333;" id="lastRefresh">Refreshing every 15s</div>
+  <div class="kds-legend-refresh" id="lastRefresh">Refreshing every 15s</div>
 </div>
 
-<!-- ══ EMPTY STATE ══ -->
+<!-- EMPTY STATE -->
 <div id="emptyState">
   <div class="empty-icon">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="36" height="36">
-      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="48" height="48">
+      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
       <path d="M16 10a4 4 0 01-8 0"/>
     </svg>
   </div>
   <div class="empty-title">All Clear</div>
-  <div class="empty-sub">No pending orders right now.<br>New orders will appear here automatically.</div>
-  <div class="empty-refresh">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-    Refreshing every 15 seconds
-  </div>
+  <div class="empty-sub">No pending orders.<br>New orders appear here automatically.</div>
 </div>
 
-<!-- ══ ORDERS ══ -->
+<!-- ORDERS -->
 <div id="ordersGrid"></div>
 
 <script>
   const SUPA_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
   const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
-  const SMS_URL = 'https://script.google.com/macros/s/AKfycbyRhSuHPCUWK3ua_2mokRI8X3IUHWMkrqVP11l7zj1Tn-qUhzGFqNnXOipXxUj7r0m6/exec';
+  const SMS_URL  = 'https://script.google.com/macros/s/AKfycbyRhSuHPCUWK3ua_2mokRI8X3IUHWMkrqVP11l7zj1Tn-qUhzGFqNnXOipXxUj7r0m6/exec';
   const PIN = '3300';
 
-  /* ── PIN ── */
+  /* PIN */
   let pinEntry = '';
   function pinPress(n) {
     if (pinEntry.length >= 4) return;
@@ -722,17 +672,18 @@
     if (pinEntry.length === 4) {
       setTimeout(() => {
         if (pinEntry === PIN) {
-          document.getElementById('pinScreen').style.opacity = '0';
-          document.getElementById('pinScreen').style.transition = 'opacity .4s';
-          setTimeout(() => document.getElementById('pinScreen').style.display = 'none', 400);
+          const ps = document.getElementById('pinScreen');
+          ps.style.transition = 'opacity .35s';
+          ps.style.opacity = '0';
+          setTimeout(() => ps.style.display = 'none', 350);
           startKDS();
         } else {
-          document.getElementById('pinError').textContent = 'Incorrect PIN. Try again.';
+          document.getElementById('pinError').textContent = 'Incorrect PIN';
           pinEntry = '';
           for (let i = 0; i < 4; i++) document.getElementById('d' + i).classList.remove('filled');
-          setTimeout(() => document.getElementById('pinError').textContent = '', 2000);
+          setTimeout(() => document.getElementById('pinError').textContent = '', 1800);
         }
-      }, 200);
+      }, 180);
     }
   }
   function pinDel() {
@@ -742,7 +693,7 @@
     document.getElementById('pinError').textContent = '';
   }
 
-  /* ── CLOCK ── */
+  /* CLOCK */
   function updateClock() {
     const now = new Date();
     document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', {
@@ -753,29 +704,26 @@
     });
   }
 
-  /* ── HELPERS ── */
+  /* HELPERS */
   function esc(s) {
     return String(s || '').replace(/[<>&"']/g, c =>
-      ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' }[c]));
+      ({ '<':'&lt;', '>':'&gt;', '&':'&amp;', '"':'&quot;', "'":'&#39;' }[c]));
   }
-
   function getMins(iso) {
     return Math.floor((Date.now() - new Date(iso)) / 60000);
   }
-
-  function timerColor(mins) {
-    if (mins >= 25) return 'timer-urgent';
-    if (mins >= 15) return 'timer-warn';
-    return 'timer-ok';
+  function timerClass(mins) {
+    if (mins >= 25) return 'urgent';
+    if (mins >= 15) return 'warn';
+    return '';
   }
-
   function cardClass(mins) {
     if (mins >= 25) return 'urgent-card';
     if (mins >= 15) return 'warning-card';
     return '';
   }
 
-  /* ── SOUND ── */
+  /* SOUND */
   function playBeep() {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -785,29 +733,26 @@
         osc.connect(gain); gain.connect(ctx.destination);
         osc.frequency.value = freq;
         gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.15);
-        gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + i * 0.15 + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.3);
+        gain.gain.linearRampToValueAtTime(0.28, ctx.currentTime + i * 0.15 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.35);
         osc.start(ctx.currentTime + i * 0.15);
-        osc.stop(ctx.currentTime + i * 0.15 + 0.3);
+        osc.stop(ctx.currentTime + i * 0.15 + 0.35);
       });
     } catch(e) {}
   }
 
-  /* ── MARK READY ── */
+  /* MARK READY */
   async function markReady(id, btn) {
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> Sending SMS...';
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> Marking done...';
     btn.classList.add('marking');
 
-    // Get customer info from card
     const card = document.querySelector(`[data-id="${id}"]`);
     const name  = card?.querySelector('.card-customer-name')?.textContent || '';
     const rawPhone = card?.querySelector('.card-customer-phone')?.textContent || '';
-    // Normalize to E.164 (+1XXXXXXXXXX) for Twilio
     const digits = rawPhone.replace(/\D/g, '');
     const phone = digits.length === 10 ? '+1' + digits : (digits.length === 11 && digits[0] === '1' ? '+' + digits : rawPhone);
 
     try {
-      // 1. Mark order done in Supabase
       await fetch(SUPA_URL + '/rest/v1/orders?id=eq.' + id, {
         method: 'PATCH',
         headers: {
@@ -819,21 +764,18 @@
         body: JSON.stringify({ status: 'done' })
       });
 
-      // 2. Send SMS to customer (no-cors required for Apps Script from browser)
-      console.log('Sending SMS to:', phone, '| name:', name);
       fetch(SMS_URL, {
         method: 'POST',
         mode: 'no-cors',
         body: JSON.stringify({ name, phone }),
         headers: { 'Content-Type': 'text/plain' }
-      }).then(() => console.log('SMS fetch fired')).catch(e => console.error('SMS fetch error:', e));
+      }).catch(() => {});
 
-      // 3. Remove card from screen
       if (card) {
-        card.style.transition = 'opacity .3s, transform .3s';
+        card.style.transition = 'opacity .25s, transform .25s';
         card.style.opacity = '0';
-        card.style.transform = 'scale(.95) translateY(8px)';
-        setTimeout(() => { card.remove(); updateCount(); }, 320);
+        card.style.transform = 'translateY(6px)';
+        setTimeout(() => { card.remove(); updateCount(); }, 260);
       }
       knownIds.delete(id);
 
@@ -850,43 +792,37 @@
     document.getElementById('ordersGrid').style.display = count === 0 ? 'none' : 'grid';
   }
 
-  /* ── RENDER ── */
+  /* RENDER */
   let knownIds = new Set();
 
   function renderOrders(orders) {
-    const grid = document.getElementById('ordersGrid');
+    const grid  = document.getElementById('ordersGrid');
     const empty = document.getElementById('emptyState');
 
     document.getElementById('orderCount').textContent = orders.length;
 
     if (!orders.length) {
-      grid.style.display = 'none';
+      grid.style.display  = 'none';
       empty.style.display = 'flex';
       return;
     }
-    grid.style.display = 'grid';
+    grid.style.display  = 'grid';
     empty.style.display = 'none';
 
-    // Remove cards no longer in results
-    grid.querySelectorAll('.order-card').forEach(card => {
-      if (!orders.find(o => o.id === card.dataset.id)) card.remove();
+    grid.querySelectorAll('.order-card').forEach(c => {
+      if (!orders.find(o => o.id === c.dataset.id)) c.remove();
     });
 
     orders.forEach(order => {
-      const mins = getMins(order.created_at);
+      const mins  = getMins(order.created_at);
       const isNew = !knownIds.has(order.id);
       if (isNew) knownIds.add(order.id);
 
-      // Update existing card timers
       const existing = grid.querySelector(`[data-id="${order.id}"]`);
       if (existing) {
-        const timerNum = existing.querySelector('.card-timer-num');
-        const timerLbl = existing.querySelector('.card-timer-lbl');
-        if (timerNum) { timerNum.textContent = mins; timerNum.className = 'card-timer-num ' + timerColor(mins); }
-        // Update card border class
-        existing.className = 'order-card ' + (isNew ? 'new-order ' : '') + cardClass(mins);
-        existing.querySelector('.card-strip').style.background =
-          mins >= 25 ? 'var(--red)' : mins >= 15 ? 'var(--yellow)' : 'var(--gold)';
+        const tn = existing.querySelector('.card-timer-num');
+        if (tn) { tn.textContent = mins; tn.className = 'card-timer-num ' + timerClass(mins); }
+        existing.className = 'order-card ' + cardClass(mins);
         return;
       }
 
@@ -903,71 +839,63 @@
           <div class="card-item-price">$${parseFloat(it.price || 0).toFixed(2)}</div>
         </div>`).join('');
 
-      const card = document.createElement('div');
-      card.className = 'order-card ' + (isNew ? 'new-order ' : '') + cardClass(mins);
-      card.dataset.id = order.id;
-      card.innerHTML = `
-        <div class="card-strip"></div>
-
-        <div class="card-hdr">
-          <div class="card-hdr-left">
+      const el = document.createElement('div');
+      el.className = 'order-card ' + (isNew ? 'new-order ' : '') + cardClass(mins);
+      el.dataset.id = order.id;
+      el.innerHTML = `
+        <div class="card-top">
+          <div class="card-top-left">
             <span class="card-order-num">${esc(order.order_num)}</span>
             ${isNew ? '<span class="card-new-badge">New</span>' : ''}
           </div>
-          <span class="card-time">${new Date(order.created_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' })}</span>
+          <span class="card-placed-time">${new Date(order.created_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/New_York'})}</span>
         </div>
 
         <div class="card-customer">
-          <div class="card-customer-left">
+          <div>
             <div class="card-customer-name">${esc(order.customer_name)}</div>
             <div class="card-customer-phone">${esc(order.customer_phone)}</div>
           </div>
-          <div class="card-timer-badge">
-            <div class="card-timer-num ${timerColor(mins)}">${mins}</div>
+          <div class="card-timer">
+            <div class="card-timer-num ${timerClass(mins)}">${mins}</div>
             <div class="card-timer-lbl">mins</div>
           </div>
         </div>
 
-        <div class="card-items-hdr">Order Items</div>
         <div class="card-items">${itemsHtml}</div>
 
         ${order.notes ? `
         <div class="card-notes">
-          <div class="card-notes-hdr">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            Customer Note
-          </div>
+          <div class="card-notes-lbl">Customer Note</div>
           <div class="card-notes-txt">${esc(order.notes)}</div>
         </div>` : ''}
 
         <div class="card-footer">
           <div class="card-totals">
-            <div class="card-total-row">
-              <span>Subtotal $${parseFloat(order.subtotal || 0).toFixed(2)}</span>
-              <span>·</span>
-              <span>Tax $${parseFloat(order.tax || 0).toFixed(2)}</span>
-              ${parseFloat(order.tip || 0) > 0 ? `<span>· Tip $${parseFloat(order.tip).toFixed(2)}</span>` : ''}
+            <div class="card-totals-detail">
+              <div>Subtotal &nbsp;$${parseFloat(order.subtotal||0).toFixed(2)}</div>
+              <div>Tax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$${parseFloat(order.tax||0).toFixed(2)}</div>
+              ${parseFloat(order.tip||0)>0?`<div>Tip &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$${parseFloat(order.tip).toFixed(2)}</div>`:''}
             </div>
-            <div class="card-total-main">$${parseFloat(order.total || 0).toFixed(2)}</div>
+            <div class="card-total-amount">$${parseFloat(order.total||0).toFixed(2)}</div>
           </div>
           <button class="card-ready-btn" onclick="markReady('${order.id}', this)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
-            ORDER READY
+            Order Ready
           </button>
         </div>`;
 
-      grid.prepend(card);
+      grid.prepend(el);
     });
 
-    // Update last refresh time
     document.getElementById('lastRefresh').textContent =
-      'Last updated ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', timeZone: 'America/New_York' });
+      'Updated ' + new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',second:'2-digit',timeZone:'America/New_York'});
   }
 
-  /* ── FETCH ── */
+  /* FETCH */
   async function fetchOrders() {
     try {
-      const res = await fetch(
+      const res    = await fetch(
         SUPA_URL + '/rest/v1/orders?status=eq.pending&order=created_at.asc&limit=50',
         { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY } }
       );
@@ -979,7 +907,7 @@
     }
   }
 
-  /* ── START ── */
+  /* START */
   function startKDS() {
     updateClock();
     setInterval(updateClock, 1000);
