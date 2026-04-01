@@ -5,7 +5,6 @@
    Email:   Gmail via Apps Script
    ============================================ */
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8BPTkc_ZRuJr-KqsJF3tYVOl2Y-Ul2gLa20nAujv7KP9i3FWtJ3-sQwLLS1HZcLYm/exec';
 
 /* Business hours — 24hr, America/New_York */
 const BIZ_HOURS = {
@@ -291,31 +290,8 @@ const Checkout = (() => {
       })
     }).catch(() => {});
 
-    /* Also add to subscribers if they gave an email — source: 'order' */
-    if (payload.email) {
-      fetch(SUPA_URL + '/rest/v1/subscribers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ email: payload.email, name: payload.name, phone: payload.phone, source: 'order' })
-      }).catch(() => {});
-    }
-
-    try {
-      const res  = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain' } });
-      const json = await res.json();
-      if (json.success) {
-        Cart.clear();
-        showSuccess(payload);
-      } else {
-        throw new Error(json.error || 'Server error');
-      }
-    } catch (err) {
-      if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = `Confirm Order &nbsp;·&nbsp; $${total.toFixed(2)} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>`;
-      }
-      showError('Could not send your order. Please call us at (540) 713-9050.');
-    }
+    Cart.clear();
+    showSuccess(payload);
   }
 
   function showSuccess(data) {

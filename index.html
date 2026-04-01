@@ -472,23 +472,6 @@
   </div>
 </section>
 
-<!-- EMAIL CAPTURE — Supabase -->
-<section class="email-capture-band">
-  <div class="container">
-    <div class="ec-inner">
-      <div>
-        <div class="ec-title">Get Weekly Specials &amp; Deals</div>
-        <div class="ec-sub">Be first to know about happy hours, new menu items, and events at Old 33.</div>
-      </div>
-      <form class="ec-form" onsubmit="handleEmailSignup(event, this)">
-        <input type="email" name="email" class="ec-input" placeholder="your@email.com" required />
-        <button type="submit" class="btn btn-red">Subscribe</button>
-      </form>
-      <div class="ec-success" id="ecSuccess">✓ You're in! We'll send deals your way.</div>
-    </div>
-  </div>
-</section>
-
 <!-- FOOTER -->
 <footer class="footer">
   <div class="container">
@@ -533,26 +516,6 @@
 <script src="js/checkout.js"></script>
 
 <script>
-  /* --- Email Signup Handler (Supabase) --- */
-  var SUPA_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
-  var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
-  function handleEmailSignup(e, form) {
-    e.preventDefault();
-    var email = form.querySelector('[name="email"]').value;
-    var btn = form.querySelector('button');
-    btn.disabled = true; btn.textContent = '...';
-    var WELCOME_URL = 'https://script.google.com/macros/s/AKfycbyhjFeZLwMt12RQhzd5fbSSgv94Ligh0lv_88-nyu-svJXfIJa68LuuvKglRY0R8pzk/exec';
-    fetch(SUPA_URL + '/rest/v1/subscribers', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Prefer': 'return=minimal' },
-      body: JSON.stringify({ email: email, source: 'website' })
-    }).then(function() {
-      form.style.display = 'none';
-      document.getElementById('ecSuccess').style.display = 'block';
-      fetch(WELCOME_URL, { method: 'POST', body: JSON.stringify({ email: email }), headers: { 'Content-Type': 'text/plain' } }).catch(function(){});
-    }).catch(function() { btn.disabled = false; btn.textContent = 'Subscribe'; });
-  }
-
   /* --- Live Open/Closed Hero Pill --- */
   (function() {
     const dot  = document.getElementById('heroPillDot');
