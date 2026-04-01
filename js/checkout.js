@@ -25,26 +25,8 @@ function genOrderNum() {
 
 /* --- Is the restaurant open right now? --- */
 function getOpenStatus() {
+  // DEMO MODE: always open for testing
   const now = new Date();
-  // Convert to Eastern time
-  const et  = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-  const dow  = et.getDay();
-  const h    = BIZ_HOURS[dow];
-  if (!h) return { open: false, reason: `We're closed on Wednesdays.` };
-
-  const mins = et.getHours() * 60 + et.getMinutes();
-  const openMins  = h.open  * 60;
-  const closeMins = h.close * 60;
-
-  if (mins < openMins) {
-    const opensAt = new Date(et); opensAt.setHours(h.open, 0, 0, 0);
-    const timeStr = opensAt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-    return { open: false, reason: `We're not open yet — we open at ${timeStr} today.` };
-  }
-  if (mins >= closeMins - 30) { // stop orders 30 min before close
-    return { open: false, reason: `We've stopped taking orders for tonight. See you tomorrow!` };
-  }
-
   const readyTime = new Date(now.getTime() + PREP_MINS * 60000);
   const readyStr  = readyTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
   const orderStr  = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
