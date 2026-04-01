@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kitchen Display | Old 33</title>
+  <meta name="robots" content="noindex" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a0a0a;
+      font-family: 'Arial', sans-serif;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    /* ── PIN SCREEN ── */
+    #pinScreen {
+      position: fixed;
+      inset: 0;
+      background: #0a0a0a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .pin-logo {
+      font-size: 13px;
+      color: #d4941a;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .pin-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .pin-dots {
+      display: flex;
+      gap: 16px;
+      margin: 8px 0;
+    }
+    .pin-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid #444;
+      background: transparent;
+      transition: background .15s;
+    }
+    .pin-dot.filled { background: #d4941a; border-color: #d4941a; }
+    .pin-pad {
+      display: grid;
+      grid-template-columns: repeat(3, 80px);
+      gap: 12px;
+    }
+    .pin-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 1px solid #2a2a2a;
+      background: #141414;
+      color: #fff;
+      font-size: 24px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .15s, transform .1s;
+    }
+    .pin-btn:active { background: #d4941a; color: #000; transform: scale(.95); }
+    .pin-btn.zero { grid-column: 2; }
+    .pin-btn.del { background: transparent; border-color: transparent; font-size: 18px; color: #666; }
+    .pin-error { color: #ef4444; font-size: 14px; height: 20px; }
+
+    /* ── HEADER ── */
+    .kds-header {
+      background: #111;
+      border-bottom: 2px solid #d4941a;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .kds-header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .kds-brand {
+      font-size: 11px;
+      color: #d4941a;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .kds-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .kds-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #888;
+    }
+    .kds-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .4; }
+    }
+    .kds-count {
+      background: #d4941a;
+      color: #000;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .kds-time {
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── EMPTY STATE ── */
+    #emptyState {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 70px);
+      gap: 16px;
+      color: #333;
+    }
+    #emptyState svg { color: #1f1f1f; }
+    #emptyState h2 { font-size: 28px; color: #2a2a2a; }
+    #emptyState p { font-size: 16px; color: #2a2a2a; }
+
+    /* ── ORDERS GRID ── */
+    #ordersGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 16px;
+      padding: 20px;
+    }
+
+    /* ── ORDER CARD ── */
+    .order-card {
+      background: #141414;
+      border: 2px solid #2a2a2a;
+      border-radius: 12px;
+      overflow: hidden;
+      animation: slideIn .3s ease;
+    }
+    .order-card.new-order {
+      border-color: #d4941a;
+      animation: slideIn .3s ease, glow 1s ease 3;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes glow {
+      0%, 100% { box-shadow: none; }
+      50% { box-shadow: 0 0 24px rgba(212,148,26,.5); }
+    }
+
+    .order-card-hdr {
+      background: #1a1a1a;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    .order-num {
+      font-size: 13px;
+      color: #d4941a;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .order-time-badge {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .order-name {
+      padding: 16px 18px 8px;
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .order-phone {
+      padding: 0 18px 14px;
+      font-size: 14px;
+      color: #888;
+    }
+
+    .order-items {
+      padding: 0 18px 16px;
+      border-top: 1px solid #1f1f1f;
+      padding-top: 14px;
+    }
+    .order-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #1f1f1f;
+    }
+    .order-item:last-child { border-bottom: none; }
+    .order-item-qty {
+      background: #d4941a;
+      color: #000;
+      font-size: 12px;
+      font-weight: 700;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .order-item-info { flex: 1; }
+    .order-item-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .order-item-mods {
+      font-size: 13px;
+      color: #888;
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+
+    .order-notes {
+      margin: 0 18px 14px;
+      background: rgba(212,148,26,.08);
+      border: 1px solid rgba(212,148,26,.2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: #d4941a;
+    }
+    .order-notes-lbl {
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 4px;
+      opacity: .7;
+    }
+
+    .order-total {
+      padding: 12px 18px;
+      border-top: 1px solid #1f1f1f;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 15px;
+      color: #666;
+    }
+    .order-total strong { color: #fff; font-size: 18px; }
+
+    .order-ready-btn {
+      display: block;
+      width: calc(100% - 36px);
+      margin: 0 18px 18px;
+      background: #d4941a;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background .15s, transform .1s;
+    }
+    .order-ready-btn:hover { background: #e8a520; }
+    .order-ready-btn:active { transform: scale(.98); }
+    .order-ready-btn.marking {
+      background: #2a2a2a;
+      color: #666;
+      pointer-events: none;
+    }
+
+    /* ── TIMER ── */
+    .order-timer {
+      padding: 0 18px 10px;
+      font-size: 13px;
+      color: #666;
+    }
+    .order-timer.urgent { color: #ef4444; font-weight: 700; }
+    .order-timer.warning { color: #f59e0b; font-weight: 600; }
+
+    @media (max-width: 400px) {
+      #ordersGrid { grid-template-columns: 1fr; padding: 12px; }
+      .order-name { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PIN SCREEN -->
+<div id="pinScreen">
+  <div class="pin-logo">Old 33 Beer &amp; Burger Grill</div>
+  <div class="pin-title">Kitchen Display</div>
+  <div class="pin-dots">
+    <div class="pin-dot" id="d0"></div>
+    <div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div>
+    <div class="pin-dot" id="d3"></div>
+  </div>
+  <div class="pin-error" id="pinError"></div>
+  <div class="pin-pad">
+    <button class="pin-btn" onclick="pinPress('1')">1</button>
+    <button class="pin-btn" onclick="pinPress('2')">2</button>
+    <button class="pin-btn" onclick="pinPress('3')">3</button>
+    <button class="pin-btn" onclick="pinPress('4')">4</button>
+    <button class="pin-btn" onclick="pinPress('5')">5</button>
+    <button class="pin-btn" onclick="pinPress('6')">6</button>
+    <button class="pin-btn" onclick="pinPress('7')">7</button>
+    <button class="pin-btn" onclick="pinPress('8')">8</button>
+    <button class="pin-btn" onclick="pinPress('9')">9</button>
+    <button class="pin-btn zero" onclick="pinPress('0')">0</button>
+    <button class="pin-btn del" onclick="pinDel()">⌫</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="kds-header">
+  <div class="kds-header-left">
+    <div>
+      <div class="kds-brand">Old 33 — Kitchen</div>
+      <div class="kds-title">Live Orders</div>
+    </div>
+  </div>
+  <div class="kds-status">
+    <div class="kds-dot"></div>
+    <span id="statusText">Live</span>
+    <div class="kds-count" id="orderCount">0</div>
+  </div>
+  <div class="kds-time" id="clock">--:--</div>
+</div>
+
+<!-- EMPTY STATE -->
+<div id="emptyState">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="80" height="80">
+    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+    <path d="M16 10a4 4 0 01-8 0"/>
+  </svg>
+  <h2>No Pending Orders</h2>
+  <p>New orders will appear here automatically</p>
+</div>
+
+<!-- ORDERS -->
+<div id="ordersGrid"></div>
+
+<script>
+  const SUPA_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
+  const PIN = '3300';
+
+  /* ── PIN ── */
+  let pinEntry = '';
+  function pinPress(n) {
+    if (pinEntry.length >= 4) return;
+    pinEntry += n;
+    document.getElementById('d' + (pinEntry.length - 1)).classList.add('filled');
+    if (pinEntry.length === 4) {
+      setTimeout(() => {
+        if (pinEntry === PIN) {
+          document.getElementById('pinScreen').style.display = 'none';
+          startKDS();
+        } else {
+          document.getElementById('pinError').textContent = 'Wrong PIN. Try again.';
+          pinEntry = '';
+          for (let i = 0; i < 4; i++) document.getElementById('d' + i).classList.remove('filled');
+        }
+      }, 200);
+    }
+  }
+  function pinDel() {
+    if (!pinEntry.length) return;
+    pinEntry = pinEntry.slice(0, -1);
+    document.getElementById('d' + pinEntry.length).classList.remove('filled');
+    document.getElementById('pinError').textContent = '';
+  }
+
+  /* ── CLOCK ── */
+  function updateClock() {
+    document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-US', {
+      hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/New_York'
+    });
+  }
+
+  /* ── HELPERS ── */
+  function esc(s) {
+    return String(s || '').replace(/[<>&"']/g, c =>
+      ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function timeAgo(iso) {
+    const mins = Math.floor((Date.now() - new Date(iso)) / 60000);
+    if (mins < 1) return 'Just now';
+    if (mins === 1) return '1 min ago';
+    return mins + ' mins ago';
+  }
+
+  function timerClass(iso) {
+    const mins = Math.floor((Date.now() - new Date(iso)) / 60000);
+    if (mins >= 25) return 'urgent';
+    if (mins >= 15) return 'warning';
+    return '';
+  }
+
+  /* ── RENDER ── */
+  let knownIds = new Set();
+
+  function renderOrders(orders) {
+    const grid = document.getElementById('ordersGrid');
+    const empty = document.getElementById('emptyState');
+    document.getElementById('orderCount').textContent = orders.length;
+
+    if (!orders.length) {
+      grid.innerHTML = '';
+      empty.style.display = 'flex';
+      return;
+    }
+    empty.style.display = 'none';
+
+    // Remove cards for completed orders
+    grid.querySelectorAll('.order-card').forEach(card => {
+      if (!orders.find(o => o.id === card.dataset.id)) card.remove();
+    });
+
+    orders.forEach(order => {
+      const isNew = !knownIds.has(order.id);
+      if (isNew) knownIds.add(order.id);
+
+      // Update timer on existing card
+      const existing = grid.querySelector(`[data-id="${order.id}"]`);
+      if (existing) {
+        const timer = existing.querySelector('.order-timer');
+        if (timer) {
+          timer.textContent = timeAgo(order.created_at);
+          timer.className = 'order-timer ' + timerClass(order.created_at);
+        }
+        return;
+      }
+
+      // Build items HTML
+      const items = Array.isArray(order.items) ? order.items : [];
+      const itemsHtml = items.map(it => `
+        <div class="order-item">
+          <div class="order-item-qty">${esc(it.qty)}</div>
+          <div class="order-item-info">
+            <div class="order-item-name">${esc(it.name)}</div>
+            ${it.mods ? `<div class="order-item-mods">${esc(it.mods)}</div>` : ''}
+          </div>
+        </div>`).join('');
+
+      const card = document.createElement('div');
+      card.className = 'order-card' + (isNew ? ' new-order' : '');
+      card.dataset.id = order.id;
+      card.innerHTML = `
+        <div class="order-card-hdr">
+          <span class="order-num">${esc(order.order_num)}</span>
+          <span class="order-time-badge">${new Date(order.created_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' })}</span>
+        </div>
+        <div class="order-name">${esc(order.customer_name)}</div>
+        <div class="order-phone">${esc(order.customer_phone)}</div>
+        <div class="order-items">${itemsHtml}</div>
+        ${order.notes ? `<div class="order-notes"><div class="order-notes-lbl">Note</div>${esc(order.notes)}</div>` : ''}
+        <div class="order-total"><span>Total</span><strong>$${parseFloat(order.total || 0).toFixed(2)}</strong></div>
+        <div class="order-timer ${timerClass(order.created_at)}">${timeAgo(order.created_at)}</div>
+        <button class="order-ready-btn" onclick="markReady('${order.id}', this)">ORDER READY</button>`;
+
+      // Play sound for new orders
+      if (isNew && knownIds.size > 0) playBeep();
+
+      grid.prepend(card);
+    });
+  }
+
+  /* ── SOUND ── */
+  function playBeep() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+      osc.start(); osc.stop(ctx.currentTime + 0.4);
+    } catch(e) {}
+  }
+
+  /* ── MARK READY ── */
+  async function markReady(id, btn) {
+    btn.textContent = 'Marking...';
+    btn.classList.add('marking');
+    try {
+      await fetch(SUPA_URL + '/rest/v1/orders?id=eq.' + id, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPA_KEY,
+          'Authorization': 'Bearer ' + SUPA_KEY,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ status: 'done' })
+      });
+      const card = document.querySelector(`[data-id="${id}"]`);
+      if (card) {
+        card.style.transition = 'opacity .3s, transform .3s';
+        card.style.opacity = '0';
+        card.style.transform = 'scale(.95)';
+        setTimeout(() => card.remove(), 300);
+      }
+      knownIds.delete(id);
+      document.getElementById('orderCount').textContent =
+        parseInt(document.getElementById('orderCount').textContent) - 1;
+    } catch(e) {
+      btn.textContent = 'ORDER READY';
+      btn.classList.remove('marking');
+    }
+  }
+
+  /* ── FETCH ORDERS ── */
+  async function fetchOrders() {
+    try {
+      const res = await fetch(
+        SUPA_URL + '/rest/v1/orders?status=eq.pending&order=created_at.asc&limit=50',
+        { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY } }
+      );
+      const orders = await res.json();
+      renderOrders(Array.isArray(orders) ? orders : []);
+      document.getElementById('statusText').textContent = 'Live';
+    } catch(e) {
+      document.getElementById('statusText').textContent = 'Reconnecting...';
+    }
+  }
+
+  /* ── START ── */
+  function startKDS() {
+    updateClock();
+    setInterval(updateClock, 1000);
+    fetchOrders();
+    setInterval(fetchOrders, 15000); // refresh every 15 seconds
+  }
+</script>
+</body>
+</html>
