@@ -710,6 +710,7 @@
 <script>
   const SUPA_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
   const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
+  const SMS_URL = 'https://script.google.com/macros/s/AKfycbyRhSuHPCUWK3ua_2mokRI8X3IUHWMkrqVP11l7zj1Tn-qUhzGFqNnXOipXxUj7r0m6/exec';
   const PIN = '3300';
 
   /* ── PIN ── */
@@ -794,9 +795,16 @@
 
   /* ── MARK READY ── */
   async function markReady(id, btn) {
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> Marking...';
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> Sending SMS...';
     btn.classList.add('marking');
+
+    // Get customer info from card
+    const card = document.querySelector(`[data-id="${id}"]`);
+    const name  = card?.querySelector('.card-customer-name')?.textContent || '';
+    const phone = card?.querySelector('.card-customer-phone')?.textContent || '';
+
     try {
+      // 1. Mark order done in Supabase
       await fetch(SUPA_URL + '/rest/v1/orders?id=eq.' + id, {
         method: 'PATCH',
         headers: {
@@ -807,7 +815,15 @@
         },
         body: JSON.stringify({ status: 'done' })
       });
-      const card = document.querySelector(`[data-id="${id}"]`);
+
+      // 2. Send SMS to customer
+      fetch(SMS_URL, {
+        method: 'POST',
+        body: JSON.stringify({ name, phone }),
+        headers: { 'Content-Type': 'text/plain' }
+      }).catch(() => {});
+
+      // 3. Remove card from screen
       if (card) {
         card.style.transition = 'opacity .3s, transform .3s';
         card.style.opacity = '0';
@@ -815,6 +831,7 @@
         setTimeout(() => { card.remove(); updateCount(); }, 320);
       }
       knownIds.delete(id);
+
     } catch(e) {
       btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> ORDER READY';
       btn.classList.remove('marking');
