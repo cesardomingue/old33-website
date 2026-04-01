@@ -9,11 +9,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
       --gold:   #c8881a;
       --green:  #16a34a;
       --red:    #dc2626;
+      --blue:   #2563eb;
       --bg:     #0a0a0a;
       --card:   #111111;
       --border: #1f1f1f;
@@ -22,14 +22,10 @@
       --gray:   #666;
       --dim:    #3a3a3a;
     }
-
     html, body { background: var(--bg); font-family: 'Inter', sans-serif; color: var(--white); min-height: 100%; }
 
     /* ── PIN ── */
-    #pinScreen {
-      position: fixed; inset: 0; background: var(--bg);
-      display: flex; align-items: center; justify-content: center; z-index: 9999;
-    }
+    #pinScreen { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 9999; }
     .pin-wrap { display: flex; flex-direction: column; align-items: center; gap: 30px; }
     .pin-brand { text-align: center; }
     .pin-brand-tag { font-size: 10px; color: var(--gold); letter-spacing: 4px; text-transform: uppercase; font-weight: 600; margin-bottom: 10px; }
@@ -48,89 +44,117 @@
     .pin-btn.del { background: transparent; border-color: transparent; color: var(--gray); font-size: 20px; }
 
     /* ── HEADER ── */
-    .adm-header {
-      background: #0d0d0d; border-bottom: 1px solid var(--border);
-      padding: 0 28px; height: 62px;
-      display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; z-index: 100;
-    }
+    .adm-header { background: #0d0d0d; border-bottom: 1px solid var(--border); padding: 0 28px; height: 62px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
     .adm-brand { display: flex; align-items: center; gap: 14px; }
     .adm-badge { width: 36px; height: 36px; background: var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 700; color: #000; flex-shrink: 0; }
     .adm-brand-name { font-family: 'Oswald', sans-serif; font-size: 17px; font-weight: 600; color: var(--white); letter-spacing: 1.5px; line-height: 1; }
     .adm-brand-sub { font-size: 10px; color: var(--gray); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 3px; }
-    .adm-header-right { display: flex; align-items: center; gap: 16px; }
-    .adm-date { font-size: 12px; color: var(--gray); }
-    .adm-refresh { background: #1a1a1a; border: 1px solid var(--border2); color: var(--gray); padding: 7px 14px; border-radius: 6px; font-size: 12px; font-family: 'Inter', sans-serif; cursor: pointer; transition: all .15s; }
-    .adm-refresh:hover { border-color: var(--gold); color: var(--white); }
+    .adm-header-right { display: flex; align-items: center; gap: 10px; }
+    .adm-live { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #22c55e; }
+    .adm-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .adm-last-refresh { font-size: 11px; color: var(--dim); }
+    .adm-btn { background: #1a1a1a; border: 1px solid var(--border2); color: var(--gray); padding: 7px 13px; border-radius: 6px; font-size: 12px; font-family: 'Inter', sans-serif; cursor: pointer; transition: all .15s; white-space: nowrap; }
+    .adm-btn:hover { border-color: var(--gold); color: var(--white); }
+    .adm-btn.export { border-color: rgba(22,163,74,.3); color: #22c55e; }
+    .adm-btn.export:hover { background: rgba(22,163,74,.08); border-color: #22c55e; }
 
     /* ── BODY ── */
-    .adm-body { padding: 28px; max-width: 1400px; margin: 0 auto; }
+    .adm-body { padding: 24px 28px; max-width: 1400px; margin: 0 auto; }
 
     /* ── PERIOD ── */
-    .period-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+    .top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; flex-wrap: wrap; gap: 12px; }
     .period-tabs { display: flex; gap: 3px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
-    .period-tab { padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--gray); transition: all .15s; border: none; background: transparent; font-family: 'Inter', sans-serif; }
-    .period-tab.active { background: var(--gold); color: #000; font-weight: 600; }
-    .period-title { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; color: var(--white); letter-spacing: 1px; }
+    .period-tab { padding: 7px 16px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; color: var(--gray); transition: all .15s; border: none; background: transparent; font-family: 'Inter', sans-serif; }
+    .period-tab.active { background: var(--gold); color: #000; font-weight: 700; }
+    .period-label { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 600; color: var(--white); letter-spacing: 1px; }
 
     /* ── METRICS ── */
-    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; margin-bottom: 28px; }
-    .metric-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; }
-    .metric-label { font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
-    .metric-value { font-family: 'Oswald', sans-serif; font-size: 36px; font-weight: 700; line-height: 1; color: var(--white); }
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 12px; margin-bottom: 22px; }
+    .metric-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+    .metric-label { font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+    .metric-value { font-family: 'Oswald', sans-serif; font-size: 32px; font-weight: 700; line-height: 1; color: var(--white); }
     .metric-value.gold  { color: var(--gold); }
     .metric-value.green { color: #22c55e; }
-    .metric-sub { font-size: 11px; color: var(--dim); margin-top: 8px; }
+    .metric-value.blue  { color: #60a5fa; }
+    .metric-sub { font-size: 11px; color: var(--dim); margin-top: 7px; }
 
-    /* ── BOTTOM ── */
-    .bottom-grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
-    @media (max-width: 1000px) { .bottom-grid { grid-template-columns: 1fr; } }
+    /* ── FINANCIAL BREAKDOWN ── */
+    .finance-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin-bottom: 22px; }
+    .finance-title { font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; }
+    .finance-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .finance-item { flex: 1; min-width: 120px; }
+    .finance-item-label { font-size: 11px; color: var(--gray); margin-bottom: 4px; }
+    .finance-item-val { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; color: var(--white); }
+    .finance-item-val.gold  { color: var(--gold); }
+    .finance-item-val.green { color: #22c55e; }
+    .finance-item-val.blue  { color: #60a5fa; }
+    .finance-item-pct { font-size: 11px; color: var(--dim); margin-top: 2px; }
+    .finance-divider { width: 1px; height: 48px; background: var(--border); flex-shrink: 0; }
+    .finance-eq { font-size: 20px; color: var(--dim); flex-shrink: 0; }
 
-    /* ── SECTION ── */
+    /* ── CHART + ITEMS ROW ── */
+    .mid-grid { display: grid; grid-template-columns: 1fr 300px; gap: 16px; margin-bottom: 22px; }
+    @media (max-width: 900px) { .mid-grid { grid-template-columns: 1fr; } }
+
+    /* ── CHART ── */
+    .chart-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; }
+    .chart-title { font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
+    .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 100px; }
+    .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .bar-wrap { width: 100%; flex: 1; display: flex; align-items: flex-end; }
+    .bar { width: 100%; background: rgba(200,136,26,.25); border-radius: 3px 3px 0 0; transition: height .4s ease; min-height: 2px; position: relative; cursor: default; }
+    .bar.today { background: var(--gold); }
+    .bar-val { font-size: 9px; color: var(--gray); white-space: nowrap; }
+    .bar-day { font-size: 9px; color: var(--dim); white-space: nowrap; }
+
+    /* ── TOP ITEMS ── */
     .section { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-    .section-hdr { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-    .section-title { font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 1.5px; color: var(--white); }
+    .section-hdr { padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .section-title { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 1.5px; color: var(--white); }
     .section-meta { font-size: 11px; color: var(--gray); }
+    .item-row { display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid #161616; }
+    .item-row:last-child { border-bottom: none; }
+    .item-rank { font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 700; color: var(--dim); width: 20px; text-align: center; flex-shrink: 0; }
+    .item-rank.top { color: var(--gold); }
+    .item-info { flex: 1; min-width: 0; }
+    .item-name { font-size: 13px; font-weight: 600; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-ct { font-size: 11px; color: var(--gray); margin-top: 1px; }
+    .item-bar-wrap { width: 50px; height: 3px; background: var(--border); border-radius: 2px; flex-shrink: 0; }
+    .item-bar { height: 3px; background: var(--gold); border-radius: 2px; }
 
-    /* ── TABLE ── */
+    /* ── ORDERS TABLE ── */
+    .orders-section { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
     .ord-table { width: 100%; border-collapse: collapse; }
-    .ord-table th { padding: 10px 20px; text-align: left; font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; border-bottom: 1px solid var(--border); background: #0d0d0d; white-space: nowrap; }
-    .ord-table td { padding: 13px 20px; font-size: 13px; border-bottom: 1px solid #161616; vertical-align: middle; }
+    .ord-table th { padding: 10px 18px; text-align: left; font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; border-bottom: 1px solid var(--border); background: #0d0d0d; white-space: nowrap; }
+    .ord-table td { padding: 12px 18px; font-size: 13px; border-bottom: 1px solid #161616; vertical-align: middle; }
     .ord-table tr:last-child td { border-bottom: none; }
     .ord-table tbody tr:hover td { background: #141414; }
-
-    .td-order-num { font-family: 'Oswald', sans-serif; font-size: 12px; color: var(--gold); letter-spacing: 1.5px; white-space: nowrap; }
-    .td-date { font-size: 11px; color: var(--gray); margin-top: 3px; white-space: nowrap; }
+    .td-num { font-family: 'Oswald', sans-serif; font-size: 11px; color: var(--gold); letter-spacing: 1.5px; white-space: nowrap; }
+    .td-date { font-size: 10px; color: var(--gray); margin-top: 3px; white-space: nowrap; }
     .td-name { font-size: 14px; font-weight: 600; color: var(--white); }
-    .td-phone { font-size: 12px; color: var(--gray); margin-top: 2px; }
-    .td-items { font-size: 12px; color: var(--gray); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .td-breakdown { font-size: 11px; color: var(--gray); line-height: 1.8; white-space: nowrap; }
+    .td-phone { font-size: 11px; color: var(--gray); margin-top: 2px; }
+    .td-items { font-size: 12px; color: var(--gray); max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .td-math { font-size: 11px; color: var(--gray); line-height: 1.9; white-space: nowrap; }
     .td-total { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; color: var(--white); white-space: nowrap; }
     .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
     .badge-done    { background: rgba(22,163,74,.1);  color: #22c55e; border: 1px solid rgba(22,163,74,.2); }
     .badge-pending { background: rgba(200,136,26,.1); color: var(--gold); border: 1px solid rgba(200,136,26,.2); }
-    .no-data { padding: 48px 20px; text-align: center; color: var(--dim); font-size: 13px; }
-
-    /* ── TOP ITEMS ── */
-    .item-row { display: flex; align-items: center; gap: 14px; padding: 14px 20px; border-bottom: 1px solid #161616; }
-    .item-row:last-child { border-bottom: none; }
-    .item-rank { font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 700; color: var(--dim); width: 22px; text-align: center; flex-shrink: 0; }
-    .item-rank.top { color: var(--gold); }
-    .item-info { flex: 1; min-width: 0; }
-    .item-name { font-size: 13px; font-weight: 600; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .item-ct { font-size: 11px; color: var(--gray); margin-top: 2px; }
-    .item-bar-wrap { width: 60px; height: 3px; background: var(--border); border-radius: 2px; flex-shrink: 0; }
-    .item-bar { height: 3px; background: var(--gold); border-radius: 2px; transition: width .5s ease; }
+    .no-data { padding: 48px; text-align: center; color: var(--dim); font-size: 13px; }
 
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
-    @media (max-width: 600px) {
+    @media (max-width: 640px) {
       .adm-body { padding: 16px; }
       .adm-header { padding: 0 16px; }
-      .adm-date { display: none; }
-      .metrics-grid { grid-template-columns: 1fr 1fr; }
+      .adm-last-refresh, .adm-live { display: none; }
+      .metrics-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .finance-divider, .finance-eq { display: none; }
+      .finance-item { min-width: 80px; }
+      .ord-table th:nth-child(3), .ord-table td:nth-child(3),
+      .ord-table th:nth-child(4), .ord-table td:nth-child(4) { display: none; }
     }
   </style>
 </head>
@@ -177,16 +201,19 @@
     </div>
   </div>
   <div class="adm-header-right">
-    <div class="adm-date" id="headerDate"></div>
-    <button class="adm-refresh" onclick="loadData()">&#8635; Refresh</button>
+    <div class="adm-live"><div class="adm-live-dot"></div>Live</div>
+    <div class="adm-last-refresh" id="lastRefresh"></div>
+    <button class="adm-btn export" onclick="exportCSV()">&#8595; Export CSV</button>
+    <button class="adm-btn" onclick="loadData()">&#8635; Refresh</button>
   </div>
 </div>
 
 <!-- BODY -->
 <div class="adm-body">
 
-  <div class="period-row">
-    <div class="period-title" id="periodTitle">Today</div>
+  <!-- PERIOD ROW -->
+  <div class="top-row">
+    <div class="period-label" id="periodLabel">Today</div>
     <div class="period-tabs">
       <button class="period-tab active" onclick="setPeriod('today',this)">Today</button>
       <button class="period-tab" onclick="setPeriod('week',this)">This Week</button>
@@ -195,10 +222,10 @@
     </div>
   </div>
 
-  <!-- METRICS -->
+  <!-- KEY METRICS -->
   <div class="metrics-grid">
     <div class="metric-card">
-      <div class="metric-label">Revenue</div>
+      <div class="metric-label">Total Revenue</div>
       <div class="metric-value gold" id="m-revenue">—</div>
       <div class="metric-sub" id="m-revenue-sub">&nbsp;</div>
     </div>
@@ -213,37 +240,71 @@
       <div class="metric-sub">per order</div>
     </div>
     <div class="metric-card">
-      <div class="metric-label">Tax Collected</div>
-      <div class="metric-value" id="m-tax">—</div>
-      <div class="metric-sub">total tax</div>
+      <div class="metric-label">Completion Rate</div>
+      <div class="metric-value blue" id="m-rate">—</div>
+      <div class="metric-sub" id="m-rate-sub">&nbsp;</div>
     </div>
     <div class="metric-card">
-      <div class="metric-label">Tips</div>
+      <div class="metric-label">Tips Earned</div>
       <div class="metric-value green" id="m-tips">—</div>
       <div class="metric-sub">total tips</div>
     </div>
   </div>
 
-  <!-- ORDERS + TOP ITEMS -->
-  <div class="bottom-grid">
-    <div class="section">
-      <div class="section-hdr">
-        <div class="section-title">Orders</div>
-        <div class="section-meta" id="orders-meta"></div>
+  <!-- FINANCIAL BREAKDOWN -->
+  <div class="finance-card">
+    <div class="finance-title">Financial Breakdown</div>
+    <div class="finance-row">
+      <div class="finance-item">
+        <div class="finance-item-label">Food Subtotal</div>
+        <div class="finance-item-val gold" id="f-sub">—</div>
+        <div class="finance-item-pct" id="f-sub-pct">&nbsp;</div>
       </div>
-      <div style="overflow-x:auto;" id="ordersWrap">
-        <div class="no-data">Loading...</div>
+      <div class="finance-eq">+</div>
+      <div class="finance-item">
+        <div class="finance-item-label">Tax Collected</div>
+        <div class="finance-item-val blue" id="f-tax">—</div>
+        <div class="finance-item-pct" id="f-tax-pct">&nbsp;</div>
+      </div>
+      <div class="finance-eq">+</div>
+      <div class="finance-item">
+        <div class="finance-item-label">Tips</div>
+        <div class="finance-item-val green" id="f-tips">—</div>
+        <div class="finance-item-pct" id="f-tips-pct">&nbsp;</div>
+      </div>
+      <div class="finance-divider"></div>
+      <div class="finance-eq">=</div>
+      <div class="finance-item">
+        <div class="finance-item-label">Total Charged</div>
+        <div class="finance-item-val" id="f-total">—</div>
+        <div class="finance-item-pct" id="f-orders-ct">&nbsp;</div>
       </div>
     </div>
+  </div>
 
+  <!-- 7-DAY CHART + TOP ITEMS -->
+  <div class="mid-grid">
+    <div class="chart-card">
+      <div class="chart-title">Revenue — Last 7 Days</div>
+      <div class="bar-chart" id="barChart"></div>
+    </div>
     <div class="section">
       <div class="section-hdr">
         <div class="section-title">Top Items</div>
         <div class="section-meta" id="items-meta"></div>
       </div>
-      <div id="topItemsWrap">
-        <div class="no-data">Loading...</div>
-      </div>
+      <div id="topItemsWrap"><div class="no-data">Loading...</div></div>
+    </div>
+  </div>
+
+  <!-- ORDERS TABLE -->
+  <div class="orders-section">
+    <div class="section-hdr">
+      <div class="section-title">Orders</div>
+      <div class="section-meta" id="orders-meta"></div>
+    </div>
+    <div style="overflow-x:auto;" id="ordersWrap">
+      <div class="no-data">Loading...</div>
     </div>
   </div>
 
@@ -267,8 +328,7 @@
       setTimeout(() => {
         if (pinEntry === PIN) {
           const ps = document.getElementById('pinScreen');
-          ps.style.transition = 'opacity .35s';
-          ps.style.opacity = '0';
+          ps.style.transition = 'opacity .35s'; ps.style.opacity = '0';
           setTimeout(() => ps.style.display = 'none', 350);
           init();
         } else {
@@ -289,10 +349,8 @@
 
   /* ── INIT ── */
   function init() {
-    document.getElementById('headerDate').textContent = new Date().toLocaleDateString('en-US', {
-      weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/New_York'
-    });
     loadData();
+    setInterval(loadData, 60000); // auto-refresh every 60s
   }
 
   /* ── PERIOD ── */
@@ -301,107 +359,165 @@
     period = p;
     document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
-    document.getElementById('periodTitle').textContent = periodLabels[p];
+    document.getElementById('periodLabel').textContent = periodLabels[p];
     render();
   }
 
   function filterOrders(orders) {
     if (period === 'all') return orders;
-    const now = new Date();
-    const et  = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    const et = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
     return orders.filter(o => {
-      const d  = new Date(o.created_at);
-      const de = new Date(d.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-      if (period === 'today') {
+      const de = new Date(new Date(o.created_at).toLocaleString('en-US', { timeZone: 'America/New_York' }));
+      if (period === 'today')
         return de.getFullYear() === et.getFullYear() && de.getMonth() === et.getMonth() && de.getDate() === et.getDate();
-      }
       if (period === 'week') {
         const cut = new Date(et); cut.setDate(et.getDate() - 7); return de >= cut;
       }
-      if (period === 'month') {
+      if (period === 'month')
         return de.getFullYear() === et.getFullYear() && de.getMonth() === et.getMonth();
-      }
     });
   }
 
   /* ── LOAD ── */
   async function loadData() {
     try {
-      const res = await fetch(
-        SUPA_URL + '/rest/v1/orders?order=created_at.desc&limit=500',
-        { headers: { apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY } }
-      );
+      const res  = await fetch(SUPA_URL + '/rest/v1/orders?order=created_at.desc&limit=500',
+        { headers: { apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY } });
       const data = await res.json();
-      allOrders = Array.isArray(data) ? data : [];
+      allOrders  = Array.isArray(data) ? data : [];
+      document.getElementById('lastRefresh').textContent =
+        'Updated ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
       render();
     } catch(e) {
-      document.getElementById('ordersWrap').innerHTML = '<div class="no-data">Failed to load. Check connection.</div>';
+      document.getElementById('ordersWrap').innerHTML = '<div class="no-data">Connection error. Refresh to retry.</div>';
     }
   }
 
   function render() {
     const orders = filterOrders(allOrders);
     renderMetrics(orders);
-    renderOrders(orders);
+    renderFinance(orders);
+    renderChart();
     renderTopItems(orders);
+    renderOrders(orders);
   }
 
   /* ── HELPERS ── */
-  function fmt(n) { return '$' + parseFloat(n || 0).toFixed(2); }
-  function esc(s) {
-    return String(s || '').replace(/[<>&"']/g, c =>
-      ({ '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;' }[c]));
-  }
+  function fmt(n)  { return '$' + parseFloat(n || 0).toFixed(2); }
+  function pct(a, b) { return b ? Math.round(a / b * 100) + '%' : '0%'; }
+  function esc(s)  { return String(s || '').replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c])); }
 
   /* ── METRICS ── */
   function renderMetrics(orders) {
-    const total = orders.reduce((s, o) => s + parseFloat(o.total   || 0), 0);
-    const tax   = orders.reduce((s, o) => s + parseFloat(o.tax     || 0), 0);
-    const tips  = orders.reduce((s, o) => s + parseFloat(o.tip     || 0), 0);
+    const total = orders.reduce((s, o) => s + parseFloat(o.total || 0), 0);
+    const tips  = orders.reduce((s, o) => s + parseFloat(o.tip   || 0), 0);
     const avg   = orders.length ? total / orders.length : 0;
     const done  = orders.filter(o => o.status === 'done').length;
     const pend  = orders.filter(o => o.status === 'pending').length;
+    const rate  = orders.length ? Math.round(done / orders.length * 100) : 0;
 
     document.getElementById('m-revenue').textContent     = fmt(total);
     document.getElementById('m-revenue-sub').textContent = done + ' completed';
     document.getElementById('m-orders').textContent      = orders.length;
     document.getElementById('m-orders-sub').textContent  = pend + ' pending';
     document.getElementById('m-avg').textContent         = fmt(avg);
-    document.getElementById('m-tax').textContent         = fmt(tax);
+    document.getElementById('m-rate').textContent        = rate + '%';
+    document.getElementById('m-rate-sub').textContent    = done + ' of ' + orders.length + ' done';
     document.getElementById('m-tips').textContent        = fmt(tips);
+  }
+
+  /* ── FINANCE ── */
+  function renderFinance(orders) {
+    const sub   = orders.reduce((s, o) => s + parseFloat(o.subtotal || 0), 0);
+    const tax   = orders.reduce((s, o) => s + parseFloat(o.tax     || 0), 0);
+    const tips  = orders.reduce((s, o) => s + parseFloat(o.tip     || 0), 0);
+    const total = orders.reduce((s, o) => s + parseFloat(o.total   || 0), 0);
+
+    document.getElementById('f-sub').textContent       = fmt(sub);
+    document.getElementById('f-tax').textContent       = fmt(tax);
+    document.getElementById('f-tips').textContent      = fmt(tips);
+    document.getElementById('f-total').textContent     = fmt(total);
+    document.getElementById('f-sub-pct').textContent   = total ? pct(sub, total)  + ' of total' : '';
+    document.getElementById('f-tax-pct').textContent   = total ? pct(tax, total)  + ' of total' : '';
+    document.getElementById('f-tips-pct').textContent  = total ? pct(tips, total) + ' of total' : '';
+    document.getElementById('f-orders-ct').textContent = orders.length + ' orders';
+  }
+
+  /* ── CHART ── */
+  function renderChart() {
+    const days = [];
+    const revByDay = {};
+    const now = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now); d.setDate(now.getDate() - i);
+      const key = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'America/New_York' });
+      const iso = d.toLocaleDateString('en-CA', { timeZone: 'America/New_York' }); // YYYY-MM-DD
+      days.push({ key, iso, isToday: i === 0 });
+      revByDay[iso] = 0;
+    }
+    allOrders.forEach(o => {
+      const iso = new Date(o.created_at).toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+      if (revByDay[iso] !== undefined) revByDay[iso] += parseFloat(o.total || 0);
+    });
+
+    const vals = days.map(d => revByDay[d.iso]);
+    const max  = Math.max(...vals, 1);
+
+    document.getElementById('barChart').innerHTML = days.map((d, i) => {
+      const h   = Math.max(Math.round(vals[i] / max * 100), vals[i] > 0 ? 4 : 0);
+      const lbl = vals[i] > 0 ? '$' + Math.round(vals[i]) : '';
+      return `<div class="bar-col">
+        <div class="bar-val">${lbl}</div>
+        <div class="bar-wrap"><div class="bar ${d.isToday ? 'today' : ''}" style="height:${h}%"></div></div>
+        <div class="bar-day">${d.key}</div>
+      </div>`;
+    }).join('');
+  }
+
+  /* ── TOP ITEMS ── */
+  function renderTopItems(orders) {
+    const wrap   = document.getElementById('topItemsWrap');
+    const counts = {};
+    orders.forEach(o => {
+      (Array.isArray(o.items) ? o.items : []).forEach(it => {
+        counts[it.name] = (counts[it.name] || 0) + (parseInt(it.qty) || 1);
+      });
+    });
+    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 10);
+    document.getElementById('items-meta').textContent = sorted.length + ' items';
+    if (!sorted.length) { wrap.innerHTML = '<div class="no-data">No data.</div>'; return; }
+    const max = sorted[0][1];
+    wrap.innerHTML = sorted.map(([name, count], i) => `
+      <div class="item-row">
+        <div class="item-rank ${i === 0 ? 'top' : ''}">${i + 1}</div>
+        <div class="item-info">
+          <div class="item-name">${esc(name)}</div>
+          <div class="item-ct">${count} ordered</div>
+        </div>
+        <div class="item-bar-wrap"><div class="item-bar" style="width:${Math.round(count/max*100)}%"></div></div>
+      </div>`).join('');
   }
 
   /* ── ORDERS ── */
   function renderOrders(orders) {
     const wrap = document.getElementById('ordersWrap');
     document.getElementById('orders-meta').textContent = orders.length + ' orders';
-
-    if (!orders.length) {
-      wrap.innerHTML = '<div class="no-data">No orders for this period.</div>';
-      return;
-    }
+    if (!orders.length) { wrap.innerHTML = '<div class="no-data">No orders for this period.</div>'; return; }
 
     const rows = orders.map(o => {
       const items   = Array.isArray(o.items) ? o.items : [];
       const preview = items.map(i => i.qty + '× ' + i.name).join(', ');
       const time    = new Date(o.created_at).toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', timeZone:'America/New_York' });
       const date    = new Date(o.created_at).toLocaleDateString('en-US', { month:'short', day:'numeric', timeZone:'America/New_York' });
+      const tip     = parseFloat(o.tip || 0);
       const badge   = o.status === 'done'
         ? '<span class="badge badge-done">Done</span>'
         : '<span class="badge badge-pending">Pending</span>';
-      const tip = parseFloat(o.tip || 0);
-
       return `<tr>
-        <td>
-          <div class="td-order-num">${esc(o.order_num)}</div>
-          <div class="td-date">${date} &middot; ${time}</div>
-        </td>
-        <td>
-          <div class="td-name">${esc(o.customer_name)}</div>
-          <div class="td-phone">${esc(o.customer_phone)}</div>
-        </td>
+        <td><div class="td-num">${esc(o.order_num)}</div><div class="td-date">${date} &middot; ${time}</div></td>
+        <td><div class="td-name">${esc(o.customer_name)}</div><div class="td-phone">${esc(o.customer_phone)}</div></td>
         <td><div class="td-items">${esc(preview)}</div></td>
-        <td class="td-breakdown">
+        <td class="td-math">
           <div>Sub &nbsp;${fmt(o.subtotal)}</div>
           <div>Tax &nbsp;&nbsp;${fmt(o.tax)}</div>
           ${tip > 0 ? `<div>Tip &nbsp;&nbsp;${fmt(tip)}</div>` : ''}
@@ -413,48 +529,40 @@
 
     wrap.innerHTML = `<table class="ord-table">
       <thead><tr>
-        <th>Order</th>
-        <th>Customer</th>
-        <th>Items</th>
-        <th>Breakdown</th>
-        <th>Total</th>
-        <th>Status</th>
+        <th>Order</th><th>Customer</th><th>Items</th><th>Breakdown</th><th>Total</th><th>Status</th>
       </tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
   }
 
-  /* ── TOP ITEMS ── */
-  function renderTopItems(orders) {
-    const wrap = document.getElementById('topItemsWrap');
-    const counts = {};
-
-    orders.forEach(o => {
-      (Array.isArray(o.items) ? o.items : []).forEach(it => {
-        counts[it.name] = (counts[it.name] || 0) + (parseInt(it.qty) || 1);
-      });
+  /* ── EXPORT CSV ── */
+  function exportCSV() {
+    const orders = filterOrders(allOrders);
+    if (!orders.length) { alert('No orders to export for this period.'); return; }
+    const header = ['Order #','Date','Time','Customer','Phone','Email','Items','Subtotal','Tax','Tip','Total','Status'];
+    const rows = orders.map(o => {
+      const items = (Array.isArray(o.items) ? o.items : []).map(i => i.qty + 'x ' + i.name).join(' | ');
+      const d = new Date(o.created_at);
+      const date = d.toLocaleDateString('en-US', { timeZone: 'America/New_York' });
+      const time = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
+      return [
+        o.order_num, date, time, o.customer_name, o.customer_phone, o.customer_email || '',
+        items,
+        parseFloat(o.subtotal || 0).toFixed(2),
+        parseFloat(o.tax      || 0).toFixed(2),
+        parseFloat(o.tip      || 0).toFixed(2),
+        parseFloat(o.total    || 0).toFixed(2),
+        o.status
+      ].map(v => '"' + String(v || '').replace(/"/g, '""') + '"').join(',');
     });
-
-    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 12);
-    document.getElementById('items-meta').textContent = sorted.length + ' items';
-
-    if (!sorted.length) {
-      wrap.innerHTML = '<div class="no-data">No data yet.</div>';
-      return;
-    }
-
-    const max = sorted[0][1];
-    wrap.innerHTML = sorted.map(([name, count], i) => `
-      <div class="item-row">
-        <div class="item-rank ${i === 0 ? 'top' : ''}">${i + 1}</div>
-        <div class="item-info">
-          <div class="item-name">${esc(name)}</div>
-          <div class="item-ct">${count} ordered</div>
-        </div>
-        <div class="item-bar-wrap">
-          <div class="item-bar" style="width:${Math.round(count / max * 100)}%"></div>
-        </div>
-      </div>`).join('');
+    const csv  = [header.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = 'old33-orders-' + period + '-' + new Date().toISOString().slice(0,10) + '.csv';
+    a.click();
+    URL.revokeObjectURL(url);
   }
 </script>
 </body>
