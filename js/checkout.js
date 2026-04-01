@@ -272,6 +272,26 @@ const Checkout = (() => {
       })
     }).catch(() => {});
 
+    // Send email receipt if customer provided email
+    if (email) {
+      const EMAIL_URL = 'https://script.google.com/macros/s/AKfycbwfmAVyQd8mKymGgTaoEQ2obyGcUiCmBX90z49nQDw7bCSlTpkEiZ0CXKadeB7o0dKWpQ/exec';
+      fetch(EMAIL_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({
+          name, email,
+          order_num: orderNum,
+          items,
+          subtotal: payload.subtotal,
+          tax:      payload.tax,
+          tip:      payload.tip,
+          total:    payload.total,
+          ready_time: payload.readyTime
+        })
+      }).catch(() => {});
+    }
+
     Cart.clear();
     showSuccess(payload);
   }
