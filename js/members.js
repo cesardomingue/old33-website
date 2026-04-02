@@ -30,7 +30,7 @@
 
   window.memberSignOut = function() {
     localStorage.removeItem('ol33_member');
-    localStorage.removeItem('ol33_info');
+    // Keep ol33_info so email pre-fills on next sign-in
     window.location.reload();
   };
 
