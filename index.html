@@ -742,11 +742,16 @@ async function applyMember(member) {
   if (member) {
     applyMember(member);
   } else {
-    // Show popup on every visit until signed in
-    setTimeout(function() {
-      var overlay = document.getElementById('memberOverlay');
-      if (overlay) overlay.style.display = 'flex';
-    }, 3000);
+    // Show popup once per browser session (not every time they click Home)
+    if (!sessionStorage.getItem('ol33_popup_shown')) {
+      setTimeout(function() {
+        var overlay = document.getElementById('memberOverlay');
+        if (overlay) {
+          overlay.style.display = 'flex';
+          sessionStorage.setItem('ol33_popup_shown', '1');
+        }
+      }, 3000);
+    }
   }
 })();
 </script>
