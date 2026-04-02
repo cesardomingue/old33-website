@@ -39,10 +39,26 @@
         signInEl.textContent = 'Hi, ' + first;
         signInEl.style.color = '#c8a84b';
         signInEl.style.fontWeight = '700';
+        signInEl.onclick = function(e) {
+          e.preventDefault();
+          if (confirm('Sign out of the Members Club?')) {
+            localStorage.removeItem('ol33_member');
+            localStorage.removeItem('ol33_info');
+            window.location.reload();
+          }
+        };
       }
       if (mobEl) {
-        mobEl.textContent = 'Hi, ' + first;
+        mobEl.textContent = 'Hi, ' + first + ' (Sign Out)';
         mobEl.style.color = '#c8a84b';
+        mobEl.onclick = function(e) {
+          e.preventDefault();
+          if (confirm('Sign out of the Members Club?')) {
+            localStorage.removeItem('ol33_member');
+            localStorage.removeItem('ol33_info');
+            window.location.reload();
+          }
+        };
       }
     }
   }
