@@ -82,8 +82,21 @@ document.addEventListener('click', function(e) {
   const card = btn.closest('.photo-card');
 
   if (btn.classList.contains('pc-variant-protein')) {
-    // Multi-select toggle — click again to deselect
+    // Multi-select protein add-ons: toggle
     btn.classList.toggle('active');
+
+  } else if (btn.dataset.multi === '1') {
+    // Multi-select dressings: toggle, but keep at least one selected
+    const activeDressings = card.querySelectorAll('.pc-variant[data-multi="1"].active');
+    if (btn.classList.contains('active') && activeDressings.length <= 1) return;
+    btn.classList.toggle('active');
+    // Rebuild card name from all active dressings
+    const allActive = [...card.querySelectorAll('.pc-variant[data-multi="1"].active')];
+    const baseName = btn.dataset.name.split(' — ')[0];
+    const dressings = allActive.map(b => b.dataset.name.split(' — ')[1] || b.dataset.name);
+    card.dataset.name  = dressings.length ? `${baseName} — ${dressings.join(' + ')}` : baseName;
+    card.dataset.price = btn.dataset.price; // all dressings same price
+
   } else {
     // Radio — one base option at a time
     card.querySelectorAll('.pc-variant:not(.pc-variant-protein)').forEach(b => b.classList.remove('active'));

@@ -119,6 +119,37 @@ const BURGER_XTRA = [
 
 const TEMP_OPTIONS = ['Rare','Medium Rare','Medium','Med Well','Well Done'];
 
+const EXTRA_SIDES = [
+  { name:'Extra French Fries',        price:3.00 },
+  { name:'Extra Curly Fries',         price:3.00 },
+  { name:'Extra Sweet Potato Fries',  price:3.50 },
+  { name:'Extra Onion Rings',         price:3.00 },
+  { name:'Extra Mac & Cheese',        price:3.00 },
+  { name:'Extra Potato Salad',        price:2.50 },
+  { name:'Extra Side Salad',          price:3.00 },
+  { name:'Extra Coleslaw',            price:2.50 },
+  { name:'Extra Hush Puppies',        price:1.50 },
+  { name:'Extra Fried Pickles',       price:2.00 },
+  { name:'Extra Cheese Fries',        price:4.00 },
+  { name:'Extra Bacon Cheese Fries',  price:5.00 },
+  { name:'Extra Loaded Fries',        price:4.00 },
+];
+
+const SALAD_TOPPINGS = [
+  { name:'Avocado',            price:1.20 },
+  { name:'Bacon Bits',         price:1.20 },
+  { name:'Extra Blue Cheese',  price:0.70 },
+  { name:'Extra Pecans',       price:0.70 },
+  { name:'Cucumber',           price:0.40 },
+  { name:'Pickled Red Onions', price:0.70 },
+  { name:'Croutons',           price:0.50 },
+  { name:'Extra Dressing',     price:0.50 },
+  { name:'Cherry Tomatoes',    price:0.40 },
+  { name:'Grilled Onions',     price:0.70 },
+  { name:'Shredded Cheddar',   price:0.70 },
+  { name:'Hard Boiled Egg',    price:0.70 },
+];
+
 const SOFT_DRINKS  = ['Soft Drink'];
 const JUICE_ITEMS  = ['Juice'];
 
@@ -131,6 +162,7 @@ function getCategory(name) {
   if (MYOB.includes(name))        return 'myob';
   if (SOFT_DRINKS.includes(name)) return 'softdrink';
   if (JUICE_ITEMS.includes(name)) return 'juice';
+  if (name.includes('House Salad') || name.includes('Caesar Salad')) return 'salad';
   return 'default';
 }
 
@@ -684,6 +716,44 @@ const Customize = (() => {
         <div class="cz-accordion-body">
           <div class="cz-extras-grid">
             ${BURGER_XTRA.map(e => `
+              <label class="cz-extra-item">
+                <input type="checkbox" class="cz-extra-cb" data-name="${s(e.name)}" data-price="${e.price}" onchange="Customize._upd()">
+                <span class="cz-extra-name">${s(e.name)}</span>
+                <span class="cz-extra-price">${e.price>0?`+$${e.price.toFixed(2)}`:'Free'}</span>
+              </label>`).join('')}
+          </div>
+        </div>
+      </details>`;
+
+      // Extra Side — optional, paid add-on
+      inner += `<details class="cz-accordion">
+        <summary class="cz-accordion-hdr">
+          <span>Add Extra Side</span>
+          <span class="cz-acc-badge">Optional · from +$1.50</span>
+        </summary>
+        <div class="cz-accordion-body">
+          <div class="cz-options-grid">
+            ${EXTRA_SIDES.map(es => `
+              <label class="cz-extra-item">
+                <input type="checkbox" class="cz-extra-cb" data-name="${s(es.name)}" data-price="${es.price}" onchange="Customize._upd()">
+                <span>${s(es.name)}</span>
+                <span class="cz-opt-price">+$${es.price.toFixed(2)}</span>
+              </label>`).join('')}
+          </div>
+        </div>
+      </details>`;
+    }
+
+    /* ── SALADS ── */
+    if (cat === 'salad') {
+      inner += `<details class="cz-accordion" open>
+        <summary class="cz-accordion-hdr">
+          <span>Add Toppings</span>
+          <span class="cz-acc-badge">Optional · 12 choices</span>
+        </summary>
+        <div class="cz-accordion-body">
+          <div class="cz-extras-grid">
+            ${SALAD_TOPPINGS.map(e => `
               <label class="cz-extra-item">
                 <input type="checkbox" class="cz-extra-cb" data-name="${s(e.name)}" data-price="${e.price}" onchange="Customize._upd()">
                 <span class="cz-extra-name">${s(e.name)}</span>
