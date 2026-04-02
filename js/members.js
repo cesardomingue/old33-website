@@ -60,17 +60,6 @@
   function updateNav() {
     var member = getMember();
 
-    // Auto-enroll from ol33_info if not already a member
-    if (!member) {
-      try {
-        var saved = JSON.parse(localStorage.getItem('ol33_info') || '{}');
-        if (saved.name && saved.email) {
-          member = { name: saved.name, email: saved.email, joined: new Date().toISOString() };
-          localStorage.setItem('ol33_member', JSON.stringify(member));
-        }
-      } catch(ex) {}
-    }
-
     var signInEl = document.getElementById('navSignIn');
     var mobEl    = document.getElementById('mobSignIn');
 

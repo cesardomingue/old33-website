@@ -494,7 +494,7 @@
 </script>
 
 <!-- MEMBER SIGN-UP / SIGN-IN MODAL -->
-<div id="memberOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;">
+<div id="memberOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;padding:20px;">
   <div style="background:#1a1a1a;border:1px solid #333;border-radius:16px;width:100%;max-width:440px;overflow:hidden;position:relative;">
     <!-- Gold bar -->
     <div style="background:#c8a84b;padding:22px 28px;">
@@ -739,22 +739,13 @@ async function applyMember(member) {
 // On page load
 (function() {
   var member = getMember();
-  if (!member) {
-    // Check if they've ordered before (ol33_info) — auto-enroll them silently
-    try {
-      var saved = JSON.parse(localStorage.getItem('ol33_info') || '{}');
-      if (saved.name && saved.email) {
-        member = { name: saved.name, email: saved.email, joined: new Date().toISOString() };
-        localStorage.setItem('ol33_member', JSON.stringify(member));
-      }
-    } catch(e) {}
-  }
   if (member) {
     applyMember(member);
   } else {
     // Show popup on every visit until signed in
     setTimeout(function() {
-      document.getElementById('memberOverlay').style.display = 'flex';
+      var overlay = document.getElementById('memberOverlay');
+      if (overlay) overlay.style.display = 'flex';
     }, 3000);
   }
 })();
