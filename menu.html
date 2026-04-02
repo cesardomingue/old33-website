@@ -815,15 +815,28 @@
         </div>
 
       </div>
-      <div class="menu-grid">
-        <div class="menu-item" data-name="Grilled Chicken Wrap" data-price="10.50">
-          <div class="mi-info"><div class="mi-name">Grilled Chicken Wrap</div><div class="mi-desc">Grilled chicken, lettuce, tomato &amp; mayo wrapped in a tortilla, served with fries</div></div>
-          <div class="mi-right"><div class="mi-price">$10.50</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+      <div class="photo-card-grid">
+        <div class="photo-card" data-name="Grilled Chicken Wrap" data-price="10.50">
+          <div class="pc-img-wrap"><img src="images/grilled-chicken-wrap.avif" alt="Grilled Chicken Wrap" loading="lazy" class="pc-img" /></div>
+          <div class="pc-body">
+            <div class="pc-name">Grilled Chicken Wrap</div>
+            <div class="pc-desc">Grilled chicken, lettuce, tomato &amp; mayo wrapped in a tortilla, served with fries</div>
+            <div class="pc-footer"><div class="pc-price">$10.50</div><button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button></div>
+          </div>
         </div>
-        <div class="menu-item" data-name="Buffalo Chicken Wrap" data-price="10.50">
-          <div class="mi-info"><div class="mi-name">Buffalo Chicken Wrap</div><div class="mi-desc">Crispy chicken in buffalo sauce, lettuce, cheddar cheese &amp; tomato wrapped in a tortilla, served with fries</div><div class="mi-tags"><span class="badge b-spicy">Spicy</span></div></div>
-          <div class="mi-right"><div class="mi-price">$10.50</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
+        <div class="photo-card" data-name="Buffalo Chicken Wrap" data-price="10.50">
+          <div class="pc-img-wrap">
+            <img src="images/buffalo-chicken-wrap.avif" alt="Buffalo Chicken Wrap" loading="lazy" class="pc-img" />
+            <div class="pc-badge-wrap"><span class="badge b-spicy">Spicy</span></div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Buffalo Chicken Wrap</div>
+            <div class="pc-desc">Crispy chicken in buffalo sauce, lettuce, cheddar cheese &amp; tomato wrapped in a tortilla, served with fries</div>
+            <div class="pc-footer"><div class="pc-price">$10.50</div><button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button></div>
+          </div>
         </div>
+      </div>
+      <div class="menu-grid" style="margin-top:14px;">
         <div class="menu-item" data-name="Smoked Brisket Platter" data-price="15.00">
           <div class="mi-info"><div class="mi-name">Smoked Brisket Platter</div><div class="mi-desc">Two tender slices of smoked brisket with fries, coleslaw, pickled onions &amp; BBQ sauce</div><div class="mi-tags"><span class="badge b-chef">Chef's Pick</span></div></div>
           <div class="mi-right"><div class="mi-price">$15.00</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
