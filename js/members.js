@@ -4,6 +4,36 @@
     try { return JSON.parse(localStorage.getItem('ol33_member') || 'null'); } catch(e) { return null; }
   }
 
+  function showSignOutModal() {
+    var existing = document.getElementById('signOutModal');
+    if (existing) { existing.style.display = 'flex'; return; }
+
+    var modal = document.createElement('div');
+    modal.id = 'signOutModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    modal.innerHTML =
+      '<div style="background:#1a1a1a;border:1px solid #333;border-radius:14px;width:100%;max-width:360px;overflow:hidden;">' +
+        '<div style="background:#c8a84b;padding:18px 24px;">' +
+          '<div style="font-size:16px;font-weight:900;color:#000;letter-spacing:1px;text-transform:uppercase;">Sign Out</div>' +
+          '<div style="font-size:12px;color:rgba(0,0,0,.6);margin-top:2px;">Old 33 Members Club</div>' +
+        '</div>' +
+        '<div style="padding:24px;">' +
+          '<p style="font-size:14px;color:#ccc;margin:0 0 24px;line-height:1.6;">Are you sure you want to sign out? Another person can sign in with their email to see their deals.</p>' +
+          '<div style="display:flex;gap:10px;">' +
+            '<button onclick="document.getElementById(\'signOutModal\').style.display=\'none\'" style="flex:1;background:#2a2a2a;border:1px solid #444;color:#ccc;font-size:13px;font-weight:600;padding:12px;border-radius:8px;cursor:pointer;">Cancel</button>' +
+            '<button onclick="memberSignOut()" style="flex:1;background:#c8a84b;border:none;color:#000;font-size:13px;font-weight:800;padding:12px;border-radius:8px;cursor:pointer;letter-spacing:.5px;">Sign Out</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(modal);
+  }
+
+  window.memberSignOut = function() {
+    localStorage.removeItem('ol33_member');
+    localStorage.removeItem('ol33_info');
+    window.location.reload();
+  };
+
   function openMemberModal(e) {
     if (e) e.preventDefault();
     var member = getMember();
@@ -41,11 +71,7 @@
         signInEl.style.fontWeight = '700';
         signInEl.onclick = function(e) {
           e.preventDefault();
-          if (confirm('Sign out of the Members Club?')) {
-            localStorage.removeItem('ol33_member');
-            localStorage.removeItem('ol33_info');
-            window.location.reload();
-          }
+          showSignOutModal();
         };
       }
       if (mobEl) {
@@ -53,11 +79,7 @@
         mobEl.style.color = '#c8a84b';
         mobEl.onclick = function(e) {
           e.preventDefault();
-          if (confirm('Sign out of the Members Club?')) {
-            localStorage.removeItem('ol33_member');
-            localStorage.removeItem('ol33_info');
-            window.location.reload();
-          }
+          showSignOutModal();
         };
       }
     }
