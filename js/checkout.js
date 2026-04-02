@@ -292,6 +292,15 @@ const Checkout = (() => {
       }).catch(() => {});
     }
 
+    // Auto-enroll as member if not already signed in
+    if (name && email) {
+      try {
+        if (!localStorage.getItem('ol33_member')) {
+          localStorage.setItem('ol33_member', JSON.stringify({ name, email, joined: new Date().toISOString() }));
+        }
+      } catch(e) {}
+    }
+
     Cart.clear();
     showSuccess(payload);
   }

@@ -690,7 +690,7 @@ function buildDeals(orderCount, firstName) {
   }
 
   return deals.map(function(d) {
-    return '<div class="special-card reveal">' +
+    return '<div class="special-card" style="opacity:1;transform:none;">' +
       '<div class="special-badge">' + d.badge + '</div>' +
       '<div class="special-name">' + d.name + '</div>' +
       '<div class="special-desc">' + d.desc + '</div>' +
@@ -738,6 +738,16 @@ async function applyMember(member) {
 // On page load
 (function() {
   var member = getMember();
+  if (!member) {
+    // Check if they've ordered before (ol33_info) — auto-enroll them silently
+    try {
+      var saved = JSON.parse(localStorage.getItem('ol33_info') || '{}');
+      if (saved.name && saved.email) {
+        member = { name: saved.name, email: saved.email, joined: new Date().toISOString() };
+        localStorage.setItem('ol33_member', JSON.stringify(member));
+      }
+    } catch(e) {}
+  }
   if (member) {
     applyMember(member);
   } else {
