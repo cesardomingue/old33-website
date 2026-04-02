@@ -22,16 +22,19 @@ const BUN_OPTIONS = [
 ];
 
 const BURGER_SIDES = [
-  { name:'French Fries',          price:0    },
-  { name:'Curly Fries',           price:0    },
-  { name:'Sweet Potato Fries',    price:0    },
-  { name:'Onion Rings',           price:0    },
-  { name:'Side of Mac & Cheese',  price:0    },
-  { name:'Potato Salad',          price:0    },
-  { name:'Side Salad',            price:0    },
-  { name:'Side of Coleslaw',      price:0    },
-  { name:'Kids Fruit Cup',        price:0    },
-  { name:'No Side',               price:0    },
+  { name:'French Fries',         price:0 },
+  { name:'Curly Fries',          price:0 },
+  { name:'Sweet Potato Fries',   price:0 },
+  { name:'Onion Rings',          price:0 },
+  { name:'Side of Mac & Cheese', price:0 },
+  { name:'Potato Salad',         price:0 },
+  { name:'Side Salad',           price:0 },
+  { name:'Side of Coleslaw',     price:0 },
+  { name:'Kids Fruit Cup',       price:0 },
+  { name:'No Side',              price:0 },
+];
+
+const BURGER_PAID_SIDES = [
   { name:'Hush Puppies',          price:1.50 },
   { name:'Fried Pickles as Side', price:2.00 },
   { name:'Cheese Fries',          price:1.00 },
@@ -555,8 +558,9 @@ const Customize = (() => {
     document.querySelectorAll('.cz-extra-cb:checked').forEach(cb => {
       extra += parseFloat(cb.dataset.price || 0);
     });
-    extra += parseFloat(document.querySelector('input[name="czBun"]:checked')?.dataset.price  || 0);
-    extra += parseFloat(document.querySelector('input[name="czSide"]:checked')?.dataset.price || 0);
+    extra += parseFloat(document.querySelector('input[name="czBun"]:checked')?.dataset.price       || 0);
+    extra += parseFloat(document.querySelector('input[name="czSide"]:checked')?.dataset.price      || 0);
+    extra += parseFloat(document.querySelector('input[name="czExtraSide"]:checked')?.dataset.price || 0);
     const el = document.getElementById('czItemTotal');
     if (el) el.textContent = `$${((_item.basePrice + extra) * _qty).toFixed(2)}`;
   }
@@ -609,6 +613,10 @@ const Customize = (() => {
     document.querySelectorAll('.cz-extra-cb:checked').forEach(cb => {
       extras.push({ name: cb.dataset.name, price: parseFloat(cb.dataset.price) });
     });
+    const extraSideEl = document.querySelector('input[name="czExtraSide"]:checked');
+    if (extraSideEl && extraSideEl.value !== 'none') {
+      extras.push({ name: extraSideEl.value, price: parseFloat(extraSideEl.dataset.price) });
+    }
 
     Cart.addItem({ name: _item.name, basePrice: _item.basePrice, qty: _qty, category: cat, bun, bunPrice, side, sidePrice, sauce, temp, extras, notes });
     close();
@@ -644,14 +652,30 @@ const Customize = (() => {
         </div>
       </div>`;
 
-      // Side — required, always open
+      // Free Side — required
       inner += `<div class="cz-section cz-section-req">
-        <div class="cz-sec-title">Side Choice <span class="cz-req">Required</span></div>
+        <div class="cz-sec-title">Free Side <span class="cz-req">Required</span></div>
         <div class="cz-options-grid">
           ${BURGER_SIDES.map((sd,i) => `
             <label class="cz-opt">
-              <input type="radio" name="czSide" value="${s(sd.name)}" data-price="${sd.price}" ${i===0?'checked':''} onchange="Customize._upd()">
-              <span>${s(sd.name)}${sd.price>0?` <span class="cz-opt-price">+$${sd.price.toFixed(2)}</span>`:''}</span>
+              <input type="radio" name="czSide" value="${s(sd.name)}" data-price="0" ${i===0?'checked':''} onchange="Customize._upd()">
+              <span>${s(sd.name)}</span>
+            </label>`).join('')}
+        </div>
+      </div>`;
+
+      // Paid Extra Side — optional
+      inner += `<div class="cz-section">
+        <div class="cz-sec-title">Add an Extra Side <span class="cz-acc-badge">Optional</span></div>
+        <div class="cz-options-grid">
+          <label class="cz-opt">
+            <input type="radio" name="czExtraSide" value="none" data-price="0" checked onchange="Customize._upd()">
+            <span>No Thanks</span>
+          </label>
+          ${BURGER_PAID_SIDES.map(sd => `
+            <label class="cz-opt">
+              <input type="radio" name="czExtraSide" value="${s(sd.name)}" data-price="${sd.price}" onchange="Customize._upd()">
+              <span>${s(sd.name)} <span class="cz-opt-price">+$${sd.price.toFixed(2)}</span></span>
             </label>`).join('')}
         </div>
       </div>`;
