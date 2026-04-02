@@ -80,11 +80,26 @@ document.addEventListener('click', function(e) {
   const btn = e.target.closest('.pc-variant');
   if (!btn) return;
   const card = btn.closest('.photo-card');
-  card.querySelectorAll('.pc-variant').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  card.dataset.name  = btn.dataset.name;
-  card.dataset.price = btn.dataset.price;
-  card.querySelector('.pc-price').textContent = '$' + parseFloat(btn.dataset.price).toFixed(2);
+
+  if (btn.classList.contains('pc-variant-protein')) {
+    // Multi-select toggle — click again to deselect
+    btn.classList.toggle('active');
+  } else {
+    // Radio — one base option at a time
+    card.querySelectorAll('.pc-variant:not(.pc-variant-protein)').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    card.dataset.name  = btn.dataset.name;
+    card.dataset.price = btn.dataset.price;
+  }
+
+  // Recalculate displayed price: base + all selected protein add-ons
+  const base = parseFloat(card.dataset.price) || 0;
+  let addons = 0;
+  card.querySelectorAll('.pc-variant-protein.active').forEach(b => {
+    addons += parseFloat(b.dataset.price) || 0;
+  });
+  const priceEl = card.querySelector('.pc-price');
+  if (priceEl) priceEl.textContent = '$' + (base + addons).toFixed(2);
 });
 
 /* --- Floating Call Button (mobile only) --- */

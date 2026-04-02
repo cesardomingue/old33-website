@@ -301,7 +301,7 @@ const Cart = (() => {
         if (item.side)  details.push('Side: ' + item.side + (item.sidePrice > 0 ? ` (+$${item.sidePrice.toFixed(2)})` : ''));
         if (item.temp)  details.push(item.temp);
         if (item.sauce) details.push(item.sauce);
-        if (item.extras?.length) details.push(...item.extras.map(e => e.name));
+        if (item.extras?.length) details.push(...item.extras.map(e => e.price > 0 ? `${e.name} +$${e.price.toFixed(2)}` : e.name));
 
         return `
         <div class="cart-item">
@@ -492,8 +492,13 @@ const Customize = (() => {
     const el    = btn.closest('[data-name]');
     const name  = el.dataset.name;
     const price = parseFloat(el.dataset.price);
-    const desc  = el.querySelector('.mi-desc')?.textContent || '';
-    _item = { name, basePrice: price, desc, category: getCategory(name) };
+    const desc  = el.querySelector('.mi-desc,.pc-desc')?.textContent || '';
+    // Collect any multi-select protein add-ons already chosen on the card
+    const cardExtras = [];
+    el.querySelectorAll('.pc-variant-protein.active').forEach(b => {
+      cardExtras.push({ name: b.dataset.name, price: parseFloat(b.dataset.price) || 0 });
+    });
+    _item = { name, basePrice: price, desc, category: getCategory(name), cardExtras };
     _qty  = 1;
     renderModal();
     document.getElementById('customizeModal')?.classList.add('open');
@@ -511,6 +516,10 @@ const Customize = (() => {
   function updateTotal() {
     if (!_item) return;
     let extra = 0;
+    // Include checked protein add-ons shown in modal
+    document.querySelectorAll('.cz-protein-cb:checked').forEach(cb => {
+      extra += parseFloat(cb.dataset.price || 0);
+    });
     document.querySelectorAll('.cz-extra-cb:checked').forEach(cb => {
       extra += parseFloat(cb.dataset.price || 0);
     });
@@ -519,6 +528,7 @@ const Customize = (() => {
     const el = document.getElementById('czItemTotal');
     if (el) el.textContent = `$${((_item.basePrice + extra) * _qty).toFixed(2)}`;
   }
+  function updProtein() { updateTotal(); }
 
   function setQty(delta) {
     _qty = Math.max(1, _qty + delta);
@@ -559,7 +569,11 @@ const Customize = (() => {
     const sauce = document.querySelector('input[name="czSauce"]:checked')?.value || null;
     const temp  = document.querySelector('input[name="czTemp"]:checked')?.value  || null;
     const notes = document.getElementById('czNotes')?.value.trim().slice(0, 200) || '';
+    // Start with card-level protein add-ons (only if still checked in modal)
     const extras = [];
+    document.querySelectorAll('.cz-protein-cb:checked').forEach(cb => {
+      extras.push({ name: cb.dataset.name, price: parseFloat(cb.dataset.price) });
+    });
     document.querySelectorAll('.cz-extra-cb:checked').forEach(cb => {
       extras.push({ name: cb.dataset.name, price: parseFloat(cb.dataset.price) });
     });
@@ -722,6 +736,21 @@ const Customize = (() => {
       </div>`;
     }
 
+    /* ── PROTEIN ADD-ONS (if any pre-selected on card) ── */
+    if (_item.cardExtras && _item.cardExtras.length > 0) {
+      inner += `<div class="cz-section" style="margin-top:8px;">
+        <div class="cz-sec-title">Protein Add-ons <span class="cz-opt-label">Selected</span></div>
+        <div class="cz-extras-grid">
+          ${_item.cardExtras.map(e => `
+            <label class="cz-extra-item cz-protein-confirm">
+              <input type="checkbox" class="cz-protein-cb" data-name="${s(e.name)}" data-price="${e.price}" checked onchange="Customize._updProtein(this)">
+              <span class="cz-extra-name">${s(e.name)}</span>
+              <span class="cz-extra-price">+$${e.price.toFixed(2)}</span>
+            </label>`).join('')}
+        </div>
+      </div>`;
+    }
+
     /* ── NOTES (all items) ── */
     inner += `<div class="cz-section" style="margin-top:8px;">
       <div class="cz-sec-title">Special Instructions <span class="cz-opt-label">Optional</span></div>
@@ -772,7 +801,7 @@ const Customize = (() => {
     document.body.appendChild(modal);
   }
 
-  return { open, close, confirm, setQty, _upd: updateTotal, inject };
+  return { open, close, confirm, setQty, _upd: updateTotal, _updProtein: updProtein, inject };
 })();
 
 /* ---------- Wire up Add buttons → Customize modal ---------- */
