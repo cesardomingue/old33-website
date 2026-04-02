@@ -113,6 +113,7 @@
       <li><a href="menu.html">Menu</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="contact.html">Contact</a></li>
+      <li><a href="#" id="navSignIn" onclick="openMemberModal(event)" style="font-size:13px;color:var(--dim);letter-spacing:.5px;">Sign In</a></li>
       <li><a href="menu.html" class="nav-order">Order Online</a></li>
     </ul>
     <button class="nav-ham" id="navHam" aria-label="Open menu">
@@ -125,6 +126,7 @@
   <a href="menu.html">Menu</a>
   <a href="about.html">About</a>
   <a href="contact.html">Contact</a>
+  <a href="#" onclick="openMemberModal(event)" style="color:var(--dim);" id="mobSignIn">Sign In</a>
   <a href="menu.html" class="mob-order">Order Online</a>
 </div>
 
@@ -187,37 +189,17 @@
   </div>
 </div>
 
-<!-- SPECIALS — update these each week as part of the $200/mo retainer -->
-<section class="section specials-section">
+<!-- MEMBERS CLUB — only shown to signed-in members -->
+<section class="section specials-section" id="membersSection" style="display:none;">
   <div class="container">
     <div class="sec-hdr reveal">
-      <span class="lbl">This Week</span>
-      <h2 class="h2">Specials &amp; Deals</h2>
+      <span class="lbl" id="memberGreeting">Members Club</span>
+      <h2 class="h2">Your Exclusive Deals</h2>
       <div class="divider center"></div>
+      <p class="lead" style="font-size:14px;" id="memberSubline">Based on your order history — only for members.</p>
     </div>
-    <div class="specials-grid">
-
-      <div class="special-card reveal rd1">
-        <div class="special-badge">Mon – Fri</div>
-        <div class="special-name">Happy Hour</div>
-        <div class="special-desc">$2 off all draft beers and $1 off appetizers. Every weekday from 3PM to 6PM.</div>
-        <div class="special-price">3PM – 6PM</div>
-      </div>
-
-      <div class="special-card reveal rd2">
-        <div class="special-badge">Fri &amp; Sat</div>
-        <div class="special-name">Burger &amp; Beer Combo</div>
-        <div class="special-desc">Any signature burger paired with a pint of your choice. Weekend only — while supplies last.</div>
-        <div class="special-price">$18.00</div>
-      </div>
-
-      <div class="special-card reveal rd3">
-        <div class="special-badge special-badge-red">Sunday</div>
-        <div class="special-name">Kids Eat Free</div>
-        <div class="special-desc">One free kids meal with every adult entrée ordered. Every Sunday, 12PM–close.</div>
-        <div class="special-price">Every Sunday</div>
-      </div>
-
+    <div class="specials-grid" id="memberDealsGrid">
+      <!-- Populated by JS based on order history -->
     </div>
   </div>
 </section>
@@ -511,6 +493,47 @@
   gtag('config', 'G-M4X8E48D0W');
 </script>
 
+<!-- MEMBER SIGN-UP / SIGN-IN MODAL -->
+<div id="memberOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#1a1a1a;border:1px solid #333;border-radius:16px;width:100%;max-width:440px;overflow:hidden;position:relative;">
+    <!-- Gold bar -->
+    <div style="background:#c8a84b;padding:22px 28px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <img src="images/logo-clean.png" alt="Old 33" width="44" height="44" style="border-radius:50%;border:2px solid rgba(0,0,0,.2);" />
+        <div>
+          <div style="font-size:18px;font-weight:900;color:#000;letter-spacing:1px;text-transform:uppercase;">Old 33 Members Club</div>
+          <div style="font-size:12px;color:rgba(0,0,0,.6);margin-top:2px;">Exclusive deals for members only</div>
+        </div>
+      </div>
+    </div>
+    <!-- Body -->
+    <div style="padding:28px;">
+      <div id="modalView1">
+        <p style="font-size:14px;color:#aaa;line-height:1.7;margin:0 0 20px;">Sign up or sign in to unlock member-only deals, specials, and offers — updated based on your order history.</p>
+        <div style="margin-bottom:14px;">
+          <label style="font-size:11px;color:#888;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Your Name</label>
+          <input id="modalName" type="text" placeholder="First name" style="width:100%;box-sizing:border-box;background:#111;border:1px solid #333;border-radius:8px;color:#fff;font-size:14px;padding:12px 14px;outline:none;" onfocus="this.style.borderColor='#c8a84b'" onblur="this.style.borderColor='#333'" />
+        </div>
+        <div style="margin-bottom:22px;">
+          <label style="font-size:11px;color:#888;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Email Address</label>
+          <input id="modalEmail" type="email" placeholder="you@email.com" style="width:100%;box-sizing:border-box;background:#111;border:1px solid #333;border-radius:8px;color:#fff;font-size:14px;padding:12px 14px;outline:none;" onfocus="this.style.borderColor='#c8a84b'" onblur="this.style.borderColor='#333'" />
+        </div>
+        <div id="modalErr" style="display:none;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#f87171;margin-bottom:14px;"></div>
+        <button onclick="memberJoin()" style="width:100%;background:#c8a84b;color:#000;font-weight:800;font-size:14px;letter-spacing:1px;text-transform:uppercase;border:none;border-radius:8px;padding:14px;cursor:pointer;">Join the Club →</button>
+        <p style="text-align:center;font-size:12px;color:#555;margin:14px 0 0;">Already a member? Just enter your email above.</p>
+      </div>
+      <div id="modalView2" style="display:none;text-align:center;">
+        <div style="font-size:40px;margin-bottom:12px;">🎉</div>
+        <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:8px;" id="modalWelcomeName">Welcome!</div>
+        <div style="font-size:14px;color:#aaa;line-height:1.7;margin-bottom:22px;">You're in the club. Scroll down to see your exclusive deals.</div>
+        <button onclick="closeMemberModal()" style="background:#c8a84b;color:#000;font-weight:800;font-size:13px;letter-spacing:1px;text-transform:uppercase;border:none;border-radius:8px;padding:12px 28px;cursor:pointer;">See My Deals</button>
+      </div>
+    </div>
+    <!-- X button — closes for this page load only -->
+    <button onclick="closeMemberModal()" style="position:absolute;top:14px;right:16px;background:rgba(0,0,0,.3);border:none;color:#000;font-size:18px;font-weight:700;width:30px;height:30px;border-radius:50%;cursor:pointer;line-height:1;">×</button>
+  </div>
+</div>
+
 <script src="js/main.js"></script>
 <script src="js/cart.js?v=2"></script>
 <script src="js/checkout.js"></script>
@@ -567,6 +590,163 @@
       text.textContent = `Closed · Opens ${nextLabel} ${nextTime}`;
     }
   })();
+</script>
+
+<script>
+/* ===== MEMBERS CLUB ===== */
+var SUPA_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
+
+function getMember() {
+  try { return JSON.parse(localStorage.getItem('ol33_member') || 'null'); } catch(e) { return null; }
+}
+
+function openMemberModal(e) {
+  if (e) e.preventDefault();
+  var member = getMember();
+  if (member) {
+    // Already signed in — scroll to deals
+    var sec = document.getElementById('membersSection');
+    if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
+  var overlay = document.getElementById('memberOverlay');
+  overlay.style.display = 'flex';
+  // Pre-fill from checkout saved info
+  try {
+    var saved = JSON.parse(localStorage.getItem('ol33_info') || '{}');
+    if (saved.email) document.getElementById('modalEmail').value = saved.email;
+    if (saved.name) document.getElementById('modalName').value = saved.name;
+  } catch(ex) {}
+}
+
+function closeMemberModal() {
+  document.getElementById('memberOverlay').style.display = 'none';
+  document.getElementById('modalView1').style.display = 'block';
+  document.getElementById('modalView2').style.display = 'none';
+}
+
+async function memberJoin() {
+  var name = document.getElementById('modalName').value.trim();
+  var email = document.getElementById('modalEmail').value.trim().toLowerCase();
+  var errEl = document.getElementById('modalErr');
+  errEl.style.display = 'none';
+
+  if (!name) { errEl.textContent = 'Please enter your name.'; errEl.style.display = 'block'; return; }
+  if (!email || !email.includes('@')) { errEl.textContent = 'Please enter a valid email.'; errEl.style.display = 'block'; return; }
+
+  // Save to localStorage
+  var member = { name: name, email: email, joined: new Date().toISOString() };
+  localStorage.setItem('ol33_member', JSON.stringify(member));
+
+  // Show success view
+  document.getElementById('modalWelcomeName').textContent = 'Welcome, ' + name + '!';
+  document.getElementById('modalView1').style.display = 'none';
+  document.getElementById('modalView2').style.display = 'block';
+
+  // Load deals in background
+  applyMember(member);
+}
+
+function updateNavForMember(member) {
+  var first = member.name.split(' ')[0];
+  var signInEl = document.getElementById('navSignIn');
+  if (signInEl) {
+    signInEl.textContent = 'Hi, ' + first;
+    signInEl.style.color = '#c8a84b';
+    signInEl.style.fontWeight = '600';
+  }
+  var mobEl = document.getElementById('mobSignIn');
+  if (mobEl) {
+    mobEl.textContent = 'Hi, ' + first;
+    mobEl.style.color = '#c8a84b';
+  }
+}
+
+function buildDeals(orderCount, firstName) {
+  var deals = [];
+
+  if (orderCount === 0) {
+    // New member, no orders yet
+    deals = [
+      { badge: 'Welcome', name: '10% Off Your First Order', desc: 'Show this to staff at pickup. One-time welcome offer just for joining the club.', val: '10% OFF' },
+      { badge: 'Members Only', name: 'Free Fountain Drink', desc: 'Add any fountain drink to your next online order and mention you\'re a member at pickup.', val: 'FREE' },
+      { badge: 'Happy Hour', name: 'Mon–Fri 3PM–6PM', desc: 'Members get $2 off draft beers and $1 off any appetizer every weekday.', val: '$2 OFF BEERS' },
+    ];
+  } else if (orderCount < 5) {
+    // Regular member
+    deals = [
+      { badge: 'Loyalty Deal', name: 'Free Side on Your Next Order', desc: 'You\'ve been with us — pick any side free on your next visit. Show this at pickup.', val: 'FREE SIDE' },
+      { badge: 'Fri & Sat', name: 'Burger & Beer Combo', desc: 'Any signature burger + a pint of your choice. Member price: $16 (reg $18). Weekend only.', val: '$16' },
+      { badge: 'Happy Hour', name: 'Mon–Fri 3PM–6PM', desc: '$2 off draft beers and $1 off appetizers. Members get an extra $1 off.', val: '$3 OFF BEERS' },
+    ];
+  } else {
+    // VIP — 5+ orders
+    deals = [
+      { badge: 'VIP', name: 'Free Appetizer', desc: 'You\'re a VIP — ' + orderCount + ' orders in. Get one free appetizer on your next visit. No minimum.', val: 'FREE APP' },
+      { badge: 'VIP Weekend', name: 'Burger & Beer — $14', desc: 'Any signature burger + a pint. VIP exclusive weekend price. Flash this to your server.', val: '$14' },
+      { badge: 'VIP Happy Hour', name: 'Mon–Fri 3PM–6PM', desc: 'Draft beers $3 off, appetizers $2 off. VIP upgrades your deal automatically.', val: '$3 OFF + $2 OFF' },
+    ];
+  }
+
+  return deals.map(function(d) {
+    return '<div class="special-card reveal">' +
+      '<div class="special-badge">' + d.badge + '</div>' +
+      '<div class="special-name">' + d.name + '</div>' +
+      '<div class="special-desc">' + d.desc + '</div>' +
+      '<div class="special-price">' + d.val + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+async function applyMember(member) {
+  var section = document.getElementById('membersSection');
+  var greeting = document.getElementById('memberGreeting');
+  var subline = document.getElementById('memberSubline');
+  var grid = document.getElementById('memberDealsGrid');
+
+  section.style.display = 'block';
+  updateNavForMember(member);
+
+  // Fetch order count from Supabase
+  var orderCount = 0;
+  try {
+    var url = SUPA_URL + '/rest/v1/orders?customer_email=eq.' + encodeURIComponent(member.email) + '&select=id';
+    var res = await fetch(url, {
+      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      var orders = await res.json();
+      orderCount = orders.length;
+    }
+  } catch(e) {}
+
+  var first = member.name.split(' ')[0];
+  greeting.textContent = 'Hey ' + first + ' — Members Club';
+
+  if (orderCount === 0) {
+    subline.textContent = 'Welcome to the club! Here are your welcome deals.';
+  } else if (orderCount < 5) {
+    subline.textContent = orderCount + ' order' + (orderCount > 1 ? 's' : '') + ' with us — loyalty deals unlocked.';
+  } else {
+    subline.textContent = orderCount + ' orders in — VIP status. You\'ve earned it.';
+  }
+
+  grid.innerHTML = buildDeals(orderCount, first);
+}
+
+// On page load
+(function() {
+  var member = getMember();
+  if (member) {
+    applyMember(member);
+  } else {
+    // Show popup on every visit until signed in
+    setTimeout(function() {
+      document.getElementById('memberOverlay').style.display = 'flex';
+    }, 3000);
+  }
+})();
 </script>
 </body>
 </html>
