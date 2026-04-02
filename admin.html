@@ -308,6 +308,15 @@
     </div>
   </div>
 
+  <!-- MESSAGES -->
+  <div class="orders-section" style="margin-top:24px;">
+    <div class="section-hdr">
+      <div class="section-title">Customer Messages</div>
+      <div class="section-meta" id="msg-meta"></div>
+    </div>
+    <div id="msgWrap"><div class="no-data">Loading...</div></div>
+  </div>
+
 </div>
 
 <script>
@@ -391,6 +400,7 @@
     } catch(e) {
       document.getElementById('ordersWrap').innerHTML = '<div class="no-data">Connection error. Refresh to retry.</div>';
     }
+    loadMessages();
   }
 
   function render() {
@@ -400,6 +410,50 @@
     renderChart();
     renderTopItems(orders);
     renderOrders(orders);
+  }
+
+  /* ── MESSAGES ── */
+  async function loadMessages() {
+    try {
+      const res  = await fetch(SUPA_URL + '/rest/v1/contacts?order=created_at.desc&limit=100',
+        { headers: { apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY } });
+      const data = await res.json();
+      renderMessages(Array.isArray(data) ? data : []);
+    } catch(e) {
+      document.getElementById('msgWrap').innerHTML = '<div class="no-data">Could not load messages.</div>';
+    }
+  }
+
+  function renderMessages(msgs) {
+    const wrap = document.getElementById('msgWrap');
+    const unread = msgs.filter(m => !m.read).length;
+    document.getElementById('msg-meta').textContent = msgs.length + ' total' + (unread > 0 ? ' · ' + unread + ' unread' : '');
+    if (!msgs.length) { wrap.innerHTML = '<div class="no-data">No messages yet.</div>'; return; }
+    wrap.innerHTML = msgs.map(m => {
+      const time = new Date(m.created_at).toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit', timeZone:'America/New_York' });
+      return `<div style="padding:16px 20px;border-bottom:1px solid var(--border);${!m.read ? 'border-left:3px solid var(--gold);' : ''}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--white);">${esc(m.name)} ${!m.read ? '<span style="font-size:10px;background:rgba(200,136,26,.2);color:var(--gold);padding:2px 8px;border-radius:20px;margin-left:6px;">NEW</span>' : ''}</div>
+            <div style="font-size:12px;color:var(--dim);margin-top:2px;">${esc(m.email)}${m.phone ? ' · ' + esc(m.phone) : ''} · ${time}</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span style="font-size:11px;background:var(--bg2);border:1px solid var(--border);color:var(--gray);padding:3px 10px;border-radius:20px;">${esc(m.subject)}</span>
+            ${!m.read ? `<button onclick="markRead('${m.id}')" style="font-size:11px;background:rgba(200,136,26,.15);border:1px solid rgba(200,136,26,.3);color:var(--gold);padding:4px 10px;border-radius:6px;cursor:pointer;">Mark Read</button>` : ''}
+          </div>
+        </div>
+        <div style="font-size:13px;color:var(--gray);margin-top:10px;line-height:1.6;">${esc(m.message)}</div>
+      </div>`;
+    }).join('');
+  }
+
+  async function markRead(id) {
+    await fetch(SUPA_URL + '/rest/v1/contacts?id=eq.' + id, {
+      method: 'PATCH',
+      headers: { apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ read: true })
+    });
+    loadMessages();
   }
 
   /* ── HELPERS ── */

@@ -172,6 +172,63 @@
       </div>
     </div>
 
+    <!-- Contact Form -->
+    <div class="sec-hdr center reveal" style="margin-top:56px;">
+      <span class="lbl">Get In Touch</span>
+      <h2 class="h2">Send Us a Message</h2>
+      <div class="divider center"></div>
+    </div>
+
+    <div class="reveal" style="max-width:640px;margin:0 auto 56px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:36px;">
+      <form id="contactForm" onsubmit="submitContact(event)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label style="display:block;font-size:12px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Name <span style="color:var(--gold);">*</span></label>
+            <input id="cf-name" type="text" required placeholder="Your full name"
+              style="width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--white);font-size:14px;padding:11px 14px;border-radius:8px;outline:none;box-sizing:border-box;"
+              onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'" />
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Email <span style="color:var(--gold);">*</span></label>
+            <input id="cf-email" type="email" required placeholder="your@email.com"
+              style="width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--white);font-size:14px;padding:11px 14px;border-radius:8px;outline:none;box-sizing:border-box;"
+              onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'" />
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label style="display:block;font-size:12px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Phone <span style="color:var(--dim);font-size:11px;">(Optional)</span></label>
+            <input id="cf-phone" type="tel" placeholder="(540) 000-0000"
+              style="width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--white);font-size:14px;padding:11px 14px;border-radius:8px;outline:none;box-sizing:border-box;"
+              onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'" />
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Subject <span style="color:var(--gold);">*</span></label>
+            <select id="cf-subject" required
+              style="width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--white);font-size:14px;padding:11px 14px;border-radius:8px;outline:none;box-sizing:border-box;cursor:pointer;"
+              onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
+              <option value="" disabled selected>Select a topic</option>
+              <option>General Question</option>
+              <option>Reservation / Large Group</option>
+              <option>Catering Inquiry</option>
+              <option>Feedback</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:20px;">
+          <label style="display:block;font-size:12px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Message <span style="color:var(--gold);">*</span></label>
+          <textarea id="cf-message" required placeholder="How can we help you?" maxlength="1000" rows="5"
+            style="width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--white);font-size:14px;padding:11px 14px;border-radius:8px;outline:none;box-sizing:border-box;resize:vertical;font-family:inherit;"
+            onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+        </div>
+        <div id="cf-msg" style="display:none;margin-bottom:14px;font-size:13px;padding:10px 14px;border-radius:8px;"></div>
+        <button type="submit" id="cf-btn" class="btn btn-red" style="width:100%;font-size:14px;padding:14px;">
+          Send Message
+        </button>
+      </form>
+    </div>
+
     <!-- Social strip -->
     <div style="margin-top:48px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:36px;text-align:center;" class="reveal">
       <span class="lbl">Follow Along</span>
@@ -215,6 +272,60 @@
 <script src="js/cart.js?v=2"></script>
 <script src="js/checkout.js"></script>
 <script src="js/members.js"></script>
+<script>
+const CF_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
+const CF_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
+
+async function submitContact(e) {
+  e.preventDefault();
+  const btn = document.getElementById('cf-btn');
+  const msg = document.getElementById('cf-msg');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  const payload = {
+    name:    document.getElementById('cf-name').value.trim(),
+    email:   document.getElementById('cf-email').value.trim(),
+    phone:   document.getElementById('cf-phone').value.trim() || null,
+    subject: document.getElementById('cf-subject').value,
+    message: document.getElementById('cf-message').value.trim(),
+    read:    false
+  };
+
+  try {
+    const res = await fetch(CF_URL + '/rest/v1/contacts', {
+      method: 'POST',
+      headers: {
+        'apikey': CF_KEY,
+        'Authorization': 'Bearer ' + CF_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok || res.status === 201) {
+      msg.style.background = 'rgba(34,197,94,.1)';
+      msg.style.border = '1px solid rgba(34,197,94,.3)';
+      msg.style.color = '#4ade80';
+      msg.textContent = "Message sent! We'll get back to you soon.";
+      msg.style.display = 'block';
+      document.getElementById('contactForm').reset();
+      btn.textContent = 'Message Sent';
+    } else {
+      throw new Error('Failed');
+    }
+  } catch {
+    msg.style.background = 'rgba(239,68,68,.1)';
+    msg.style.border = '1px solid rgba(239,68,68,.3)';
+    msg.style.color = '#f87171';
+    msg.textContent = 'Something went wrong. Please call us at (540) 713-9050.';
+    msg.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Send Message';
+  }
+}
+</script>
 
 </body>
 </html>
