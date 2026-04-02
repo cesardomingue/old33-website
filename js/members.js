@@ -10,7 +10,7 @@
 
     var modal = document.createElement('div');
     modal.id = 'signOutModal';
-    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
 
     var inner = document.createElement('div');
     inner.style.cssText = 'background:#1a1a1a;border:1px solid #333;border-radius:14px;width:100%;max-width:360px;overflow:hidden;';
