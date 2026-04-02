@@ -766,29 +766,56 @@
           <div class="menu-cat-note">Fresh salads and wraps</div>
         </div>
       </div>
-      <div class="menu-note">Dressings: Ranch, Bleu Cheese, Honey Mustard, Italian, Thousand Island &amp; Raspberry Vinaigrette</div>
-      <div class="menu-note">Add Grilled Chicken or Grilled Shrimp to any salad +$5.00 each</div>
+      <div class="photo-card-grid">
+
+        <!-- Old 33 House Salad -->
+        <div class="photo-card" data-name="Old 33 House Salad" data-price="11.00">
+          <div class="pc-img-wrap">
+            <img src="images/old33-house-salad.avif" alt="Old 33 House Salad" loading="lazy" class="pc-img" />
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Old 33 House Salad</div>
+            <div class="pc-desc">Spring mix, spinach, dried apple chips, diced onions, cherry tomatoes, candied pecans &amp; blue cheese crumbles</div>
+            <div class="pc-variants">
+              <button class="pc-variant active" data-name="Old 33 House Salad — Ranch" data-price="11.00">Ranch</button>
+              <button class="pc-variant" data-name="Old 33 House Salad — Bleu Cheese" data-price="11.00">Bleu Cheese</button>
+              <button class="pc-variant" data-name="Old 33 House Salad — Honey Mustard" data-price="11.00">Honey Mustard</button>
+              <button class="pc-variant" data-name="Old 33 House Salad — Italian" data-price="11.00">Italian</button>
+              <button class="pc-variant" data-name="Old 33 House Salad — Thousand Island" data-price="11.00">Thousand Island</button>
+              <button class="pc-variant" data-name="Old 33 House Salad — Raspberry Vinaigrette" data-price="11.00">Raspberry Vinaigrette</button>
+              <button class="pc-variant" data-name="Old 33 House Salad — No Dressing" data-price="11.00">No Dressing</button>
+              <button class="pc-variant" data-name="Old 33 House Salad + Grilled Chicken" data-price="16.50">+ Grilled Chicken $16.50</button>
+              <button class="pc-variant" data-name="Old 33 House Salad + Grilled Shrimp" data-price="16.50">+ Grilled Shrimp $16.50</button>
+            </div>
+            <div class="pc-footer">
+              <div class="pc-price">$11.00</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Caesar Salad -->
+        <div class="photo-card" data-name="Caesar Salad" data-price="9.90">
+          <div class="pc-img-wrap">
+            <img src="images/caesar-salad.avif" alt="Caesar Salad" loading="lazy" class="pc-img" />
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">Caesar Salad</div>
+            <div class="pc-desc">Romaine lettuce, croutons, traditional Caesar dressing, topped with freshly grated Parmesan cheese</div>
+            <div class="pc-variants">
+              <button class="pc-variant active" data-name="Caesar Salad" data-price="9.90">Classic · $9.90</button>
+              <button class="pc-variant" data-name="Caesar Salad + Grilled Chicken" data-price="15.40">+ Grilled Chicken $15.40</button>
+              <button class="pc-variant" data-name="Caesar Salad + Grilled Shrimp" data-price="15.40">+ Grilled Shrimp $15.40</button>
+            </div>
+            <div class="pc-footer">
+              <div class="pc-price">$9.90</div>
+              <button class="pc-add" onclick="Cart.add(this)" aria-label="Add to cart">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
       <div class="menu-grid">
-        <div class="menu-item" data-name="Old 33 House Salad" data-price="10.00">
-          <div class="mi-info">
-            <div class="mi-name">Old 33 House Salad</div>
-            <div class="mi-desc">Spring mix, spinach, apple chips, diced onions, cherry tomatoes, candied pecans &amp; blue cheese crumbles</div>
-          </div>
-          <div class="mi-right">
-            <div class="mi-price">$10.00</div>
-            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
-          </div>
-        </div>
-        <div class="menu-item" data-name="Caesar Salad" data-price="9.00">
-          <div class="mi-info">
-            <div class="mi-name">Caesar Salad</div>
-            <div class="mi-desc">Romaine lettuce, croutons, caesar dressing, topped with freshly grated parmesan cheese</div>
-          </div>
-          <div class="mi-right">
-            <div class="mi-price">$9.00</div>
-            <button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button>
-          </div>
-        </div>
         <div class="menu-item" data-name="Grilled Chicken Wrap" data-price="10.50">
           <div class="mi-info"><div class="mi-name">Grilled Chicken Wrap</div><div class="mi-desc">Grilled chicken, lettuce, tomato &amp; mayo wrapped in a tortilla, served with fries</div></div>
           <div class="mi-right"><div class="mi-price">$10.50</div><button class="mi-add" onclick="Cart.add(this)" aria-label="Add to cart">+</button></div>
