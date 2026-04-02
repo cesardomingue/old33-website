@@ -744,16 +744,15 @@ async function applyMember(member) {
   } else {
     // Show popup once per browser session (not every time they click Home)
     if (!sessionStorage.getItem('ol33_popup_shown')) {
+      sessionStorage.setItem('ol33_popup_shown', '1');
       setTimeout(function() {
         var overlay = document.getElementById('memberOverlay');
-        if (overlay) {
-          overlay.style.opacity = '0';
-          overlay.style.transition = 'opacity 0.6s ease';
-          overlay.style.display = 'flex';
-          setTimeout(function() { overlay.style.opacity = '1'; }, 30);
-          sessionStorage.setItem('ol33_popup_shown', '1');
-        }
-      }, 12000);
+        if (!overlay) return;
+        overlay.style.opacity = '0';
+        overlay.style.transition = 'opacity 0.6s ease';
+        overlay.style.display = 'flex';
+        setTimeout(function() { overlay.style.opacity = '1'; }, 30);
+      }, 6000);
     }
   }
 })();
