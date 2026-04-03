@@ -328,28 +328,90 @@
   let period = 'today';
 
   /* ── PIN ── */
+  const MAX_ATTEMPTS  = 5;
+  const LOCKOUT_MS    = 15 * 60 * 1000; // 15 minutes
+  const LOCK_KEY      = 'adm_lockout';
+  const ATTEMPTS_KEY  = 'adm_attempts';
+
+  function getLockout() {
+    const t = parseInt(localStorage.getItem(LOCK_KEY) || '0');
+    return t > Date.now() ? t : 0;
+  }
+  function getAttempts() {
+    return parseInt(localStorage.getItem(ATTEMPTS_KEY) || '0');
+  }
+  function setAttempts(n) {
+    localStorage.setItem(ATTEMPTS_KEY, n);
+  }
+  function lockout() {
+    const until = Date.now() + LOCKOUT_MS;
+    localStorage.setItem(LOCK_KEY, until);
+    setAttempts(0);
+    showLockout(until);
+  }
+  function showLockout(until) {
+    const err = document.getElementById('pinError');
+    const pad = document.querySelector('.pin-pad');
+    pad.style.opacity = '0.3';
+    pad.style.pointerEvents = 'none';
+    function tick() {
+      const remaining = Math.max(0, Math.ceil((until - Date.now()) / 1000));
+      if (remaining <= 0) {
+        localStorage.removeItem(LOCK_KEY);
+        setAttempts(0);
+        err.textContent = '';
+        pad.style.opacity = '1';
+        pad.style.pointerEvents = '';
+        return;
+      }
+      const m = Math.floor(remaining / 60);
+      const s = remaining % 60;
+      err.textContent = `Too many attempts. Locked for ${m}:${s.toString().padStart(2,'0')}`;
+      setTimeout(tick, 1000);
+    }
+    tick();
+  }
+
+  // Check lockout on load
+  (function() {
+    const until = getLockout();
+    if (until) showLockout(until);
+  })();
+
   let pinEntry = '';
   function pinPress(n) {
+    if (getLockout()) return;
     if (pinEntry.length >= 4) return;
     pinEntry += n;
     document.getElementById('d' + (pinEntry.length - 1)).classList.add('filled');
     if (pinEntry.length === 4) {
       setTimeout(() => {
         if (pinEntry === PIN) {
+          localStorage.removeItem(LOCK_KEY);
+          setAttempts(0);
           const ps = document.getElementById('pinScreen');
           ps.style.transition = 'opacity .35s'; ps.style.opacity = '0';
           setTimeout(() => ps.style.display = 'none', 350);
           init();
         } else {
-          document.getElementById('pinError').textContent = 'Incorrect PIN';
+          const attempts = getAttempts() + 1;
+          setAttempts(attempts);
+          const remaining = MAX_ATTEMPTS - attempts;
+          if (remaining <= 0) {
+            lockout();
+          } else {
+            document.getElementById('pinError').textContent =
+              `Incorrect PIN — ${remaining} attempt${remaining === 1 ? '' : 's'} remaining`;
+            setTimeout(() => document.getElementById('pinError').textContent = '', 2500);
+          }
           pinEntry = '';
           for (let i = 0; i < 4; i++) document.getElementById('d' + i).classList.remove('filled');
-          setTimeout(() => document.getElementById('pinError').textContent = '', 1800);
         }
       }, 180);
     }
   }
   function pinDel() {
+    if (getLockout()) return;
     if (!pinEntry.length) return;
     pinEntry = pinEntry.slice(0, -1);
     document.getElementById('d' + pinEntry.length).classList.remove('filled');
