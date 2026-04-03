@@ -716,19 +716,24 @@
     tick();
   }
 
-  fetchIP().then(async () => {
-    const attempts = await getRecentAttempts();
-    if (attempts.length >= MAX_ATTEMPTS) {
-      const fifth = new Date(attempts[MAX_ATTEMPTS - 1].attempted_at).getTime();
-      const expiresAt = fifth + LOCKOUT_MS;
-      if (expiresAt > Date.now()) { showLockout(expiresAt); return; }
-    }
-    if (attempts.length > 0) {
-      const remaining = MAX_ATTEMPTS - attempts.length;
-      document.getElementById('pinError').textContent =
-        `${remaining} attempt${remaining === 1 ? '' : 's'} remaining`;
-    }
-  });
+  if (sessionStorage.getItem('kds_auth') === '1') {
+    document.getElementById('pinScreen').style.display = 'none';
+    startKDS();
+  } else {
+    fetchIP().then(async () => {
+      const attempts = await getRecentAttempts();
+      if (attempts.length >= MAX_ATTEMPTS) {
+        const fifth = new Date(attempts[MAX_ATTEMPTS - 1].attempted_at).getTime();
+        const expiresAt = fifth + LOCKOUT_MS;
+        if (expiresAt > Date.now()) { showLockout(expiresAt); return; }
+      }
+      if (attempts.length > 0) {
+        const remaining = MAX_ATTEMPTS - attempts.length;
+        document.getElementById('pinError').textContent =
+          `${remaining} attempt${remaining === 1 ? '' : 's'} remaining`;
+      }
+    });
+  }
 
   let pinEntry = '';
   function pinPress(n) {
@@ -739,6 +744,7 @@
     if (pinEntry.length === 4) {
       setTimeout(async () => {
         if (pinEntry === PIN) {
+          sessionStorage.setItem('kds_auth', '1');
           const ps = document.getElementById('pinScreen');
           ps.style.transition = 'opacity .35s';
           ps.style.opacity = '0';
