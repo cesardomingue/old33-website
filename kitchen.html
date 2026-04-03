@@ -663,70 +663,89 @@
   const SMS_URL  = 'https://script.google.com/macros/s/AKfycbyRhSuHPCUWK3ua_2mokRI8X3IUHWMkrqVP11l7zj1Tn-qUhzGFqNnXOipXxUj7r0m6/exec';
   const PIN = '3300';
 
-  /* PIN */
-  const MAX_ATTEMPTS  = 5;
-  const LOCKOUT_MS    = 15 * 60 * 1000;
-  const LOCK_KEY      = 'kds_lockout';
-  const ATTEMPTS_KEY  = 'kds_attempts';
+  /* PIN (server-side lockout) */
+  const MAX_ATTEMPTS = 5;
+  const LOCKOUT_MS   = 15 * 60 * 1000;
+  const PAGE_ID      = 'kitchen';
+  let   clientIP     = null;
+  let   pinLocked    = false;
 
-  function getLockout() {
-    const t = parseInt(localStorage.getItem(LOCK_KEY) || '0');
-    return t > Date.now() ? t : 0;
+  async function fetchIP() {
+    try {
+      const r = await fetch('https://api.ipify.org?format=json');
+      clientIP = (await r.json()).ip;
+    } catch { clientIP = 'unknown'; }
   }
-  function getAttempts() { return parseInt(localStorage.getItem(ATTEMPTS_KEY) || '0'); }
-  function setAttempts(n) { localStorage.setItem(ATTEMPTS_KEY, n); }
-  function lockout() {
-    const until = Date.now() + LOCKOUT_MS;
-    localStorage.setItem(LOCK_KEY, until);
-    setAttempts(0);
-    showLockout(until);
+
+  async function getRecentAttempts() {
+    const since = new Date(Date.now() - LOCKOUT_MS).toISOString();
+    const r = await fetch(
+      `${SUPA_URL}/rest/v1/pin_attempts?ip=eq.${clientIP}&page=eq.${PAGE_ID}&attempted_at=gte.${encodeURIComponent(since)}&order=attempted_at.asc`,
+      { headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` } }
+    );
+    return await r.json();
   }
-  function showLockout(until) {
+
+  async function logAttempt() {
+    await fetch(`${SUPA_URL}/rest/v1/pin_attempts`, {
+      method: 'POST',
+      headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page: PAGE_ID, ip: clientIP })
+    });
+  }
+
+  function showLockout(expiresAt) {
+    pinLocked = true;
     const err = document.getElementById('pinError');
     const pad = document.querySelector('.pin-pad');
     pad.style.opacity = '0.3';
     pad.style.pointerEvents = 'none';
     function tick() {
-      const remaining = Math.max(0, Math.ceil((until - Date.now()) / 1000));
-      if (remaining <= 0) {
-        localStorage.removeItem(LOCK_KEY);
-        setAttempts(0);
+      const left = Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000));
+      if (left <= 0) {
+        pinLocked = false;
         err.textContent = '';
         pad.style.opacity = '1';
         pad.style.pointerEvents = '';
         return;
       }
-      const m = Math.floor(remaining / 60);
-      const s = remaining % 60;
+      const m = Math.floor(left / 60), s = left % 60;
       err.textContent = `Too many attempts. Locked for ${m}:${s.toString().padStart(2,'0')}`;
       setTimeout(tick, 1000);
     }
     tick();
   }
-  (function() { const until = getLockout(); if (until) showLockout(until); })();
+
+  fetchIP().then(async () => {
+    const attempts = await getRecentAttempts();
+    if (attempts.length >= MAX_ATTEMPTS) {
+      const fifth = new Date(attempts[MAX_ATTEMPTS - 1].attempted_at).getTime();
+      const expiresAt = fifth + LOCKOUT_MS;
+      if (expiresAt > Date.now()) showLockout(expiresAt);
+    }
+  });
 
   let pinEntry = '';
   function pinPress(n) {
-    if (getLockout()) return;
+    if (pinLocked) return;
     if (pinEntry.length >= 4) return;
     pinEntry += n;
     document.getElementById('d' + (pinEntry.length - 1)).classList.add('filled');
     if (pinEntry.length === 4) {
-      setTimeout(() => {
+      setTimeout(async () => {
         if (pinEntry === PIN) {
-          localStorage.removeItem(LOCK_KEY);
-          setAttempts(0);
           const ps = document.getElementById('pinScreen');
           ps.style.transition = 'opacity .35s';
           ps.style.opacity = '0';
           setTimeout(() => ps.style.display = 'none', 350);
           startKDS();
         } else {
-          const attempts = getAttempts() + 1;
-          setAttempts(attempts);
-          const remaining = MAX_ATTEMPTS - attempts;
+          await logAttempt();
+          const attempts = await getRecentAttempts();
+          const remaining = MAX_ATTEMPTS - attempts.length;
           if (remaining <= 0) {
-            lockout();
+            const fifth = new Date(attempts[MAX_ATTEMPTS - 1].attempted_at).getTime();
+            showLockout(fifth + LOCKOUT_MS);
           } else {
             document.getElementById('pinError').textContent =
               `Incorrect PIN — ${remaining} attempt${remaining === 1 ? '' : 's'} remaining`;
@@ -739,7 +758,7 @@
     }
   }
   function pinDel() {
-    if (getLockout()) return;
+    if (pinLocked) return;
     if (!pinEntry.length) return;
     pinEntry = pinEntry.slice(0, -1);
     document.getElementById('d' + pinEntry.length).classList.remove('filled');
