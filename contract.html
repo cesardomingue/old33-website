@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Services Agreement — Old 33 Beer &amp; Burger Grill</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Georgia', serif;
+      font-size: 13pt;
+      line-height: 1.75;
+      color: #111;
+      background: #fff;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 60px 64px;
+    }
+
+    /* Header */
+    .contract-header {
+      text-align: center;
+      border-bottom: 3px double #111;
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+    }
+    .contract-header h1 {
+      font-size: 22pt;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .contract-header .subtitle {
+      font-size: 11pt;
+      color: #444;
+      margin-bottom: 8px;
+    }
+    .contract-header .doc-id {
+      font-size: 9.5pt;
+      color: #666;
+      font-style: italic;
+    }
+
+    /* Section headings */
+    h2 {
+      font-size: 11pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin: 28px 0 8px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 4px;
+    }
+
+    p { margin-bottom: 10px; }
+
+    /* Party block */
+    .parties {
+      display: flex;
+      gap: 32px;
+      margin: 20px 0;
+    }
+    .party-box {
+      flex: 1;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      padding: 14px 18px;
+      background: #fafafa;
+    }
+    .party-box strong {
+      display: block;
+      font-size: 10pt;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #555;
+      margin-bottom: 6px;
+    }
+    .party-box .name { font-weight: bold; font-size: 12pt; }
+    .party-box .detail { font-size: 10.5pt; color: #333; margin-top: 2px; }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 16px;
+      font-size: 11.5pt;
+    }
+    table th {
+      background: #111;
+      color: #fff;
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 10pt;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #e0e0e0;
+      vertical-align: top;
+    }
+    table tr:last-child td { border-bottom: none; }
+    table tr:nth-child(even) td { background: #f7f7f7; }
+
+    /* Numbered list */
+    ol.terms {
+      padding-left: 20px;
+      margin: 8px 0 12px;
+    }
+    ol.terms li {
+      margin-bottom: 10px;
+    }
+
+    /* Highlight box */
+    .highlight-box {
+      border-left: 4px solid #111;
+      background: #f4f4f4;
+      padding: 12px 16px;
+      margin: 12px 0;
+      font-size: 11.5pt;
+    }
+
+    /* Signature block */
+    .signature-section {
+      margin-top: 48px;
+      border-top: 2px solid #111;
+      padding-top: 24px;
+    }
+    .sig-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-top: 16px;
+    }
+    .sig-block { }
+    .sig-label {
+      font-size: 9.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    .sig-name {
+      font-weight: bold;
+      font-size: 11.5pt;
+      margin-bottom: 2px;
+    }
+    .sig-title {
+      font-size: 10.5pt;
+      color: #444;
+      margin-bottom: 24px;
+    }
+    .sig-line {
+      border-bottom: 1px solid #555;
+      height: 48px;
+      position: relative;
+      margin-bottom: 6px;
+    }
+    .sig-line-label {
+      font-size: 9pt;
+      color: #777;
+    }
+    .sig-date-line {
+      border-bottom: 1px solid #555;
+      height: 28px;
+      margin-top: 12px;
+      margin-bottom: 6px;
+    }
+
+    /* Footer */
+    .contract-footer {
+      margin-top: 40px;
+      border-top: 1px solid #ccc;
+      padding-top: 12px;
+      text-align: center;
+      font-size: 9pt;
+      color: #888;
+    }
+
+    /* Print styles */
+    @media print {
+      body { background: #fff; }
+      .page { padding: 40px 50px; }
+      .no-print { display: none; }
+    }
+
+    /* Screen-only print button */
+    .print-bar {
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 14px;
+      font-family: sans-serif;
+      font-size: 13px;
+    }
+    .print-bar button {
+      background: #c9a84c;
+      color: #111;
+      border: none;
+      padding: 8px 24px;
+      font-size: 13px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 16px;
+    }
+    .print-bar button:hover { background: #e0b85a; }
+  </style>
+</head>
+<body>
+
+<!-- Screen-only bar -->
+<div class="print-bar no-print">
+  <span>To sign: File → Print → Save as PDF (Mac) &nbsp;|&nbsp; Then open in Preview, click Markup → Signature</span>
+  <button onclick="window.print()">Save / Print PDF</button>
+</div>
+
+<div class="page">
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="contract-header">
+    <h1>Web Services Agreement</h1>
+    <div class="subtitle">Professional Website Development &amp; Ongoing Services</div>
+    <div class="doc-id">Agreement Date: __________________ &nbsp;|&nbsp; Document Ref: OLD33-WSA-2026</div>
+  </div>
+
+  <!-- ═══════ PARTIES ═══════ -->
+  <h2>1. Parties to This Agreement</h2>
+
+  <div class="parties">
+    <div class="party-box">
+      <strong>Service Provider (Technology Partner)</strong>
+      <div class="name">Cesar Dominguez</div>
+      <div class="detail">Founder &amp; CEO</div>
+      <div class="detail">Email: cesardom2007@gmail.com</div>
+    </div>
+    <div class="party-box">
+      <strong>Client (Business Owner)</strong>
+      <div class="name">Rey ________________</div>
+      <div class="detail">Owner — Old 33 Beer &amp; Burger Grill</div>
+      <div class="detail">Address: ___________________________</div>
+      <div class="detail">Email: ____________________________</div>
+    </div>
+  </div>
+
+  <p>This Web Services Agreement ("<strong>Agreement</strong>") is entered into as of the date signed below between Cesar Dominguez ("<strong>Technology Partner</strong>") and the Client identified above ("<strong>Client</strong>"). Both parties agree to the following terms.</p>
+
+  <!-- ═══════ SCOPE OF WORK ═══════ -->
+  <h2>2. Scope of Work Delivered</h2>
+
+  <p>The Technology Partner has designed, built, and deployed a complete custom website for Old 33 Beer &amp; Burger Grill, including the following features:</p>
+
+  <table>
+    <thead><tr><th>Feature</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>Public Website</td><td>Homepage, Menu, Gallery, About, Contact pages — fully mobile-responsive</td></tr>
+      <tr><td>Online Ordering System</td><td>Cart, photo-card menu with variants, customization modal (extras, toppings, sauces)</td></tr>
+      <tr><td>Members Club</td><td>Customer sign-up, login, loyalty program, exclusive pricing</td></tr>
+      <tr><td>Kitchen Dashboard</td><td>Real-time order queue for kitchen staff with status tracking</td></tr>
+      <tr><td>Admin Dashboard</td><td>Revenue chart, order history, customer messages, analytics overview</td></tr>
+      <tr><td>Contact Form</td><td>Customer inquiries submitted to secure database</td></tr>
+      <tr><td>Hosting Setup</td><td>Live on GitHub Pages at cesardomingue.github.io/old33-website</td></tr>
+      <tr><td>Database</td><td>Supabase backend (orders, contacts, members)</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══════ PAYMENT TERMS ═══════ -->
+  <h2>3. Payment Terms</h2>
+
+  <table>
+    <thead><tr><th>Payment Type</th><th>Amount</th><th>Due</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Upfront Development Fee</strong></td>
+        <td><strong>$8,000.00</strong></td>
+        <td>Upon signing this agreement</td>
+        <td>One-time payment for all work delivered</td>
+      </tr>
+      <tr>
+        <td><strong>Monthly Maintenance &amp; Hosting</strong></td>
+        <td><strong>$200.00/month</strong></td>
+        <td>1st of each month</td>
+        <td>Updates, support, database, hosting management</td>
+      </tr>
+      <tr>
+        <td><strong>Online Order Commission</strong></td>
+        <td><strong>2% per order</strong></td>
+        <td>Monthly, invoiced by 5th</td>
+        <td>Applies to all orders placed through the website</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box">
+    <strong>Payment Method:</strong> Zelle / Cash / Check payable to Cesar Dominguez. A $25 late fee applies after 10 days past due. Services may be suspended after 30 days past due.
+  </div>
+
+  <!-- ═══════ OWNERSHIP ═══════ -->
+  <h2>4. Ownership &amp; Intellectual Property</h2>
+
+  <ol class="terms">
+    <li><strong>Website Design &amp; Code:</strong> The Technology Partner retains full ownership of all custom code, design templates, and technical systems built for this project — now and permanently. The $8,000 upfront fee purchases a <strong>perpetual, non-exclusive license</strong> for the Client to use the website for their business. The Client may not resell, redistribute, or transfer the code to a third party without written consent from the Technology Partner.</li>
+    <li><strong>Business Data:</strong> All customer data, order history, and business information collected through the website (names, emails, orders) belongs exclusively to the Client. The Technology Partner may not sell, share, or use this data for any purpose outside of maintaining the website.</li>
+    <li><strong>Infrastructure Access:</strong> The Technology Partner maintains administrative access to the hosting, database, and deployment infrastructure for the purpose of providing maintenance services under this Agreement. This access remains in place for the duration of the monthly retainer.</li>
+    <li><strong>Domain:</strong> If the Client purchases a custom domain (e.g., old33grill.com), that domain is owned solely by the Client and registered in the Client's name.</li>
+  </ol>
+
+  <!-- ═══════ MONTHLY SERVICES ═══════ -->
+  <h2>5. Monthly Maintenance Services ($200/month Includes)</h2>
+
+  <ol class="terms">
+    <li>Menu updates — add, remove, or change prices on any menu items</li>
+    <li>Hours, contact info, and gallery updates</li>
+    <li>Bug fixes and performance improvements</li>
+    <li>Database management and backup monitoring</li>
+    <li>Security patches and hosting upkeep</li>
+    <li>Up to 3 hours of new feature development per month</li>
+    <li>Email/text support — responses within 24 business hours</li>
+  </ol>
+
+  <p>Work exceeding 3 hours/month in new development will be billed at <strong>$75/hour</strong>, agreed in writing before work begins.</p>
+
+  <!-- ═══════ COMMISSION ═══════ -->
+  <h2>6. Online Order Commission (2%)</h2>
+
+  <p>A 2% commission applies to the subtotal (before tax) of every order placed through the website's ordering system. The Technology Partner will provide a monthly invoice by the 5th of the following month showing total online order revenue and commission owed. The Client agrees to pay within 10 days of invoice.</p>
+
+  <div class="highlight-box">
+    <strong>Example:</strong> If the restaurant generates $10,000 in online orders in a month, the commission owed is $200. This is in addition to the $200 monthly retainer.
+  </div>
+
+  <!-- ═══════ TERM ═══════ -->
+  <h2>7. Term &amp; Termination</h2>
+
+  <ol class="terms">
+    <li>This Agreement begins on the date signed and continues on a month-to-month basis after the initial 6-month committed term.</li>
+    <li><strong>Either party</strong> may terminate the monthly retainer with <strong>30 days written notice</strong> after the initial 6-month term.</li>
+    <li>Upon termination, the Technology Partner will provide the Client with a full export of their business data — including customer records, order history, and member profiles — within 7 business days, contingent on all outstanding balances being paid in full. The Technology Partner retains full ownership of all custom code, system architecture, and technical infrastructure. The Client receives their data only, not the underlying codebase.</li>
+    <li>The upfront fee is non-refundable once development work has begun.</li>
+    <li>If the Client terminates within the first 6 months, the remaining monthly fees for that period are still owed in full.</li>
+    <li><strong>Platform Migration Fee:</strong> If the Client chooses to migrate the website to a different hosting provider, platform, or developer, a one-time migration/handoff fee of <strong>$500.00</strong> is due before any files or credentials are transferred. This fee covers knowledge transfer, documentation, and data export preparation.</li>
+  </ol>
+
+  <!-- ═══════ SERVICE SUSPENSION ═══════ -->
+  <h2>8. Service Suspension for Non-Payment</h2>
+
+  <ol class="terms">
+    <li>If any payment (monthly retainer or commission invoice) is not received within <strong>10 days</strong> of its due date, the Technology Partner reserves the right to suspend website services — including taking the site offline and restricting access to the admin and kitchen dashboards — without further notice.</li>
+    <li>Services will be restored within 24 hours of full payment of all outstanding balances, including any accrued late fees.</li>
+    <li>The Technology Partner is not liable for any lost revenue, lost orders, or business disruption resulting from a service suspension triggered by the Client's non-payment.</li>
+  </ol>
+
+  <!-- ═══════ NON-COMPETE / NO REVERSE ENGINEERING ═══════ -->
+  <h2>9. No Reverse Engineering &amp; Right of First Refusal</h2>
+
+  <ol class="terms">
+    <li><strong>No Reverse Engineering:</strong> The Client agrees not to hire, contract, or instruct any third party to replicate, rebuild, clone, or reverse-engineer the website's custom systems — including the ordering system, Members Club, kitchen dashboard, and admin dashboard — for the duration of this Agreement and for <strong>12 months</strong> after termination.</li>
+    <li><strong>Right of First Refusal:</strong> During the term of this Agreement, if the Client wishes to have any new web development work performed (new features, mobile app, redesign, additional pages, integrations, etc.), the Client agrees to offer that work to the Technology Partner first. The Technology Partner has 5 business days to accept or decline. If declined in writing, the Client is free to hire another party for that specific project only.</li>
+    <li><strong>Competitor Exclusivity:</strong> The Technology Partner agrees not to build the same custom ordering and loyalty system for any direct competing restaurant within a <strong>5-mile radius</strong> of Old 33 Beer &amp; Burger Grill for the duration of this Agreement, in exchange for the Client's continued monthly retainer. This exclusivity does not apply to any business owned or operated by the Client. Additional locations owned by Rey Gotay are offered to the Technology Partner under the same right of first refusal outlined in Section 9.2.</li>
+  </ol>
+
+  <!-- ═══════ ANNUAL PRICE ADJUSTMENT ═══════ -->
+  <h2>10. Annual Price Adjustment</h2>
+
+  <p>The monthly maintenance fee of $200/month may be adjusted by the Technology Partner once per calendar year, with <strong>30 days written notice</strong>. Annual increases are capped at <strong>10% per year</strong>. The commission rate of 2% is fixed for the first 6 months of this Agreement. After 6 months, the commission rate may be renegotiated by either party with 30 days written notice.</p>
+
+  <!-- ═══════ ATTRIBUTION ═══════ -->
+  <h2>11. Technology Partner Attribution</h2>
+
+  <p>The Technology Partner reserves the right to display a small, unobtrusive "Built by Cesar Dominguez" credit in the footer of the website and to list Old 33 Beer &amp; Burger Grill as a client in their professional portfolio. The Client agrees not to remove or obscure this attribution without written consent from the Technology Partner.</p>
+
+  <!-- ═══════ MEMBERS CLUB ═══════ -->
+  <h2>12. Members Club &amp; Customer Data Infrastructure</h2>
+
+  <ol class="terms">
+    <li>The Members Club loyalty system, including customer accounts, point balances, and member profiles, is hosted on infrastructure managed by the Technology Partner (Supabase database).</li>
+    <li>All member data belongs to the Client. However, the technical infrastructure (database schema, API keys, system configuration) was designed and is maintained by the Technology Partner.</li>
+    <li>Upon termination and receipt of all outstanding payments plus the migration fee (Section 7.6), the Technology Partner will transfer complete database access credentials and a full data export to the Client within 7 business days.</li>
+    <li>If the Client cancels and does not pay the migration fee, the Technology Partner's obligation to transfer credentials is suspended until payment is received. Member data will be preserved for 60 days after termination before the database is decommissioned.</li>
+  </ol>
+
+  <!-- ═══════ CONFIDENTIALITY ═══════ -->
+  <h2>13. Confidentiality</h2>
+
+  <p>Both parties agree to keep confidential any proprietary business information shared during this engagement, including but not limited to: sales data, customer lists, pricing strategies, and any materials marked as confidential. This obligation survives termination of the Agreement.</p>
+
+  <!-- ═══════ WARRANTIES ═══════ -->
+  <h2>14. Technology Partner Warranties &amp; Representations</h2>
+
+  <ol class="terms">
+    <li>The Technology Partner represents that the website is original work and does not infringe on any third-party intellectual property.</li>
+    <li>The Technology Partner will maintain the website in working order and address reported bugs within 48 business hours.</li>
+    <li>The Technology Partner will not introduce any unauthorized tracking, backdoors, or malicious code into the website.</li>
+  </ol>
+
+  <!-- ═══════ LIMITATION ═══════ -->
+  <h2>15. Limitation of Liability</h2>
+
+  <p>The Technology Partner's total liability under this Agreement shall not exceed the total fees paid in the preceding 3 months. The Technology Partner is not liable for lost revenue resulting from third-party service outages (hosting providers, payment processors, internet service).</p>
+
+  <!-- ═══════ DISPUTE ═══════ -->
+  <h2>16. Governing Law &amp; Disputes</h2>
+
+  <p>This Agreement is governed by the laws of the State of Virginia. Any disputes shall first be attempted to be resolved through good-faith negotiation. If unresolved after 30 days, disputes shall be submitted to binding arbitration in Rockingham County, Virginia.</p>
+
+  <!-- ═══════ ENTIRE AGREEMENT ═══════ -->
+  <h2>17. Entire Agreement</h2>
+
+  <p>This document constitutes the entire agreement between the parties and supersedes any prior verbal or written discussions. Any amendments must be in writing and signed by both parties.</p>
+
+  <!-- ═══════ SIGNATURES ═══════ -->
+  <div class="signature-section">
+    <p style="font-size:11.5pt; margin-bottom:16px;">
+      By signing below, both parties acknowledge they have read, understood, and agree to all terms of this Agreement.
+    </p>
+
+    <div class="sig-grid">
+
+      <div class="sig-block">
+        <div class="sig-label">Service Provider</div>
+        <div class="sig-name">Cesar Dominguez</div>
+        <div class="sig-title">Founder &amp; CEO</div>
+        <div class="sig-line"></div>
+        <div class="sig-line-label">Signature</div>
+        <div class="sig-date-line"></div>
+        <div class="sig-line-label">Date</div>
+        <div style="margin-top:14px; font-size:10.5pt; color:#444;">Print Name: _______________________</div>
+      </div>
+
+      <div class="sig-block">
+        <div class="sig-label">Client / Business Owner</div>
+        <div class="sig-name">Rey ___________________</div>
+        <div class="sig-title">Owner — Old 33 Beer &amp; Burger Grill</div>
+        <div class="sig-line"></div>
+        <div class="sig-line-label">Signature</div>
+        <div class="sig-date-line"></div>
+        <div class="sig-line-label">Date</div>
+        <div style="margin-top:14px; font-size:10.5pt; color:#444;">Print Name: _______________________</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="contract-footer">
+    OLD33-WSA-2026 &nbsp;|&nbsp; Web Services Agreement — Old 33 Beer &amp; Burger Grill &nbsp;|&nbsp; Confidential
+  </div>
+
+</div><!-- /.page -->
+</body>
+</html>
