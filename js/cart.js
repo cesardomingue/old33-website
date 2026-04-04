@@ -170,7 +170,9 @@ function getCategory(name) {
 }
 
 function uid() {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2,5);
+  const arr = new Uint8Array(8);
+  crypto.getRandomValues(arr);
+  return Array.from(arr).map(b => b.toString(16).padStart(2,'0')).join('');
 }
 
 /* ============================================

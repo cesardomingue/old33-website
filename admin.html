@@ -322,7 +322,12 @@
 <script>
   const SUPA_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
   const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
-  const PIN = '3300';
+  const PIN_HASH = 'd3b63363e3c4234a3fa5ad9e7dac9449c7fc9a4b3c28236247d3bace953f9de7';
+
+  async function hashPin(input) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
 
   let allOrders = [];
   let period = 'today';
@@ -338,24 +343,30 @@
     try {
       const r = await fetch('https://api.ipify.org?format=json');
       clientIP = (await r.json()).ip;
-    } catch { clientIP = 'unknown'; }
+    } catch { clientIP = null; }
   }
 
   async function getRecentAttempts() {
+    if (!clientIP) return [];
     const since = new Date(Date.now() - LOCKOUT_MS).toISOString();
-    const r = await fetch(
-      `${SUPA_URL}/rest/v1/pin_attempts?ip=eq.${clientIP}&page=eq.${PAGE_ID}&attempted_at=gte.${encodeURIComponent(since)}&order=attempted_at.asc`,
-      { headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` } }
-    );
-    return await r.json();
+    try {
+      const r = await fetch(
+        `${SUPA_URL}/rest/v1/pin_attempts?ip=eq.${clientIP}&page=eq.${PAGE_ID}&attempted_at=gte.${encodeURIComponent(since)}&order=attempted_at.asc`,
+        { headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` } }
+      );
+      return r.ok ? await r.json() : [];
+    } catch { return []; }
   }
 
   async function logAttempt() {
-    await fetch(`${SUPA_URL}/rest/v1/pin_attempts`, {
-      method: 'POST',
-      headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ page: PAGE_ID, ip: clientIP })
-    });
+    if (!clientIP) return;
+    try {
+      await fetch(`${SUPA_URL}/rest/v1/pin_attempts`, {
+        method: 'POST',
+        headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ page: PAGE_ID, ip: clientIP })
+      });
+    } catch { /* non-critical */ }
   }
 
   function showLockout(expiresAt) {
@@ -408,7 +419,8 @@
     document.getElementById('d' + (pinEntry.length - 1)).classList.add('filled');
     if (pinEntry.length === 4) {
       setTimeout(async () => {
-        if (pinEntry === PIN) {
+        const enteredHash = await hashPin(pinEntry);
+        if (enteredHash === PIN_HASH) {
           sessionStorage.setItem('adm_auth', '1');
           const ps = document.getElementById('pinScreen');
           ps.style.transition = 'opacity .35s'; ps.style.opacity = '0';
