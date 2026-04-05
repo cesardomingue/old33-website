@@ -86,12 +86,15 @@ function emailRestaurant(data) {
 
   const html = `
   <div style="font-family:Arial,sans-serif;background:#0a0a0a;color:#f5f2ec;padding:32px;max-width:560px;margin:0 auto;border-radius:8px;">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;border-bottom:2px solid #d4941a;padding-bottom:20px;">
-      <div>
-        <div style="font-size:22px;font-weight:700;color:#d4941a;letter-spacing:2px;">OLD 33</div>
-        <div style="font-size:11px;color:#686868;letter-spacing:3px;text-transform:uppercase;">Beer & Burger Grill</div>
-      </div>
-    </div>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;border-bottom:2px solid #d4941a;padding-bottom:20px;">
+      <tr>
+        <td>
+          <img src="https://cesardomingue.github.io/old33-website/images/logo-clean.png" alt="Old 33" width="40" height="40" style="border-radius:50%;border:1px solid #d4941a;vertical-align:middle;margin-right:12px;">
+          <span style="font-size:18px;font-weight:700;color:#d4941a;letter-spacing:2px;vertical-align:middle;">OLD 33</span>
+          <span style="font-size:11px;color:#686868;letter-spacing:2px;text-transform:uppercase;vertical-align:middle;margin-left:8px;">Beer &amp; Burger Grill</span>
+        </td>
+      </tr>
+    </table>
 
     <div style="background:#181818;border-radius:6px;padding:20px;margin-bottom:20px;">
       <div style="font-size:11px;color:#686868;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">New Order</div>
@@ -107,7 +110,7 @@ function emailRestaurant(data) {
     </div>
 
     <div style="background:#d4941a;color:#000;border-radius:6px;padding:16px 20px;margin-bottom:20px;font-weight:700;font-size:16px;">
-      ⏰ Ready ~ ${data.readyTime || data.pickupLabel || "ASAP"}
+      Ready ~ ${data.readyTime || data.pickupLabel || "ASAP"}
     </div>
 
     <div style="background:#181818;border-radius:6px;padding:20px;margin-bottom:20px;">
@@ -155,45 +158,137 @@ function emailRestaurant(data) {
 //  CONFIRMATION EMAIL TO CUSTOMER
 // ─────────────────────────────────────────
 function emailCustomer(data) {
-  const itemsList = data.items.map(i =>
-    `<li style="padding:6px 0;border-bottom:1px solid #222;font-size:14px;">${i.name} ×${i.qty} — <strong>$${i.price}</strong>${i.mods ? `<br><span style="font-size:12px;color:#888;">${i.mods}</span>` : ''}</li>`
-  ).join('');
+  const logoUrl = 'https://cesardomingue.github.io/old33-website/images/logo-clean.png';
 
-  const html = `
-  <div style="font-family:Arial,sans-serif;background:#0a0a0a;color:#f5f2ec;padding:32px;max-width:480px;margin:0 auto;border-radius:8px;">
-    <div style="text-align:center;margin-bottom:28px;">
-      <div style="font-size:28px;font-weight:700;color:#d4941a;letter-spacing:4px;">OLD 33</div>
-      <div style="font-size:11px;color:#686868;letter-spacing:3px;">BEER &amp; BURGER GRILL</div>
-    </div>
+  const itemsRows = data.items.map(i => `
+    <tr>
+      <td style="padding:14px 0;border-bottom:1px solid #f0ece4;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td style="width:32px;vertical-align:top;padding-right:12px;">
+              <div style="background:#fdf6e8;border:1px solid #e8d49a;border-radius:4px;width:32px;height:32px;text-align:center;line-height:32px;font-size:12px;font-weight:700;color:#a07010;">${i.qty}x</div>
+            </td>
+            <td style="vertical-align:top;">
+              <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:2px;">${i.name}</div>
+              ${i.mods ? `<div style="font-size:12px;color:#888;line-height:1.5;">${i.mods}</div>` : ''}
+            </td>
+            <td style="text-align:right;vertical-align:top;white-space:nowrap;">
+              <div style="font-size:14px;font-weight:700;color:#1a1a1a;">$${i.price}</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>`).join('');
 
-    <div style="text-align:center;margin-bottom:24px;">
-      <div style="font-size:36px;margin-bottom:8px;">✅</div>
-      <h2 style="font-size:22px;font-weight:700;color:#f5f2ec;margin-bottom:4px;">You're all set, ${data.name.split(' ')[0]}!</h2>
-      <p style="font-size:14px;color:#686868;">We got your order and we're already on it.</p>
-    </div>
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f4f1eb;font-family:Georgia,serif;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f1eb;">
+  <tr><td align="center" style="padding:32px 16px;">
 
-    <div style="background:#d4941a;color:#000;border-radius:6px;padding:16px;text-align:center;margin-bottom:24px;">
-      <div style="font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Ready Time</div>
-      <div style="font-size:20px;font-weight:700;">${data.readyTime || data.pickupLabel || "ASAP"}</div>
-    </div>
+    <!-- Card -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
 
-    <div style="background:#181818;border-radius:6px;padding:20px;margin-bottom:20px;">
-      <div style="font-size:11px;color:#686868;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;">Your Order — ${data.orderNum}</div>
-      <ul style="list-style:none;padding:0;margin:0;">${itemsList}</ul>
-      <div style="margin-top:16px;padding-top:12px;border-top:1px solid #333;display:flex;justify-content:space-between;font-size:18px;font-weight:700;color:#d4941a;">
-        <span>Total</span><span>$${data.total}</span>
-      </div>
-      <div style="margin-top:6px;font-size:12px;color:#686868;text-align:right;">Pay at pickup — cash or card</div>
-    </div>
+      <!-- Header -->
+      <tr>
+        <td align="center" style="padding:36px 32px 28px;border-bottom:1px solid #f0ece4;">
+          <img src="${logoUrl}" alt="Old 33" width="72" height="72" style="display:block;margin:0 auto 16px;border-radius:50%;border:2px solid #e8d49a;">
+          <div style="font-family:Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#a07010;margin-bottom:18px;">OLD 33 BEER &amp; BURGER GRILL</div>
+          <div style="font-family:Georgia,serif;font-size:30px;font-weight:700;color:#1a1a1a;margin-bottom:10px;">Order Confirmed</div>
+          <div style="width:40px;height:2px;background:#c8951a;margin:0 auto;"></div>
+        </td>
+      </tr>
 
-    <div style="background:#181818;border-radius:6px;padding:16px 20px;margin-bottom:20px;font-size:13px;color:#686868;line-height:1.7;">
-      <strong style="color:#f5f2ec;">Old 33 Beer &amp; Burger Grill</strong><br>
-      159 W Rockingham St, Elkton VA 22827<br>
-      <a href="tel:5407139050" style="color:#d4941a;">(540) 713-9050</a>
-    </div>
+      <!-- Order Info Bar -->
+      <tr>
+        <td style="background:#c8951a;padding:0;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td style="padding:16px 24px;width:50%;">
+                <div style="font-family:Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(0,0,0,0.6);margin-bottom:4px;">Order</div>
+                <div style="font-family:Arial,sans-serif;font-size:15px;font-weight:700;color:#000;">${data.orderNum}</div>
+              </td>
+              <td style="padding:16px 24px;text-align:right;">
+                <div style="font-family:Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(0,0,0,0.6);margin-bottom:4px;">Ready Around</div>
+                <div style="font-family:Arial,sans-serif;font-size:15px;font-weight:700;color:#000;">${data.readyTime || data.pickupLabel || 'ASAP'}</div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
 
-    <p style="font-size:12px;color:#444;text-align:center;">Questions? Call or text us at (540) 713-9050</p>
-  </div>`;
+      <!-- Greeting -->
+      <tr>
+        <td style="padding:28px 32px 8px;">
+          <p style="font-size:16px;color:#1a1a1a;margin:0 0 8px;">Hey <strong>${data.name.split(' ')[0]}</strong>,</p>
+          <p style="font-family:Arial,sans-serif;font-size:14px;color:#666;line-height:1.7;margin:0;">Your order has been received and is being prepared. Come pick it up at the counter &mdash; we&rsquo;ll have it waiting for you.</p>
+        </td>
+      </tr>
+
+      <!-- Order Items -->
+      <tr>
+        <td style="padding:20px 32px 0;">
+          <div style="font-family:Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#888;margin-bottom:4px;">Your Order</div>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            ${itemsRows}
+          </table>
+        </td>
+      </tr>
+
+      <!-- Totals -->
+      <tr>
+        <td style="padding:0 32px 24px;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #f0ece4;margin-top:4px;">
+            <tr>
+              <td style="padding:8px 0 4px;font-family:Arial,sans-serif;font-size:13px;color:#888;">Subtotal</td>
+              <td style="padding:8px 0 4px;text-align:right;font-family:Arial,sans-serif;font-size:13px;color:#888;">$${data.subtotal}</td>
+            </tr>
+            <tr>
+              <td style="padding:4px 0;font-family:Arial,sans-serif;font-size:13px;color:#888;">Tax</td>
+              <td style="padding:4px 0;text-align:right;font-family:Arial,sans-serif;font-size:13px;color:#888;">$${data.tax}</td>
+            </tr>
+            ${parseFloat(data.tip) > 0 ? `<tr><td style="padding:4px 0;font-family:Arial,sans-serif;font-size:13px;color:#888;">Tip</td><td style="padding:4px 0;text-align:right;font-family:Arial,sans-serif;font-size:13px;color:#888;">$${data.tip}</td></tr>` : ''}
+            <tr>
+              <td style="padding:12px 0 0;border-top:1px solid #f0ece4;font-family:Arial,sans-serif;font-size:16px;font-weight:700;color:#1a1a1a;">Total</td>
+              <td style="padding:12px 0 0;border-top:1px solid #f0ece4;text-align:right;font-family:Arial,sans-serif;font-size:18px;font-weight:700;color:#c8951a;">$${data.total}</td>
+            </tr>
+            <tr>
+              <td colspan="2" style="padding:6px 0 0;font-family:Arial,sans-serif;font-size:12px;color:#aaa;text-align:right;">Pay at pickup &mdash; cash or card</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Location -->
+      <tr>
+        <td style="padding:0 32px 32px;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fdf6e8;border:1px solid #eddfa0;border-radius:8px;">
+            <tr>
+              <td style="padding:16px 20px;font-family:Arial,sans-serif;font-size:13px;color:#666;line-height:1.8;">
+                <strong style="color:#1a1a1a;display:block;margin-bottom:4px;">Old 33 Beer &amp; Burger Grill</strong>
+                159 W Rockingham St, Elkton VA 22827<br>
+                <a href="tel:5407139050" style="color:#c8951a;text-decoration:none;">(540) 713-9050</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Footer -->
+      <tr>
+        <td style="background:#1a1a1a;padding:20px 32px;text-align:center;">
+          <div style="font-family:Arial,sans-serif;font-size:11px;color:#555;letter-spacing:1px;">Questions? Call or text <a href="tel:5407139050" style="color:#c8951a;text-decoration:none;">(540) 713-9050</a></div>
+        </td>
+      </tr>
+
+    </table>
+    <!-- /Card -->
+
+  </td></tr>
+</table>
+</body>
+</html>`;
 
   MailApp.sendEmail({
     to:       data.email,

@@ -674,6 +674,17 @@
             <div class="metric-foot"><div class="metric-note" id="m-pend-sub">&nbsp;</div></div>
           </div>
 
+          <div class="metric-card" style="--mc-accent:#4ade80;--mc-icon-bg:rgba(74,222,128,.08);grid-column:span 2;">
+            <div class="metric-top">
+              <div class="metric-lbl">Your Commission (4%)</div>
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+              </div>
+            </div>
+            <div class="metric-val" id="m-commission" style="color:#4ade80;">—</div>
+            <div class="metric-foot"><div class="metric-note" id="m-commission-sub">&nbsp;</div></div>
+          </div>
+
         </div>
 
         <!-- FINANCIAL BREAKDOWN -->
@@ -702,6 +713,11 @@
               <div class="finance-lbl">Total Collected</div>
               <div class="finance-val fv-white" id="f-total">—</div>
               <div class="finance-note">gross customer total</div>
+            </div>
+            <div class="finance-cell" style="border-top:1px solid rgba(74,222,128,.15);background:rgba(74,222,128,.04);border-radius:8px;padding:12px;">
+              <div class="finance-lbl" style="color:#4ade80;">Your Commission (4%)</div>
+              <div class="finance-val" style="color:#4ade80;font-size:22px;font-weight:700;margin:4px 0;" id="f-commission">—</div>
+              <div class="finance-note" id="f-commission-n">4% of food subtotal</div>
             </div>
           </div>
         </div>
@@ -1109,39 +1125,46 @@
 
   /* ─── METRICS ─── */
   function renderMetrics(orders) {
-    const rev  = orders.reduce((s,o)=>s+parseFloat(o.total||0),0);
-    const tips = orders.reduce((s,o)=>s+parseFloat(o.tip||0),0);
-    const avg  = orders.length ? rev/orders.length : 0;
-    const done = orders.filter(o=>o.status==='done').length;
-    const pend = orders.filter(o=>o.status!=='done').length;
-    const rate = orders.length ? Math.round(done/orders.length*100) : 0;
+    const rev        = orders.reduce((s,o)=>s+parseFloat(o.total||0),0);
+    const sub        = orders.reduce((s,o)=>s+parseFloat(o.subtotal||0),0);
+    const tips       = orders.reduce((s,o)=>s+parseFloat(o.tip||0),0);
+    const avg        = orders.length ? rev/orders.length : 0;
+    const done       = orders.filter(o=>o.status==='done').length;
+    const pend       = orders.filter(o=>o.status!=='done').length;
+    const rate       = orders.length ? Math.round(done/orders.length*100) : 0;
+    const commission = sub * 0.04;
 
-    document.getElementById('m-revenue').textContent = fmt(rev);
-    document.getElementById('m-rev-sub').textContent = done+' order'+(done!==1?'s':'')+' completed';
-    document.getElementById('m-orders').textContent  = orders.length;
-    document.getElementById('m-ord-sub').textContent = pend+' pending · '+done+' done';
-    document.getElementById('m-avg').textContent     = fmt(avg);
-    document.getElementById('m-rate').textContent    = rate+'%';
-    document.getElementById('m-rate-sub').textContent= done+' of '+orders.length+' fulfilled';
-    document.getElementById('m-tips').textContent    = fmt(tips);
-    document.getElementById('m-pend').textContent    = pend;
-    document.getElementById('m-pend-sub').textContent= pend>0?'need attention':'all caught up ✓';
+    document.getElementById('m-revenue').textContent    = fmt(rev);
+    document.getElementById('m-rev-sub').textContent    = done+' order'+(done!==1?'s':'')+' completed';
+    document.getElementById('m-orders').textContent     = orders.length;
+    document.getElementById('m-ord-sub').textContent    = pend+' pending · '+done+' done';
+    document.getElementById('m-avg').textContent        = fmt(avg);
+    document.getElementById('m-rate').textContent       = rate+'%';
+    document.getElementById('m-rate-sub').textContent   = done+' of '+orders.length+' fulfilled';
+    document.getElementById('m-tips').textContent       = fmt(tips);
+    document.getElementById('m-pend').textContent       = pend;
+    document.getElementById('m-pend-sub').textContent   = pend>0?'need attention':'all caught up ✓';
+    document.getElementById('m-commission').textContent = fmt(commission);
+    document.getElementById('m-commission-sub').textContent = fmt(sub)+' food revenue × 4%';
   }
 
   /* ─── FINANCE ─── */
   function renderFinance(orders) {
-    const sub  = orders.reduce((s,o)=>s+parseFloat(o.subtotal||0),0);
-    const tax  = orders.reduce((s,o)=>s+parseFloat(o.tax||0),0);
-    const tips = orders.reduce((s,o)=>s+parseFloat(o.tip||0),0);
-    const tot  = orders.reduce((s,o)=>s+parseFloat(o.total||0),0);
-    document.getElementById('f-sub').textContent   = fmt(sub);
-    document.getElementById('f-tax').textContent   = fmt(tax);
-    document.getElementById('f-tips').textContent  = fmt(tips);
-    document.getElementById('f-total').textContent = fmt(tot);
-    document.getElementById('f-sub-n').textContent  = tot?pct(sub,tot)+' of total':'';
-    document.getElementById('f-tax-n').textContent  = tot?pct(tax,tot)+' of total':'';
-    document.getElementById('f-tips-n').textContent = tot?pct(tips,tot)+' of total':'';
-    document.getElementById('f-ct').textContent     = orders.length+' order'+(orders.length!==1?'s':'');
+    const sub        = orders.reduce((s,o)=>s+parseFloat(o.subtotal||0),0);
+    const tax        = orders.reduce((s,o)=>s+parseFloat(o.tax||0),0);
+    const tips       = orders.reduce((s,o)=>s+parseFloat(o.tip||0),0);
+    const tot        = orders.reduce((s,o)=>s+parseFloat(o.total||0),0);
+    const commission = sub * 0.04;
+    document.getElementById('f-sub').textContent        = fmt(sub);
+    document.getElementById('f-tax').textContent        = fmt(tax);
+    document.getElementById('f-tips').textContent       = fmt(tips);
+    document.getElementById('f-total').textContent      = fmt(tot);
+    document.getElementById('f-commission').textContent = fmt(commission);
+    document.getElementById('f-sub-n').textContent      = tot?pct(sub,tot)+' of total':'';
+    document.getElementById('f-tax-n').textContent      = tot?pct(tax,tot)+' of total':'';
+    document.getElementById('f-tips-n').textContent     = tot?pct(tips,tot)+' of total':'';
+    document.getElementById('f-commission-n').textContent = orders.length ? '4% of $'+sub.toFixed(2)+' food revenue' : '4% of food subtotal';
+    document.getElementById('f-ct').textContent         = orders.length+' order'+(orders.length!==1?'s':'');
   }
 
   /* ─── CHART ─── */

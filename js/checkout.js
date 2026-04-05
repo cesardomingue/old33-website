@@ -23,6 +23,17 @@ function genOrderNum() {
   return 'ORD-' + Date.now().toString(36).toUpperCase().slice(-6);
 }
 
+/* --- Member discount --- */
+function getMemberDiscount() {
+  try {
+    var m = JSON.parse(localStorage.getItem('ol33_member') || 'null');
+    if (!m || !m.email) return { member: null, pct: 0 };
+    // Tier is determined server-side via order history; use stored tier or default 10%
+    var pct = m.discountPct || 10;
+    return { member: m, pct: pct };
+  } catch(e) { return { member: null, pct: 0 }; }
+}
+
 /* --- Is the restaurant open right now? --- */
 function getOpenStatus() {
   // DEMO MODE: always open for testing
@@ -63,7 +74,9 @@ const Checkout = (() => {
     const sub    = Cart.getSubtotal();
     const tax    = Cart.getTax();
     const tip    = Cart.getTipAmt();
-    const total  = Cart.getTotal();
+    const { member: ckMember, pct: discountPct } = getMemberDiscount();
+    const discountAmt = discountPct > 0 ? sub * (discountPct / 100) : 0;
+    const total  = sub - discountAmt + tax + tip;
 
     const itemRows = cart.items.map(item => {
       const mods = [];
@@ -131,8 +144,10 @@ const Checkout = (() => {
           <div class="ck-section">
             <div class="ck-sec-lbl">Order Summary</div>
             <div class="ck-order-items">${itemRows}</div>
+            ${ckMember ? `<div style="display:flex;align-items:center;gap:8px;background:rgba(200,168,75,.08);border:1px solid rgba(200,168,75,.2);border-radius:8px;padding:8px 12px;margin-bottom:10px;"><svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13" style="color:var(--gold);flex-shrink:0"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span style="font-size:12px;color:var(--gold);font-weight:700;">33 Club member — ${discountPct}% discount applied</span></div>` : ''}
             <div class="ck-totals">
               <div class="ck-tot-row"><span>Subtotal</span><span>$${sub.toFixed(2)}</span></div>
+              ${discountAmt > 0 ? `<div class="ck-tot-row" style="color:var(--gold)"><span>33 Club Discount (${discountPct}% off)</span><span>−$${discountAmt.toFixed(2)}</span></div>` : ''}
               <div class="ck-tot-row"><span>Tax (12.3%)</span><span>$${tax.toFixed(2)}</span></div>
               ${tip > 0 ? `<div class="ck-tot-row"><span>Tip</span><span>$${tip.toFixed(2)}</span></div>` : ''}
               <div class="ck-tot-row ck-grand"><span>Total</span><span>$${total.toFixed(2)}</span></div>
@@ -213,7 +228,9 @@ const Checkout = (() => {
     const sub      = Cart.getSubtotal();
     const tax      = Cart.getTax();
     const tip      = Cart.getTipAmt();
-    const total    = Cart.getTotal();
+    const { member: subMember, pct: subDiscountPct } = getMemberDiscount();
+    const discountAmt = subDiscountPct > 0 ? sub * (subDiscountPct / 100) : 0;
+    const total    = sub - discountAmt + tax + tip;
     const orderNum = genOrderNum();
 
     const items = cart.items.map(item => {
@@ -233,6 +250,7 @@ const Checkout = (() => {
       orderTime:  status.orderTime,
       readyTime:  status.readyTime,
       subtotal:   sub.toFixed(2),
+      discount:   discountAmt > 0 ? discountAmt.toFixed(2) : null,
       tax:        tax.toFixed(2),
       tip:        tip > 0 ? tip.toFixed(2) : '0.00',
       total:      total.toFixed(2),
@@ -265,9 +283,11 @@ const Checkout = (() => {
           notes: payload.notes || null,
           items: payload.items,
           subtotal: parseFloat(payload.subtotal),
+          discount: discountAmt > 0 ? parseFloat(discountAmt.toFixed(2)) : null,
           tax: parseFloat(payload.tax),
           tip: parseFloat(payload.tip),
           total: parseFloat(payload.total),
+          is_member: subMember ? true : null,
           order_time: payload.orderTime,
           ready_time: payload.readyTime
         })

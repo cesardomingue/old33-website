@@ -49,12 +49,11 @@
     if (e) e.preventDefault();
     var member = getMember();
     if (member) {
-      // Already signed in — go to home to see deals
-      window.location.href = 'index.html#membersSection';
+      // Already signed in — go to club page
+      window.location.href = 'account.html';
       return;
     }
-    // Redirect to homepage which has the full modal
-    window.location.href = 'index.html#join';
+    window.location.href = 'account.html';
   }
 
   function updateNav() {
@@ -69,18 +68,14 @@
         signInEl.textContent = 'Hi, ' + first;
         signInEl.style.color = '#c8a84b';
         signInEl.style.fontWeight = '700';
-        signInEl.onclick = function(e) {
-          e.preventDefault();
-          showSignOutModal();
-        };
+        signInEl.href = 'account.html';
+        signInEl.onclick = null;
       }
       if (mobEl) {
-        mobEl.textContent = 'Hi, ' + first + ' (Sign Out)';
+        mobEl.textContent = 'Hi, ' + first + ' · 33 Club';
         mobEl.style.color = '#c8a84b';
-        mobEl.onclick = function(e) {
-          e.preventDefault();
-          showSignOutModal();
-        };
+        mobEl.href = 'account.html';
+        mobEl.onclick = null;
       }
     }
   }
