@@ -3,577 +3,291 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kitchen Display | Old 33</title>
-  <meta name="robots" content="noindex" />
+  <title>Kitchen Display — Old 33</title>
+  <meta name="robots" content="noindex,nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
     :root {
-      --gold:    #c8881a;
-      --gold-lt: #e09a20;
-      --amber:   #d97706;
-      --red:     #dc2626;
-      --green:   #16a34a;
-      --green-lt:#15803d;
-      --bg:      #0a0a0a;
-      --card:    #111111;
-      --border:  #1f1f1f;
-      --border2: #2a2a2a;
-      --white:   #f0ede8;
-      --gray:    #666;
-      --dim:     #444;
+      --gold:   #c8881a;
+      --amber:  #d97706;
+      --red:    #ef4444;
+      --green:  #16a34a;
+      --green2: #15803d;
+      --bg:     #080808;
+      --hdr:    #0a0a0a;
+      --card:   #0e0e0e;
+      --border: rgba(255,255,255,.07);
+      --border2:rgba(255,255,255,.12);
+      --white:  #f0ede8;
+      --muted:  #555;
+      --dim:    #333;
     }
 
     html, body {
-      height: 100%;
-      background: var(--bg);
-      font-family: 'Inter', sans-serif;
-      color: var(--white);
-      overflow-x: hidden;
+      height:100%; background:var(--bg);
+      font-family:'Inter',sans-serif; color:var(--white);
+      overflow-x:hidden; -webkit-font-smoothing:antialiased;
     }
 
-    /* ─────────────────────────────
-       PIN SCREEN
-    ───────────────────────────── */
+    /* ── PIN SCREEN ── */
     #pinScreen {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
+      position:fixed; inset:0; background:var(--bg);
+      display:flex; align-items:center; justify-content:center; z-index:9999;
+      background-image:radial-gradient(ellipse 60% 50% at 50% 0%, rgba(200,136,26,.05) 0%, transparent 70%);
     }
-    .pin-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 32px;
+    .pin-wrap { display:flex; flex-direction:column; align-items:center; gap:28px; }
+    .pin-logo { height:64px; width:auto; display:block; margin:0 auto; filter:brightness(1.05); }
+    .pin-rule  { width:30px; height:1px; background:rgba(200,136,26,.45); margin:12px auto 0; }
+    .pin-sub   { font-size:10px; color:var(--muted); letter-spacing:3px; text-transform:uppercase; margin-top:8px; text-align:center; }
+    .pin-label { font-size:11px; color:var(--muted); letter-spacing:3px; text-transform:uppercase; font-weight:500; }
+    .pin-dots  { display:flex; gap:16px; }
+    .pin-dot   { width:11px; height:11px; border-radius:50%; border:1px solid rgba(255,255,255,.15); background:transparent; transition:all .2s; }
+    .pin-dot.filled { background:var(--gold); border-color:var(--gold); box-shadow:0 0 8px rgba(200,136,26,.45); }
+    .pin-error { font-size:12px; color:var(--red); height:16px; text-align:center; font-weight:500; }
+    .pin-pad   { display:grid; grid-template-columns:repeat(3,76px); gap:8px; }
+    .pin-btn   {
+      width:76px; height:76px; border-radius:50%;
+      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1);
+      color:var(--white); font-family:'Inter',sans-serif; font-size:24px; font-weight:300;
+      cursor:pointer; transition:all .15s; display:flex; align-items:center; justify-content:center;
+      user-select:none;
     }
-    .pin-brand {
-      text-align: center;
-    }
-    .pin-brand-tag {
-      font-size: 10px;
-      color: var(--gold);
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-    .pin-brand-name {
-      font-family: 'Oswald', sans-serif;
-      font-size: 48px;
-      font-weight: 700;
-      color: var(--white);
-      letter-spacing: 4px;
-      line-height: 1;
-    }
-    .pin-brand-rule {
-      width: 40px;
-      height: 2px;
-      background: var(--gold);
-      margin: 14px auto 0;
-    }
-    .pin-brand-sub {
-      font-size: 11px;
-      color: var(--dim);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-top: 10px;
-    }
-    .pin-label {
-      font-size: 12px;
-      color: var(--gray);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-    .pin-dots {
-      display: flex;
-      gap: 16px;
-    }
-    .pin-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      border: 1.5px solid var(--border2);
-      background: transparent;
-      transition: all .15s;
-    }
-    .pin-dot.filled {
-      background: var(--gold);
-      border-color: var(--gold);
-    }
-    .pin-error {
-      font-size: 12px;
-      color: var(--red);
-      height: 16px;
-      text-align: center;
-      letter-spacing: .5px;
-    }
-    .pin-pad {
-      display: grid;
-      grid-template-columns: repeat(3, 76px);
-      gap: 10px;
-    }
-    .pin-btn {
-      width: 76px;
-      height: 76px;
-      border-radius: 50%;
-      border: 1px solid var(--border2);
-      background: #161616;
-      color: var(--white);
-      font-family: 'Inter', sans-serif;
-      font-size: 24px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background .12s, transform .1s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .pin-btn:active { background: var(--gold); color: #000; transform: scale(.93); }
-    .pin-btn.zero { grid-column: 2; }
-    .pin-btn.del { background: transparent; border-color: transparent; color: var(--dim); font-size: 20px; }
-    .pin-btn.del:active { background: transparent; color: var(--white); }
+    .pin-btn:hover  { background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.18); }
+    .pin-btn:active { background:var(--gold); border-color:var(--gold); color:#000; transform:scale(.93); }
+    .pin-btn.zero   { grid-column:2; }
+    .pin-btn.del    { background:transparent; border-color:transparent; color:var(--muted); font-size:20px; }
+    .pin-btn.del:hover { color:var(--white); background:transparent; border-color:transparent; }
 
-    /* ─────────────────────────────
-       HEADER
-    ───────────────────────────── */
-    .kds-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: #0d0d0d;
-      border-bottom: 1px solid var(--border);
-      height: 62px;
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    /* ── HEADER ── */
+    .kds-hdr {
+      position:sticky; top:0; z-index:100;
+      background:var(--hdr); border-bottom:1px solid var(--border);
+      height:64px; padding:0 24px;
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
     }
-    .kds-brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
+    .kds-hdr-left { display:flex; align-items:center; gap:16px; }
+    .kds-logo { height:36px; width:auto; display:block; filter:brightness(1.05); }
+
+    .kds-divider { width:1px; height:28px; background:var(--border); }
+
+    .kds-stat {
+      display:flex; flex-direction:column; align-items:center; line-height:1;
     }
-    .kds-badge {
-      width: 36px;
-      height: 36px;
-      background: var(--gold);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Oswald', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      color: #000;
-      letter-spacing: 1px;
-      flex-shrink: 0;
+    .kds-stat-num {
+      font-family:'Oswald',sans-serif; font-size:28px; font-weight:700;
+      color:var(--gold); line-height:1;
     }
-    .kds-brand-name {
-      font-family: 'Oswald', sans-serif;
-      font-size: 17px;
-      font-weight: 600;
-      color: var(--white);
-      letter-spacing: 1.5px;
-      line-height: 1;
-    }
-    .kds-brand-sub {
-      font-size: 10px;
-      color: var(--dim);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-top: 3px;
+    .kds-stat-lbl {
+      font-size:9px; color:var(--muted); text-transform:uppercase;
+      letter-spacing:1.5px; margin-top:3px; font-weight:600;
     }
 
-    .kds-mid {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-    .kds-live {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 5px 12px;
-      border-radius: 20px;
-      border: 1px solid #1a2e1a;
-      background: #0d1a0d;
-    }
-    .kds-live-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #22c55e;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: .4; }
-    }
-    .kds-live-txt {
-      font-size: 11px;
-      font-weight: 600;
-      color: #22c55e;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-    .kds-count-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      line-height: 1;
-    }
-    .kds-count-num {
-      font-family: 'Oswald', sans-serif;
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--gold);
-    }
-    .kds-count-lbl {
-      font-size: 9px;
-      color: var(--dim);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-    }
+    .kds-hdr-center { display:flex; align-items:center; gap:14px; }
 
-    .kds-clock {
-      text-align: right;
+    .live-pill {
+      display:flex; align-items:center; gap:6px;
+      background:rgba(22,163,74,.08); border:1px solid rgba(22,163,74,.2);
+      padding:5px 12px; border-radius:20px;
     }
-    .kds-time {
-      font-family: 'Oswald', sans-serif;
-      font-size: 26px;
-      font-weight: 600;
-      color: var(--white);
-      letter-spacing: 2px;
-      line-height: 1;
-    }
-    .kds-date {
-      font-size: 10px;
-      color: var(--dim);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-top: 3px;
-    }
+    .live-dot { width:5px; height:5px; border-radius:50%; background:#22c55e; animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+    .live-txt { font-size:10px; font-weight:700; color:#22c55e; letter-spacing:.8px; text-transform:uppercase; }
+    .live-txt.err { color:var(--amber); }
 
-    /* ─────────────────────────────
-       LEGEND BAR
-    ───────────────────────────── */
-    .kds-legend {
-      border-bottom: 1px solid var(--border);
-      padding: 8px 24px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      font-size: 11px;
-      color: var(--dim);
+    .sound-btn {
+      display:flex; align-items:center; gap:7px; padding:6px 12px;
+      background:rgba(255,255,255,.04); border:1px solid var(--border2);
+      border-radius:20px; cursor:pointer; transition:all .15s; font-family:'Inter',sans-serif;
+      font-size:10px; font-weight:600; color:var(--muted); letter-spacing:.5px; text-transform:uppercase;
     }
-    .kds-legend-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .kds-legend-pip {
-      width: 8px;
-      height: 8px;
-      border-radius: 2px;
-    }
-    .kds-legend-refresh {
-      margin-left: auto;
-      font-size: 10px;
-      color: var(--dim);
-    }
+    .sound-btn:hover { border-color:rgba(255,255,255,.2); color:var(--white); }
+    .sound-btn.on  { background:rgba(22,163,74,.08); border-color:rgba(22,163,74,.25); color:#22c55e; }
+    .sound-icon { font-size:13px; }
 
-    /* ─────────────────────────────
-       EMPTY STATE
-    ───────────────────────────── */
+    .kds-hdr-right {}
+    .kds-time-big  { font-family:'Oswald',sans-serif; font-size:28px; font-weight:600; color:var(--white); letter-spacing:1px; line-height:1; text-align:right; }
+    .kds-date-sm   { font-size:10px; color:var(--muted); text-align:right; margin-top:3px; letter-spacing:.5px; }
+
+    /* ── STATUS BAR ── */
+    .kds-statusbar {
+      border-bottom:1px solid var(--border);
+      padding:0 24px; height:36px;
+      display:flex; align-items:center; gap:20px;
+      font-size:11px; color:var(--muted);
+    }
+    .legend-item { display:flex; align-items:center; gap:6px; }
+    .legend-pip  { width:8px; height:8px; border-radius:2px; flex-shrink:0; }
+    .kds-refresh { margin-left:auto; font-size:10px; color:var(--dim); }
+
+    /* ── EMPTY STATE ── */
     #emptyState {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: calc(100vh - 100px);
-      gap: 16px;
+      display:none; flex-direction:column; align-items:center; justify-content:center;
+      min-height:calc(100vh - 100px); gap:14px;
     }
-    .empty-icon { color: #1c1c1c; }
+    .empty-icon { color:var(--dim); }
     .empty-title {
-      font-family: 'Oswald', sans-serif;
-      font-size: 24px;
-      font-weight: 600;
-      color: #1e1e1e;
-      letter-spacing: 2px;
+      font-family:'Oswald',sans-serif; font-size:22px; font-weight:600;
+      color:var(--dim); letter-spacing:2px; text-transform:uppercase;
     }
-    .empty-sub { font-size: 13px; color: #1a1a1a; text-align: center; line-height: 1.7; }
+    .empty-sub { font-size:13px; color:var(--muted); text-align:center; line-height:1.7; max-width:280px; }
 
-    /* ─────────────────────────────
-       GRID
-    ───────────────────────────── */
+    /* ── GRID ── */
     #ordersGrid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-      gap: 16px;
-      padding: 20px 24px;
-      align-items: start;
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(380px,1fr));
+      gap:14px;
+      padding:18px 20px 40px;
+      align-items:start;
     }
 
-    /* ─────────────────────────────
-       CARD
-    ───────────────────────────── */
+    /* ── ORDER CARD ── */
     .order-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      border-left: 4px solid var(--gold);
-      animation: cardIn .3s ease;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:10px;
+      overflow:hidden;
+      border-left:4px solid var(--gold);
+      animation:slideIn .25s ease;
     }
-    .order-card.warning-card { border-left-color: var(--amber); }
-    .order-card.urgent-card  { border-left-color: var(--red); }
-    .order-card.new-order    { animation: cardIn .3s ease, newFlash 1.2s ease 2; }
+    .order-card.warn   { border-left-color:var(--amber); }
+    .order-card.urgent { border-left-color:var(--red); }
+    .order-card.new-card { animation:slideIn .25s ease, newPop 2s ease; }
 
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(-12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes newFlash {
-      0%, 100% { background: var(--card); }
-      50%      { background: #1a1500; }
-    }
+    @keyframes slideIn { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes newPop  { 0%,100%{background:var(--card)} 10%,60%{background:#130f00} }
 
-    /* Card top row */
-    .card-top {
-      padding: 12px 16px 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
+    /* Card header row */
+    .c-head {
+      padding:11px 16px;
+      display:flex; align-items:center; justify-content:space-between;
+      border-bottom:1px solid var(--border);
+      background:rgba(255,255,255,.02);
     }
-    .card-top-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .c-head-left { display:flex; align-items:center; gap:10px; }
+    .c-num {
+      font-family:'Oswald',sans-serif; font-size:12px; font-weight:500;
+      color:var(--gold); letter-spacing:2px;
     }
-    .card-order-num {
-      font-family: 'Oswald', sans-serif;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--gold);
-      letter-spacing: 2px;
+    .c-new-tag {
+      font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+      background:var(--gold); color:#000; padding:2px 7px; border-radius:3px;
     }
-    .card-new-badge {
-      background: var(--gold);
-      color: #000;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 2px 7px;
-      border-radius: 3px;
-    }
-    .card-placed-time {
-      font-size: 12px;
-      color: var(--dim);
-    }
+    .c-placed { font-size:11px; color:var(--muted); }
 
-    /* Customer row */
-    .card-customer {
-      padding: 14px 16px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
+    /* Customer + timer row */
+    .c-customer {
+      padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between;
+      border-bottom:1px solid var(--border);
     }
-    .card-customer-name {
-      font-family: 'Oswald', sans-serif;
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--white);
-      letter-spacing: .5px;
-      line-height: 1;
+    .c-name {
+      font-family:'Oswald',sans-serif; font-size:34px; font-weight:700;
+      color:var(--white); line-height:1; letter-spacing:.3px;
     }
-    .card-customer-phone {
-      font-size: 13px;
-      color: var(--gray);
-      margin-top: 4px;
-      letter-spacing: .5px;
+    .c-phone { font-size:12px; color:var(--muted); margin-top:5px; letter-spacing:.5px; }
+
+    .c-timer {
+      display:flex; flex-direction:column; align-items:center;
+      background:#0a0a0a; border:1px solid rgba(255,255,255,.08);
+      border-radius:8px; padding:10px 14px; min-width:68px; text-align:center;
+      flex-shrink:0;
     }
-    .card-timer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: #0d0d0d;
-      border: 1px solid var(--border2);
-      border-radius: 8px;
-      padding: 10px 16px;
-      min-width: 70px;
-      text-align: center;
-      flex-shrink: 0;
+    .c-timer-num {
+      font-family:'Oswald',sans-serif; font-size:30px; font-weight:700;
+      line-height:1; color:var(--white);
     }
-    .card-timer-num {
-      font-family: 'Oswald', sans-serif;
-      font-size: 28px;
-      font-weight: 700;
-      line-height: 1;
-      color: var(--white);
-    }
-    .card-timer-num.warn { color: var(--amber); }
-    .card-timer-num.urgent { color: var(--red); }
-    .card-timer-lbl {
-      font-size: 9px;
-      color: var(--dim);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-top: 3px;
+    .c-timer-num.warn   { color:var(--amber); }
+    .c-timer-num.urgent { color:var(--red); animation:timerPulse 1s infinite; }
+    @keyframes timerPulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+    .c-timer-lbl {
+      font-size:9px; color:var(--muted); text-transform:uppercase;
+      letter-spacing:1.5px; margin-top:3px;
     }
 
     /* Items */
-    .card-items {
-      padding: 4px 0;
+    .c-items { padding:4px 0; }
+    .c-item {
+      display:flex; align-items:flex-start; gap:12px;
+      padding:11px 16px; border-bottom:1px solid rgba(255,255,255,.04);
     }
-    .card-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 11px 16px;
-      border-bottom: 1px solid #161616;
+    .c-item:last-child { border-bottom:none; }
+    .c-qty {
+      width:28px; height:28px; border-radius:5px; flex-shrink:0;
+      background:rgba(200,136,26,.1); border:1px solid rgba(200,136,26,.22);
+      color:var(--gold); font-size:13px; font-weight:700;
+      display:flex; align-items:center; justify-content:center; margin-top:1px;
     }
-    .card-item:last-child { border-bottom: none; }
-    .card-item-qty {
-      width: 26px;
-      height: 26px;
-      border-radius: 5px;
-      background: rgba(200,136,26,.12);
-      border: 1px solid rgba(200,136,26,.25);
-      color: var(--gold);
-      font-size: 13px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-    .card-item-info { flex: 1; min-width: 0; }
-    .card-item-name {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--white);
-      line-height: 1.2;
-    }
-    .card-item-mods {
-      font-size: 12px;
-      color: var(--gray);
-      margin-top: 3px;
-      line-height: 1.5;
-    }
-    .card-item-price {
-      font-size: 13px;
-      color: var(--dim);
-      font-weight: 500;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
+    .c-item-info { flex:1; min-width:0; }
+    .c-item-name { font-size:16px; font-weight:600; color:var(--white); line-height:1.2; }
+    .c-item-mods { font-size:11.5px; color:var(--muted); margin-top:4px; line-height:1.55; }
+    .c-item-price { font-size:12px; color:var(--dim); flex-shrink:0; margin-top:3px; }
 
-    /* Notes */
-    .card-notes {
-      margin: 0 16px 12px;
-      background: rgba(200,136,26,.05);
-      border-left: 2px solid var(--gold);
-      padding: 10px 12px;
-      border-radius: 0 4px 4px 0;
+    /* Note */
+    .c-note {
+      margin:0 16px 12px;
+      background:rgba(200,136,26,.04); border-left:2px solid var(--gold);
+      border-radius:0 6px 6px 0; padding:10px 12px;
     }
-    .card-notes-lbl {
-      font-size: 9px;
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-weight: 700;
-      margin-bottom: 4px;
+    .c-note-lbl {
+      font-size:9px; color:var(--gold); text-transform:uppercase;
+      letter-spacing:2px; font-weight:700; margin-bottom:4px;
     }
-    .card-notes-txt {
-      font-size: 13px;
-      color: #bbb;
-      line-height: 1.5;
-    }
+    .c-note-txt { font-size:13px; color:rgba(255,255,255,.6); line-height:1.55; }
 
     /* Footer */
-    .card-footer {
-      border-top: 1px solid var(--border);
+    .c-foot { border-top:1px solid var(--border); }
+    .c-totals {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 16px;
     }
-    .card-totals {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 11px 16px;
-    }
-    .card-totals-detail {
-      font-size: 11px;
-      color: var(--dim);
-      line-height: 1.7;
-    }
-    .card-total-amount {
-      font-family: 'Oswald', sans-serif;
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--white);
+    .c-totals-detail { font-size:10.5px; color:var(--dim); line-height:1.9; }
+    .c-total-amt {
+      font-family:'Oswald',sans-serif; font-size:26px; font-weight:700; color:var(--white);
     }
 
     /* Ready button */
-    .card-ready-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      background: var(--green);
-      color: #fff;
-      border: none;
-      padding: 17px 24px;
-      font-family: 'Oswald', sans-serif;
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background .15s;
+    .c-ready-btn {
+      width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+      background:var(--green); color:#fff; border:none;
+      padding:18px 24px; cursor:pointer; transition:background .15s, opacity .15s;
+      font-family:'Oswald',sans-serif; font-size:15px; font-weight:600;
+      letter-spacing:3px; text-transform:uppercase;
     }
-    .card-ready-btn:hover  { background: var(--green-lt); }
-    .card-ready-btn:active { opacity: .9; }
-    .card-ready-btn.marking {
-      background: #1a1a1a;
-      color: var(--dim);
-      pointer-events: none;
+    .c-ready-btn:hover  { background:var(--green2); }
+    .c-ready-btn:active { opacity:.88; }
+    .c-ready-btn.busy {
+      background:#161616; color:var(--muted); pointer-events:none;
     }
 
-    /* ─────────────────────────────
-       SCROLLBAR
-    ───────────────────────────── */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #1f1f1f; border-radius: 2px; }
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width:4px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:rgba(255,255,255,.1); border-radius:2px; }
 
-    @media (max-width: 500px) {
-      #ordersGrid { grid-template-columns: 1fr; padding: 12px; }
-      .kds-header { padding: 0 16px; }
-      .kds-legend { display: none; }
-      .card-customer-name { font-size: 28px; }
+    /* ── RESPONSIVE ── */
+    @media(max-width:520px){
+      #ordersGrid { grid-template-columns:1fr; padding:12px 12px 32px; }
+      .kds-hdr { padding:0 14px; }
+      .kds-statusbar { display:none; }
+      .c-name { font-size:28px; }
+    }
+    @media(max-width:700px){
+      .kds-hdr-center .sound-btn .sound-icon { display:none; }
     }
   </style>
 </head>
 <body>
 
-<!-- PIN SCREEN -->
+<!-- ═══ PIN SCREEN ═══ -->
 <div id="pinScreen">
   <div class="pin-wrap">
-    <div class="pin-brand">
-      <div class="pin-brand-tag">Kitchen Display System</div>
-      <div class="pin-brand-name">OLD 33</div>
-      <div class="pin-brand-rule"></div>
-      <div class="pin-brand-sub">Beer &amp; Burger Grill &nbsp;&middot;&nbsp; Elkton, VA</div>
+    <div>
+      <img src="images/logo-clean.png" alt="Old 33" class="pin-logo">
+      <div class="pin-rule"></div>
+      <div class="pin-sub">Kitchen Display System</div>
     </div>
     <div class="pin-label">Enter PIN</div>
     <div class="pin-dots">
@@ -584,397 +298,389 @@
     </div>
     <div class="pin-error" id="pinError"></div>
     <div class="pin-pad">
-      <button class="pin-btn" onclick="pinPress('1')">1</button>
-      <button class="pin-btn" onclick="pinPress('2')">2</button>
-      <button class="pin-btn" onclick="pinPress('3')">3</button>
-      <button class="pin-btn" onclick="pinPress('4')">4</button>
-      <button class="pin-btn" onclick="pinPress('5')">5</button>
-      <button class="pin-btn" onclick="pinPress('6')">6</button>
-      <button class="pin-btn" onclick="pinPress('7')">7</button>
-      <button class="pin-btn" onclick="pinPress('8')">8</button>
-      <button class="pin-btn" onclick="pinPress('9')">9</button>
-      <button class="pin-btn zero" onclick="pinPress('0')">0</button>
-      <button class="pin-btn del" onclick="pinDel()">&#9003;</button>
+      <button class="pin-btn" onclick="pp('1')">1</button>
+      <button class="pin-btn" onclick="pp('2')">2</button>
+      <button class="pin-btn" onclick="pp('3')">3</button>
+      <button class="pin-btn" onclick="pp('4')">4</button>
+      <button class="pin-btn" onclick="pp('5')">5</button>
+      <button class="pin-btn" onclick="pp('6')">6</button>
+      <button class="pin-btn" onclick="pp('7')">7</button>
+      <button class="pin-btn" onclick="pp('8')">8</button>
+      <button class="pin-btn" onclick="pp('9')">9</button>
+      <button class="pin-btn zero" onclick="pp('0')">0</button>
+      <button class="pin-btn del" onclick="pd()">&#9003;</button>
     </div>
   </div>
 </div>
 
-<!-- HEADER -->
-<div class="kds-header">
-  <div class="kds-brand">
-    <div class="kds-badge">33</div>
-    <div>
-      <div class="kds-brand-name">OLD 33</div>
-      <div class="kds-brand-sub">Kitchen Display</div>
+<!-- ═══ HEADER ═══ -->
+<div class="kds-hdr">
+  <div class="kds-hdr-left">
+    <img src="images/logo-clean.png" alt="Old 33" class="kds-logo">
+    <div class="kds-divider"></div>
+    <div class="kds-stat">
+      <div class="kds-stat-num" id="pendingCount">0</div>
+      <div class="kds-stat-lbl">Pending</div>
     </div>
   </div>
-  <div class="kds-mid">
-    <div class="kds-live">
-      <div class="kds-live-dot"></div>
-      <span class="kds-live-txt" id="liveText">Live</span>
+
+  <div class="kds-hdr-center">
+    <div class="live-pill">
+      <div class="live-dot"></div>
+      <span class="live-txt" id="liveLabel">Live</span>
     </div>
-    <div class="kds-count-wrap">
-      <div class="kds-count-num" id="orderCount">0</div>
-      <div class="kds-count-lbl">Pending</div>
-    </div>
+    <button class="sound-btn on" id="soundBtn" onclick="toggleSound()">
+      <span class="sound-icon" id="soundIcon">🔔</span>
+      <span id="soundLbl">Sound On</span>
+    </button>
   </div>
-  <div class="kds-clock">
-    <div class="kds-time" id="clock">--:--</div>
-    <div class="kds-date" id="clockDate">---</div>
+
+  <div class="kds-hdr-right">
+    <div class="kds-time-big" id="kClock">--:--</div>
+    <div class="kds-date-sm" id="kDate">---</div>
   </div>
 </div>
 
-<!-- LEGEND -->
-<div class="kds-legend">
-  <div class="kds-legend-item">
-    <div class="kds-legend-pip" style="background:var(--gold)"></div>
-    <span>New</span>
+<!-- ═══ STATUS BAR ═══ -->
+<div class="kds-statusbar">
+  <div class="legend-item">
+    <div class="legend-pip" style="background:var(--gold)"></div>
+    <span>0 – 9 min</span>
   </div>
-  <div class="kds-legend-item">
-    <div class="kds-legend-pip" style="background:var(--amber)"></div>
-    <span>15+ min</span>
+  <div class="legend-item">
+    <div class="legend-pip" style="background:var(--amber)"></div>
+    <span>10 – 19 min — caution</span>
   </div>
-  <div class="kds-legend-item">
-    <div class="kds-legend-pip" style="background:var(--red)"></div>
-    <span>25+ min — urgent</span>
+  <div class="legend-item">
+    <div class="legend-pip" style="background:var(--red)"></div>
+    <span>20+ min — urgent</span>
   </div>
-  <div class="kds-legend-refresh" id="lastRefresh">Refreshing every 15s</div>
+  <div class="kds-refresh" id="lastRefresh">Loading…</div>
 </div>
 
-<!-- EMPTY STATE -->
+<!-- ═══ EMPTY STATE ═══ -->
 <div id="emptyState">
   <div class="empty-icon">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="48" height="48">
-      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-      <line x1="3" y1="6" x2="21" y2="6"/>
-      <path d="M16 10a4 4 0 01-8 0"/>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" width="44" height="44">
+      <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
     </svg>
   </div>
   <div class="empty-title">All Clear</div>
-  <div class="empty-sub">No pending orders.<br>New orders appear here automatically.</div>
+  <div class="empty-sub">No pending orders right now.<br>New orders will appear here automatically.</div>
 </div>
 
-<!-- ORDERS -->
+<!-- ═══ ORDERS GRID ═══ -->
 <div id="ordersGrid"></div>
 
 <script>
-  const SUPA_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
-  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
-  const SMS_URL  = 'https://script.google.com/macros/s/AKfycbyRhSuHPCUWK3ua_2mokRI8X3IUHWMkrqVP11l7zj1Tn-qUhzGFqNnXOipXxUj7r0m6/exec';
-  const PIN_HASH = 'd3b63363e3c4234a3fa5ad9e7dac9449c7fc9a4b3c28236247d3bace953f9de7';
+  /* ─── CONFIG ─── */
+  const SB_URL  = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
+  const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
+  const SMS_URL = 'https://script.google.com/macros/s/AKfycbyRhSuHPCUWK3ua_2mokRI8X3IUHWMkrqVP11l7zj1Tn-qUhzGFqNnXOipXxUj7r0m6/exec';
+  const PIN_H   = 'd3b63363e3c4234a3fa5ad9e7dac9449c7fc9a4b3c28236247d3bace953f9de7';
+  const H       = { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY };
 
-  async function hashPin(input) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  /* ─── STATE ─── */
+  let knownIds  = null; // null = first load (no bell on initial draw)
+  let soundOn   = true;
+
+  /* ─── HASH ─── */
+  async function hashPin(v) {
+    const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(v));
+    return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
   }
 
-  /* PIN (server-side lockout) */
-  const MAX_ATTEMPTS = 5;
-  const LOCKOUT_MS   = 15 * 60 * 1000;
-  const PAGE_ID      = 'kitchen';
-  let   clientIP     = null;
-  let   pinLocked    = false;
+  /* ─── PIN LOCKOUT ─── */
+  const MAX_ATT = 5, LOCK_MS = 15*60*1000, PG = 'kitchen';
+  let clientIP = null, locked = false;
 
   async function fetchIP() {
-    try {
-      const r = await fetch('https://api.ipify.org?format=json');
-      clientIP = (await r.json()).ip;
-    } catch { clientIP = null; }
+    try { clientIP = (await (await fetch('https://api.ipify.org?format=json')).json()).ip; }
+    catch { clientIP = null; }
   }
-
-  async function getRecentAttempts() {
+  async function getAttempts() {
     if (!clientIP) return [];
-    const since = new Date(Date.now() - LOCKOUT_MS).toISOString();
+    const since = new Date(Date.now() - LOCK_MS).toISOString();
     try {
       const r = await fetch(
-        `${SUPA_URL}/rest/v1/pin_attempts?ip=eq.${clientIP}&page=eq.${PAGE_ID}&attempted_at=gte.${encodeURIComponent(since)}&order=attempted_at.asc`,
-        { headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` } }
+        `${SB_URL}/rest/v1/pin_attempts?ip=eq.${clientIP}&page=eq.${PG}&attempted_at=gte.${encodeURIComponent(since)}&order=attempted_at.asc`,
+        { headers: H }
       );
       return r.ok ? await r.json() : [];
     } catch { return []; }
   }
-
   async function logAttempt() {
     if (!clientIP) return;
     try {
-      await fetch(`${SUPA_URL}/rest/v1/pin_attempts`, {
-        method: 'POST',
-        headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ page: PAGE_ID, ip: clientIP })
+      await fetch(`${SB_URL}/rest/v1/pin_attempts`, {
+        method:'POST', headers:{...H,'Content-Type':'application/json'},
+        body: JSON.stringify({ page:PG, ip:clientIP })
       });
-    } catch { /* non-critical */ }
+    } catch {}
   }
-
-  function showLockout(expiresAt) {
-    pinLocked = true;
+  function showLockout(exp) {
+    locked = true;
     const err = document.getElementById('pinError');
     const pad = document.querySelector('.pin-pad');
-    pad.style.opacity = '0.3';
-    pad.style.pointerEvents = 'none';
-    function tick() {
-      const left = Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000));
-      if (left <= 0) {
-        pinLocked = false;
-        err.textContent = '';
-        pad.style.opacity = '1';
-        pad.style.pointerEvents = '';
-        return;
-      }
-      const m = Math.floor(left / 60), s = left % 60;
-      err.textContent = `Too many attempts. Locked for ${m}:${s.toString().padStart(2,'0')}`;
+    pad.style.opacity = '0.3'; pad.style.pointerEvents = 'none';
+    (function tick() {
+      const left = Math.max(0, Math.ceil((exp - Date.now()) / 1000));
+      if (!left) { locked=false; err.textContent=''; pad.style.opacity='1'; pad.style.pointerEvents=''; return; }
+      err.textContent = `Locked — ${Math.floor(left/60)}:${(left%60).toString().padStart(2,'0')}`;
       setTimeout(tick, 1000);
-    }
-    tick();
+    })();
   }
 
+  /* ─── BOOT ─── */
   if (sessionStorage.getItem('kds_auth') === '1') {
     document.getElementById('pinScreen').style.display = 'none';
     startKDS();
   } else {
     fetchIP().then(async () => {
-      const attempts = await getRecentAttempts();
-      if (attempts.length >= MAX_ATTEMPTS) {
-        const fifth = new Date(attempts[MAX_ATTEMPTS - 1].attempted_at).getTime();
-        const expiresAt = fifth + LOCKOUT_MS;
-        if (expiresAt > Date.now()) { showLockout(expiresAt); return; }
+      const atts = await getAttempts();
+      if (atts.length >= MAX_ATT) {
+        const exp = new Date(atts[MAX_ATT-1].attempted_at).getTime() + LOCK_MS;
+        if (exp > Date.now()) { showLockout(exp); return; }
       }
-      if (attempts.length > 0) {
-        const remaining = MAX_ATTEMPTS - attempts.length;
-        document.getElementById('pinError').textContent =
-          `${remaining} attempt${remaining === 1 ? '' : 's'} remaining`;
+      if (atts.length > 0) {
+        const rem = MAX_ATT - atts.length;
+        document.getElementById('pinError').textContent = `${rem} attempt${rem===1?'':'s'} remaining`;
       }
     });
   }
 
-  let pinEntry = '';
-  function pinPress(n) {
-    if (pinLocked) return;
-    if (pinEntry.length >= 4) return;
-    pinEntry += n;
-    document.getElementById('d' + (pinEntry.length - 1)).classList.add('filled');
-    if (pinEntry.length === 4) {
+  let pinStr = '';
+  function pp(n) {
+    if (locked || pinStr.length >= 4) return;
+    pinStr += n;
+    document.getElementById('d' + (pinStr.length-1)).classList.add('filled');
+    if (pinStr.length === 4) {
       setTimeout(async () => {
-        const enteredHash = await hashPin(pinEntry);
-        if (enteredHash === PIN_HASH) {
-          sessionStorage.setItem('kds_auth', '1');
+        if (await hashPin(pinStr) === PIN_H) {
+          sessionStorage.setItem('kds_auth','1');
           const ps = document.getElementById('pinScreen');
-          ps.style.transition = 'opacity .35s';
-          ps.style.opacity = '0';
-          setTimeout(() => ps.style.display = 'none', 350);
-          startKDS();
+          ps.style.transition = 'opacity .35s'; ps.style.opacity = '0';
+          setTimeout(() => { ps.style.display = 'none'; startKDS(); }, 350);
         } else {
           await logAttempt();
-          const attempts = await getRecentAttempts();
-          const remaining = MAX_ATTEMPTS - attempts.length;
-          if (remaining <= 0) {
-            const fifth = new Date(attempts[MAX_ATTEMPTS - 1].attempted_at).getTime();
-            showLockout(fifth + LOCKOUT_MS);
-          } else {
-            document.getElementById('pinError').textContent =
-              `Incorrect PIN — ${remaining} attempt${remaining === 1 ? '' : 's'} remaining`;
-            setTimeout(() => document.getElementById('pinError').textContent = '', 2500);
+          const atts = await getAttempts();
+          const rem  = MAX_ATT - atts.length;
+          if (rem <= 0) showLockout(new Date(atts[MAX_ATT-1].attempted_at).getTime() + LOCK_MS);
+          else {
+            document.getElementById('pinError').textContent = `Incorrect PIN — ${rem} attempt${rem===1?'':'s'} remaining`;
+            setTimeout(() => { const e=document.getElementById('pinError'); if(e.textContent.startsWith('Incorrect')) e.textContent=''; }, 2500);
           }
-          pinEntry = '';
-          for (let i = 0; i < 4; i++) document.getElementById('d' + i).classList.remove('filled');
+          pinStr = '';
+          for (let i=0;i<4;i++) document.getElementById('d'+i).classList.remove('filled');
         }
       }, 180);
     }
   }
-  function pinDel() {
-    if (pinLocked) return;
-    if (!pinEntry.length) return;
-    pinEntry = pinEntry.slice(0, -1);
-    document.getElementById('d' + pinEntry.length).classList.remove('filled');
+  function pd() {
+    if (locked || !pinStr.length) return;
+    pinStr = pinStr.slice(0,-1);
+    document.getElementById('d'+pinStr.length).classList.remove('filled');
     document.getElementById('pinError').textContent = '';
   }
 
-  /* CLOCK */
+  /* ─── SOUND ─── */
+  function toggleSound() {
+    soundOn = !soundOn;
+    const btn = document.getElementById('soundBtn');
+    document.getElementById('soundIcon').textContent = soundOn ? '🔔' : '🔕';
+    document.getElementById('soundLbl').textContent  = soundOn ? 'Sound On' : 'Sound Off';
+    btn.classList.toggle('on', soundOn);
+  }
+  function playBell() {
+    if (!soundOn) return;
+    try {
+      const ctx = new (window.AudioContext||window.webkitAudioContext)();
+      [880,1100,880].forEach((f,i) => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.value = f; o.type = 'sine';
+        const t = ctx.currentTime + i*.15;
+        g.gain.setValueAtTime(0,t);
+        g.gain.linearRampToValueAtTime(.3, t+.01);
+        g.gain.exponentialRampToValueAtTime(.001, t+.4);
+        o.start(t); o.stop(t+.4);
+      });
+    } catch {}
+  }
+
+  /* ─── HELPERS ─── */
+  const esc = s => String(s||'').replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
+  const getMins = iso => Math.floor((Date.now() - new Date(iso)) / 60000);
+  const urgency = m => m >= 20 ? 'urgent' : m >= 10 ? 'warn' : '';
+
+  /* ─── CLOCK ─── */
   function updateClock() {
     const now = new Date();
-    document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', {
-      hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/New_York'
+    const cl = document.getElementById('kClock');
+    const dl = document.getElementById('kDate');
+    if (cl) cl.textContent = now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true,timeZone:'America/New_York'});
+    if (dl) dl.textContent = now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',timeZone:'America/New_York'});
+  }
+
+  /* ─── TIMER REFRESH ─── */
+  function refreshTimers() {
+    document.querySelectorAll('.order-card').forEach(card => {
+      const iso = card.dataset.created;
+      if (!iso) return;
+      const mins = getMins(iso);
+      const u    = urgency(mins);
+      // Update card border urgency
+      card.className = 'order-card' + (u ? ' '+u : '');
+      // Update timer num
+      const tn = card.querySelector('.c-timer-num');
+      if (tn) { tn.textContent = mins; tn.className = 'c-timer-num' + (u ? ' '+u : ''); }
     });
-    document.getElementById('clockDate').textContent = now.toLocaleDateString('en-US', {
-      weekday: 'short', month: 'short', day: 'numeric', timeZone: 'America/New_York'
-    });
   }
 
-  /* HELPERS */
-  function esc(s) {
-    return String(s || '').replace(/[<>&"']/g, c =>
-      ({ '<':'&lt;', '>':'&gt;', '&':'&amp;', '"':'&quot;', "'":'&#39;' }[c]));
-  }
-  function getMins(iso) {
-    return Math.floor((Date.now() - new Date(iso)) / 60000);
-  }
-  function timerClass(mins) {
-    if (mins >= 25) return 'urgent';
-    if (mins >= 15) return 'warn';
-    return '';
-  }
-  function cardClass(mins) {
-    if (mins >= 25) return 'urgent-card';
-    if (mins >= 15) return 'warning-card';
-    return '';
-  }
-
-  /* SOUND */
-  function playBeep() {
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      [880, 1100].forEach((freq, i) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain); gain.connect(ctx.destination);
-        osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.15);
-        gain.gain.linearRampToValueAtTime(0.28, ctx.currentTime + i * 0.15 + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.35);
-        osc.start(ctx.currentTime + i * 0.15);
-        osc.stop(ctx.currentTime + i * 0.15 + 0.35);
-      });
-    } catch(e) {}
-  }
-
-  /* MARK READY */
+  /* ─── MARK READY ─── */
   async function markReady(id, btn) {
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> Marking done...';
-    btn.classList.add('marking');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> Marking done…`;
+    btn.classList.add('busy');
 
-    const card = document.querySelector(`[data-id="${id}"]`);
-    const name  = card?.querySelector('.card-customer-name')?.textContent || '';
-    const rawPhone = card?.querySelector('.card-customer-phone')?.textContent || '';
-    const digits = rawPhone.replace(/\D/g, '');
-    const phone = digits.length === 10 ? '+1' + digits : (digits.length === 11 && digits[0] === '1' ? '+' + digits : rawPhone);
+    const card  = document.querySelector(`[data-id="${id}"]`);
+    const name  = card?.querySelector('.c-name')?.textContent || '';
+    const rawPh = card?.querySelector('.c-phone')?.textContent || '';
+    const digits= rawPh.replace(/\D/g,'');
+    const phone = digits.length===10 ? '+1'+digits : (digits.length===11&&digits[0]==='1' ? '+'+digits : rawPh);
 
     try {
-      await fetch(SUPA_URL + '/rest/v1/orders?id=eq.' + id, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPA_KEY,
-          'Authorization': 'Bearer ' + SUPA_KEY,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({ status: 'done' })
+      const r = await fetch(`${SB_URL}/rest/v1/orders?id=eq.${id}`, {
+        method:'PATCH',
+        headers:{...H,'Content-Type':'application/json',Prefer:'return=minimal'},
+        body: JSON.stringify({ status:'done' })
       });
 
-      fetch(SMS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: JSON.stringify({ name, phone }),
-        headers: { 'Content-Type': 'text/plain' }
-      }).catch(() => {});
+      if (!r.ok) throw new Error('HTTP '+r.status);
 
+      // SMS — fire and forget
+      fetch(SMS_URL, {
+        method:'POST', mode:'no-cors',
+        body: JSON.stringify({ name, phone }),
+        headers: { 'Content-Type':'text/plain' }
+      }).catch(()=>{});
+
+      // Animate out
       if (card) {
         card.style.transition = 'opacity .25s, transform .25s';
         card.style.opacity = '0';
-        card.style.transform = 'translateY(6px)';
+        card.style.transform = 'scale(.97)';
         setTimeout(() => { card.remove(); updateCount(); }, 260);
       }
-      knownIds.delete(id);
+      if (knownIds) knownIds.delete(id);
 
-    } catch(e) {
-      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> ORDER READY';
-      btn.classList.remove('marking');
+    } catch {
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> ORDER READY`;
+      btn.classList.remove('busy');
     }
   }
 
+  /* ─── COUNT ─── */
   function updateCount() {
-    const count = document.querySelectorAll('.order-card').length;
-    document.getElementById('orderCount').textContent = count;
-    document.getElementById('emptyState').style.display = count === 0 ? 'flex' : 'none';
-    document.getElementById('ordersGrid').style.display = count === 0 ? 'none' : 'grid';
+    const n = document.querySelectorAll('.order-card').length;
+    document.getElementById('pendingCount').textContent = n;
+    document.getElementById('emptyState').style.display  = n===0 ? 'flex' : 'none';
+    document.getElementById('ordersGrid').style.display  = n===0 ? 'none' : 'grid';
   }
 
-  /* RENDER */
-  let knownIds = new Set();
-
+  /* ─── RENDER ─── */
   function renderOrders(orders) {
-    const grid  = document.getElementById('ordersGrid');
-    const empty = document.getElementById('emptyState');
-
-    document.getElementById('orderCount').textContent = orders.length;
+    const grid = document.getElementById('ordersGrid');
+    document.getElementById('pendingCount').textContent = orders.length;
 
     if (!orders.length) {
-      grid.style.display  = 'none';
-      empty.style.display = 'flex';
+      grid.style.display = 'none';
+      document.getElementById('emptyState').style.display = 'flex';
       return;
     }
-    grid.style.display  = 'grid';
-    empty.style.display = 'none';
+    grid.style.display = 'grid';
+    document.getElementById('emptyState').style.display = 'none';
 
+    // Remove cards that are no longer pending
     grid.querySelectorAll('.order-card').forEach(c => {
-      if (!orders.find(o => o.id === c.dataset.id)) c.remove();
+      if (!orders.find(o => o.id === c.dataset.id)) {
+        c.style.transition = 'opacity .2s'; c.style.opacity = '0';
+        setTimeout(() => c.remove(), 210);
+      }
     });
 
     orders.forEach(order => {
       const mins  = getMins(order.created_at);
-      const isNew = !knownIds.has(order.id);
-      if (isNew) knownIds.add(order.id);
+      const u     = urgency(mins);
+      const isNew = knownIds !== null && !knownIds.has(order.id);
 
+      if (knownIds) knownIds.add(order.id);
+
+      // Update existing card timer
       const existing = grid.querySelector(`[data-id="${order.id}"]`);
       if (existing) {
-        const tn = existing.querySelector('.card-timer-num');
-        if (tn) { tn.textContent = mins; tn.className = 'card-timer-num ' + timerClass(mins); }
-        existing.className = 'order-card ' + cardClass(mins);
+        const tn = existing.querySelector('.c-timer-num');
+        if (tn) { tn.textContent = mins; tn.className = 'c-timer-num'+(u?' '+u:''); }
+        existing.className = 'order-card'+(u?' '+u:'');
         return;
       }
 
-      if (isNew && knownIds.size > 1) playBeep();
+      if (isNew) playBell();
 
       const items = Array.isArray(order.items) ? order.items : [];
       const itemsHtml = items.map(it => `
-        <div class="card-item">
-          <div class="card-item-qty">${esc(it.qty)}</div>
-          <div class="card-item-info">
-            <div class="card-item-name">${esc(it.name)}</div>
-            ${it.mods ? `<div class="card-item-mods">${esc(it.mods)}</div>` : ''}
+        <div class="c-item">
+          <div class="c-qty">${esc(it.qty||1)}</div>
+          <div class="c-item-info">
+            <div class="c-item-name">${esc(it.name)}</div>
+            ${it.mods ? `<div class="c-item-mods">${esc(it.mods)}</div>` : ''}
           </div>
-          <div class="card-item-price">$${parseFloat(it.price || 0).toFixed(2)}</div>
+          <div class="c-item-price">$${parseFloat(it.price||0).toFixed(2)}</div>
         </div>`).join('');
 
-      const el = document.createElement('div');
-      el.className = 'order-card ' + (isNew ? 'new-order ' : '') + cardClass(mins);
+      const tip = parseFloat(order.tip||0);
+      const el  = document.createElement('div');
+      el.className  = 'order-card'+(u?' '+u:'')+(isNew?' new-card':'');
       el.dataset.id = order.id;
+      el.dataset.created = order.created_at;
+
       el.innerHTML = `
-        <div class="card-top">
-          <div class="card-top-left">
-            <span class="card-order-num">${esc(order.order_num)}</span>
-            ${isNew ? '<span class="card-new-badge">New</span>' : ''}
+        <div class="c-head">
+          <div class="c-head-left">
+            <span class="c-num">${esc(order.order_num||'—')}</span>
+            ${isNew ? '<span class="c-new-tag">New</span>' : ''}
           </div>
-          <span class="card-placed-time">${new Date(order.created_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/New_York'})}</span>
+          <span class="c-placed">${new Date(order.created_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/New_York'})}</span>
         </div>
 
-        <div class="card-customer">
+        <div class="c-customer">
           <div>
-            <div class="card-customer-name">${esc(order.customer_name)}</div>
-            <div class="card-customer-phone">${esc(order.customer_phone)}</div>
+            <div class="c-name">${esc(order.customer_name||'Guest')}</div>
+            <div class="c-phone">${esc(order.customer_phone||'—')}</div>
           </div>
-          <div class="card-timer">
-            <div class="card-timer-num ${timerClass(mins)}">${mins}</div>
-            <div class="card-timer-lbl">mins</div>
+          <div class="c-timer">
+            <div class="c-timer-num${u?' '+u:''}">${mins}</div>
+            <div class="c-timer-lbl">min</div>
           </div>
         </div>
 
-        <div class="card-items">${itemsHtml}</div>
+        <div class="c-items">${itemsHtml}</div>
 
         ${order.notes ? `
-        <div class="card-notes">
-          <div class="card-notes-lbl">Customer Note</div>
-          <div class="card-notes-txt">${esc(order.notes)}</div>
+        <div class="c-note">
+          <div class="c-note-lbl">Customer Note</div>
+          <div class="c-note-txt">${esc(order.notes)}</div>
         </div>` : ''}
 
-        <div class="card-footer">
-          <div class="card-totals">
-            <div class="card-totals-detail">
+        <div class="c-foot">
+          <div class="c-totals">
+            <div class="c-totals-detail">
               <div>Subtotal &nbsp;$${parseFloat(order.subtotal||0).toFixed(2)}</div>
-              <div>Tax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$${parseFloat(order.tax||0).toFixed(2)}</div>
-              ${parseFloat(order.tip||0)>0?`<div>Tip &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$${parseFloat(order.tip).toFixed(2)}</div>`:''}
+              <div>Tax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$${parseFloat(order.tax||0).toFixed(2)}</div>
+              ${tip>0?`<div>Tip &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$${tip.toFixed(2)}</div>`:''}
             </div>
-            <div class="card-total-amount">$${parseFloat(order.total||0).toFixed(2)}</div>
+            <div class="c-total-amt">$${parseFloat(order.total||0).toFixed(2)}</div>
           </div>
-          <button class="card-ready-btn" onclick="markReady('${order.id}', this)">
+          <button class="c-ready-btn" onclick="markReady('${order.id}',this)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
             Order Ready
           </button>
@@ -987,25 +693,38 @@
       'Updated ' + new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',second:'2-digit',timeZone:'America/New_York'});
   }
 
-  /* FETCH */
+  /* ─── FETCH ─── */
   async function fetchOrders() {
     try {
-      const res    = await fetch(
-        SUPA_URL + '/rest/v1/orders?status=eq.pending&order=created_at.asc&limit=50',
-        { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY } }
+      // Get pending orders OR orders with null status (handles edge cases)
+      const r = await fetch(
+        `${SB_URL}/rest/v1/orders?or=(status.eq.pending,status.is.null)&order=created_at.asc&limit=50`,
+        { headers: H }
       );
-      const orders = await res.json();
-      renderOrders(Array.isArray(orders) ? orders : []);
-      document.getElementById('liveText').textContent = 'Live';
-    } catch(e) {
-      document.getElementById('liveText').textContent = 'Reconnecting...';
+      if (!r.ok) throw new Error('HTTP '+r.status);
+      const data = await r.json();
+      const orders = Array.isArray(data) ? data : [];
+
+      // Initialize knownIds on first load (no bell)
+      if (knownIds === null) {
+        knownIds = new Set(orders.map(o => o.id));
+      }
+
+      renderOrders(orders);
+
+      const ll = document.getElementById('liveLabel');
+      ll.textContent = 'Live'; ll.classList.remove('err');
+    } catch {
+      const ll = document.getElementById('liveLabel');
+      ll.textContent = 'Reconnecting…'; ll.classList.add('err');
     }
   }
 
-  /* START */
+  /* ─── START ─── */
   function startKDS() {
     updateClock();
     setInterval(updateClock, 1000);
+    setInterval(refreshTimers, 30000); // update timers every 30s between fetches
     fetchOrders();
     setInterval(fetchOrders, 15000);
   }
