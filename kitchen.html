@@ -134,140 +134,140 @@
     }
     .empty-sub { font-size:13px; color:var(--muted); text-align:center; line-height:1.7; max-width:280px; }
 
-    /* ── GRID ── */
+    /* ── GRID — masonry column flow ── */
     #ordersGrid {
-      display:grid;
-      grid-template-columns:repeat(auto-fill, minmax(300px,1fr));
-      gap:12px;
-      padding:14px 16px 40px;
-      align-items:start;
+      columns: 340px;
+      column-gap: 14px;
+      padding: 16px 18px 48px;
     }
 
     /* ── ORDER CARD ── */
     .order-card {
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:10px;
-      overflow:hidden;
-      border-left:4px solid var(--gold);
-      animation:slideIn .25s ease;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      break-inside: avoid;
+      display: block;
+      margin-bottom: 14px;
+      position: relative;
+      animation: slideIn .3s ease;
+      transition: border-color .3s;
     }
-    .order-card.warn   { border-left-color:var(--amber); }
-    .order-card.urgent { border-left-color:var(--red); }
-    .order-card.new-card { animation:slideIn .25s ease, newPop 2s ease; }
+    /* Urgency top bar */
+    .order-card::before {
+      content:''; display:block;
+      height:3px; width:100%;
+      background: var(--gold);
+      transition: background .3s;
+    }
+    .order-card.warn::before   { background: var(--amber); }
+    .order-card.urgent::before { background: var(--red); animation: urgentBar 1s infinite; }
+    @keyframes urgentBar { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .order-card.new-card { animation: slideIn .3s ease, newGlow 2.5s ease; }
 
-    @keyframes slideIn { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes newPop  { 0%,100%{background:var(--card)} 10%,60%{background:#130f00} }
+    @keyframes slideIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes newGlow  { 0%,100%{box-shadow:none} 15%,65%{box-shadow:0 0 0 2px rgba(200,136,26,.35), 0 8px 32px rgba(200,136,26,.15)} }
 
-    /* Card header row */
+    /* ── CARD HEADER ── */
     .c-head {
-      padding:11px 16px;
-      display:flex; align-items:center; justify-content:space-between;
-      border-bottom:1px solid var(--border);
-      background:rgba(255,255,255,.02);
+      padding: 10px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border);
     }
-    .c-head-left { display:flex; align-items:center; gap:10px; }
+    .c-head-left { display:flex; align-items:center; gap:8px; }
     .c-num {
-      font-family:'Oswald',sans-serif; font-size:12px; font-weight:500;
-      color:var(--gold); letter-spacing:2px;
+      font-family:'Oswald',sans-serif; font-size:11px; font-weight:600;
+      color: var(--gold); letter-spacing:2.5px; text-transform:uppercase;
     }
     .c-new-tag {
-      font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
-      background:var(--gold); color:#000; padding:2px 7px; border-radius:3px;
+      font-size:9px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase;
+      background:var(--gold); color:#000; padding:2px 6px; border-radius:3px;
     }
-    .c-placed { font-size:11px; color:var(--muted); }
 
-    /* Customer + timer row */
-    .c-customer {
-      padding:11px 16px;
-      display:flex; align-items:center; justify-content:space-between;
-      border-bottom:1px solid var(--border);
+    /* Timer pill — top right */
+    .c-timer-pill {
+      display:flex; align-items:baseline; gap:3px;
+      background:rgba(200,136,26,.1); border:1px solid rgba(200,136,26,.2);
+      border-radius:20px; padding:3px 10px;
     }
-    .c-name {
-      font-family:'Oswald',sans-serif; font-size:28px; font-weight:700;
-      color:var(--white); line-height:1; letter-spacing:.3px;
-    }
-    .c-phone { font-size:11px; color:var(--muted); margin-top:4px; letter-spacing:.5px; }
-
-    .c-timer {
-      display:flex; flex-direction:column; align-items:center;
-      background:#0a0a0a; border:1px solid rgba(255,255,255,.08);
-      border-radius:8px; padding:10px 14px; min-width:68px; text-align:center;
-      flex-shrink:0;
-    }
+    .c-timer-pill.warn   { background:rgba(217,119,6,.12); border-color:rgba(217,119,6,.3); }
+    .c-timer-pill.urgent { background:rgba(239,68,68,.12); border-color:rgba(239,68,68,.35);
+                           animation:timerPulse 1s infinite; }
+    @keyframes timerPulse { 0%,100%{opacity:1} 50%{opacity:.55} }
     .c-timer-num {
-      font-family:'Oswald',sans-serif; font-size:30px; font-weight:700;
-      line-height:1; color:var(--white);
+      font-family:'Oswald',sans-serif; font-size:20px; font-weight:700;
+      color:var(--gold); line-height:1;
     }
     .c-timer-num.warn   { color:var(--amber); }
-    .c-timer-num.urgent { color:var(--red); animation:timerPulse 1s infinite; }
-    @keyframes timerPulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+    .c-timer-num.urgent { color:var(--red); }
     .c-timer-lbl {
       font-size:9px; color:var(--muted); text-transform:uppercase;
-      letter-spacing:1.5px; margin-top:3px;
+      letter-spacing:1.5px; font-weight:600;
     }
 
-    /* Items */
-    .c-items {
-      padding:4px 0;
-      max-height:220px; overflow-y:auto;
-      -webkit-overflow-scrolling:touch;
+    /* ── CUSTOMER ── */
+    .c-customer {
+      padding: 12px 16px 10px;
+      border-bottom: 1px solid var(--border);
     }
-    .c-items::-webkit-scrollbar { width:3px; }
-    .c-items::-webkit-scrollbar-track { background:transparent; }
-    .c-items::-webkit-scrollbar-thumb { background:rgba(255,255,255,.08); border-radius:2px; }
+    .c-name {
+      font-family:'Oswald',sans-serif; font-size:26px; font-weight:700;
+      color:var(--white); line-height:1; letter-spacing:.5px; text-transform:uppercase;
+    }
+    .c-meta {
+      font-size:11px; color:var(--muted); margin-top:4px; letter-spacing:.3px;
+    }
+
+    /* ── ITEMS ── */
+    .c-items { padding: 6px 0; }
     .c-item {
       display:flex; align-items:flex-start; gap:12px;
-      padding:10px 16px; border-bottom:1px solid rgba(255,255,255,.04);
+      padding:9px 16px;
+      border-bottom:1px solid rgba(255,255,255,.035);
     }
     .c-item:last-child { border-bottom:none; }
     .c-qty {
-      width:28px; height:28px; border-radius:5px; flex-shrink:0;
-      background:rgba(200,136,26,.1); border:1px solid rgba(200,136,26,.22);
-      color:var(--gold); font-size:13px; font-weight:700;
-      display:flex; align-items:center; justify-content:center; margin-top:1px;
+      min-width:26px; height:26px; border-radius:5px; flex-shrink:0;
+      background:rgba(200,136,26,.08); border:1px solid rgba(200,136,26,.18);
+      color:var(--gold); font-size:12px; font-weight:700;
+      display:flex; align-items:center; justify-content:center;
+      margin-top:1px; padding:0 4px;
     }
     .c-item-info { flex:1; min-width:0; }
-    .c-item-name { font-size:16px; font-weight:600; color:var(--white); line-height:1.2; }
-    .c-item-mods { font-size:11.5px; color:var(--muted); margin-top:4px; line-height:1.55; }
-    .c-item-price { font-size:12px; color:var(--dim); flex-shrink:0; margin-top:3px; }
+    .c-item-name {
+      font-size:16px; font-weight:600; color:var(--white); line-height:1.25;
+      letter-spacing:.1px;
+    }
+    .c-item-mods {
+      font-size:11px; color:#4a4a4a; margin-top:3px;
+      line-height:1.6; letter-spacing:.1px;
+    }
 
-    /* Note */
+    /* ── NOTE ── */
     .c-note {
-      margin:0 16px 12px;
-      background:rgba(200,136,26,.04); border-left:2px solid var(--gold);
-      border-radius:0 6px 6px 0; padding:10px 12px;
+      margin:4px 14px 10px;
+      background:rgba(200,136,26,.05);
+      border:1px solid rgba(200,136,26,.15);
+      border-radius:6px; padding:9px 12px;
     }
     .c-note-lbl {
       font-size:9px; color:var(--gold); text-transform:uppercase;
       letter-spacing:2px; font-weight:700; margin-bottom:4px;
     }
-    .c-note-txt { font-size:13px; color:rgba(255,255,255,.6); line-height:1.55; }
+    .c-note-txt { font-size:12px; color:rgba(255,255,255,.55); line-height:1.6; }
 
-    /* Footer */
-    .c-foot { border-top:1px solid var(--border); }
-    .c-totals {
-      display:flex; align-items:center; justify-content:flex-end;
-      padding:10px 16px;
-    }
-    .c-totals-detail { display:none; }
-    .c-total-amt {
-      font-family:'Oswald',sans-serif; font-size:24px; font-weight:700; color:var(--white);
-    }
-
-    /* Ready button */
+    /* ── READY BUTTON ── */
     .c-ready-btn {
-      width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
-      background:var(--green); color:#fff; border:none;
-      padding:14px 24px; cursor:pointer; transition:background .15s, opacity .15s;
-      font-family:'Oswald',sans-serif; font-size:14px; font-weight:600;
+      width:100%; display:flex; align-items:center; justify-content:center; gap:9px;
+      background:var(--green); color:#fff; border:none; border-top:1px solid rgba(255,255,255,.06);
+      padding:15px 24px; cursor:pointer; transition:background .15s, opacity .15s;
+      font-family:'Oswald',sans-serif; font-size:13px; font-weight:600;
       letter-spacing:3px; text-transform:uppercase;
     }
     .c-ready-btn:hover  { background:var(--green2); }
-    .c-ready-btn:active { opacity:.88; }
-    .c-ready-btn.busy {
-      background:#161616; color:var(--muted); pointer-events:none;
-    }
+    .c-ready-btn:active { opacity:.85; }
+    .c-ready-btn.busy   { background:#161616; color:var(--muted); pointer-events:none; }
 
     /* ── SCROLLBAR ── */
     ::-webkit-scrollbar { width:4px; }
@@ -540,11 +540,11 @@
       if (!iso) return;
       const mins = getMins(iso);
       const u    = urgency(mins);
-      // Update card border urgency
       card.className = 'order-card' + (u ? ' '+u : '');
-      // Update timer num
       const tn = card.querySelector('.c-timer-num');
       if (tn) { tn.textContent = mins; tn.className = 'c-timer-num' + (u ? ' '+u : ''); }
+      const tp = card.querySelector('.c-timer-pill');
+      if (tp) { tp.className = 'c-timer-pill' + (u ? ' '+u : ''); }
     });
   }
 
@@ -595,7 +595,7 @@
     const n = document.querySelectorAll('.order-card').length;
     document.getElementById('pendingCount').textContent = n;
     document.getElementById('emptyState').style.display  = n===0 ? 'flex' : 'none';
-    document.getElementById('ordersGrid').style.display  = n===0 ? 'none' : 'grid';
+    document.getElementById('ordersGrid').style.display  = n===0 ? 'none' : 'block';
   }
 
   /* ─── RENDER ─── */
@@ -608,7 +608,7 @@
       document.getElementById('emptyState').style.display = 'flex';
       return;
     }
-    grid.style.display = 'grid';
+    grid.style.display = 'block';
     document.getElementById('emptyState').style.display = 'none';
 
     // Remove cards that are no longer pending
@@ -631,6 +631,8 @@
       if (existing) {
         const tn = existing.querySelector('.c-timer-num');
         if (tn) { tn.textContent = mins; tn.className = 'c-timer-num'+(u?' '+u:''); }
+        const tp = existing.querySelector('.c-timer-pill');
+        if (tp) { tp.className = 'c-timer-pill'+(u?' '+u:''); }
         existing.className = 'order-card'+(u?' '+u:'');
         return;
       }
@@ -645,11 +647,10 @@
             <div class="c-item-name">${esc(it.name)}</div>
             ${it.mods ? `<div class="c-item-mods">${esc(it.mods)}</div>` : ''}
           </div>
-          <div class="c-item-price">$${parseFloat(it.price||0).toFixed(2)}</div>
         </div>`).join('');
 
-      const tip = parseFloat(order.tip||0);
-      const el  = document.createElement('div');
+      const placedTime = new Date(order.created_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/New_York'});
+      const el = document.createElement('div');
       el.className  = 'order-card'+(u?' '+u:'')+(isNew?' new-card':'');
       el.dataset.id = order.id;
       el.dataset.created = order.created_at;
@@ -660,42 +661,29 @@
             <span class="c-num">${esc(order.order_num||'—')}</span>
             ${isNew ? '<span class="c-new-tag">New</span>' : ''}
           </div>
-          <span class="c-placed">${new Date(order.created_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/New_York'})}</span>
+          <div class="c-timer-pill${u?' '+u:''}">
+            <span class="c-timer-num${u?' '+u:''}">${mins}</span>
+            <span class="c-timer-lbl">min</span>
+          </div>
         </div>
 
         <div class="c-customer">
-          <div>
-            <div class="c-name">${esc(order.customer_name||'Guest')}</div>
-            <div class="c-phone">${esc(order.customer_phone||'—')}</div>
-          </div>
-          <div class="c-timer">
-            <div class="c-timer-num${u?' '+u:''}">${mins}</div>
-            <div class="c-timer-lbl">min</div>
-          </div>
+          <div class="c-name">${esc(order.customer_name||'Guest')}</div>
+          <div class="c-meta">${esc(order.customer_phone||'')}${order.customer_phone ? ' · ' : ''}${placedTime}</div>
         </div>
 
         <div class="c-items">${itemsHtml}</div>
 
         ${order.notes ? `
         <div class="c-note">
-          <div class="c-note-lbl">Customer Note</div>
+          <div class="c-note-lbl">Note</div>
           <div class="c-note-txt">${esc(order.notes)}</div>
         </div>` : ''}
 
-        <div class="c-foot">
-          <div class="c-totals">
-            <div class="c-totals-detail">
-              <div>Subtotal &nbsp;$${parseFloat(order.subtotal||0).toFixed(2)}</div>
-              <div>Tax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$${parseFloat(order.tax||0).toFixed(2)}</div>
-              ${tip>0?`<div>Tip &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$${tip.toFixed(2)}</div>`:''}
-            </div>
-            <div class="c-total-amt">$${parseFloat(order.total||0).toFixed(2)}</div>
-          </div>
-          <button class="c-ready-btn" onclick="markReady('${order.id}',this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
-            Order Ready
-          </button>
-        </div>`;
+        <button class="c-ready-btn" onclick="markReady('${order.id}',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>
+          Order Ready
+        </button>`;
 
       grid.prepend(el);
     });
