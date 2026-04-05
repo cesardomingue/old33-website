@@ -441,22 +441,31 @@
   }
 
   /* ─── BOOT ─── */
-  if (sessionStorage.getItem('kds_auth') === '1') {
-    document.getElementById('pinScreen').style.display = 'none';
-    startKDS();
-  } else {
-    fetchIP().then(async () => {
-      const atts = await getAttempts();
-      if (atts.length >= MAX_ATT) {
-        const exp = new Date(atts[MAX_ATT-1].attempted_at).getTime() + LOCK_MS;
-        if (exp > Date.now()) { showLockout(exp); return; }
-      }
-      if (atts.length > 0) {
-        const rem = MAX_ATT - atts.length;
-        document.getElementById('pinError').textContent = `${rem} attempt${rem===1?'':'s'} remaining`;
-      }
-    });
+  async function getKdsToken() {
+    const raw = PIN_H + 'kds' + new Date().toDateString();
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
+    return Array.from(new Uint8Array(buf)).map(x=>x.toString(16).padStart(2,'0')).join('');
   }
+  (async function boot() {
+    const expected = await getKdsToken();
+    if (sessionStorage.getItem('kds_auth') === expected) {
+      document.getElementById('pinScreen').style.display = 'none';
+      startKDS();
+    } else {
+      sessionStorage.removeItem('kds_auth'); // clear any stale/forged value
+      fetchIP().then(async () => {
+        const atts = await getAttempts();
+        if (atts.length >= MAX_ATT) {
+          const exp = new Date(atts[MAX_ATT-1].attempted_at).getTime() + LOCK_MS;
+          if (exp > Date.now()) { showLockout(exp); return; }
+        }
+        if (atts.length > 0) {
+          const rem = MAX_ATT - atts.length;
+          document.getElementById('pinError').textContent = `${rem} attempt${rem===1?'':'s'} remaining`;
+        }
+      });
+    }
+  })();
 
   let pinStr = '';
   function pp(n) {
@@ -466,7 +475,7 @@
     if (pinStr.length === 4) {
       setTimeout(async () => {
         if (await hashPin(pinStr) === PIN_H) {
-          sessionStorage.setItem('kds_auth','1');
+          sessionStorage.setItem('kds_auth', await getKdsToken());
           const ps = document.getElementById('pinScreen');
           ps.style.transition = 'opacity .35s'; ps.style.opacity = '0';
           setTimeout(() => { ps.style.display = 'none'; startKDS(); }, 350);

@@ -28,9 +28,8 @@ function getMemberDiscount() {
   try {
     var m = JSON.parse(localStorage.getItem('ol33_member') || 'null');
     if (!m || !m.email) return { member: null, pct: 0 };
-    // Tier is determined server-side via order history; use stored tier or default 10%
-    var pct = m.discountPct || 10;
-    return { member: m, pct: pct };
+    // Always 10% — never trust client-supplied discount rate
+    return { member: m, pct: 10 };
   } catch(e) { return { member: null, pct: 0 }; }
 }
 

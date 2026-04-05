@@ -906,22 +906,30 @@
   }
 
   /* ─── BOOT ─── */
-  if (sessionStorage.getItem('adm_auth')==='1') {
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('app').style.display='flex';
-    init();
-  } else {
-    fetchIP().then(async () => {
-      const atts = await getAttempts();
-      if (atts.length >= MAX_ATT) {
-        const exp = new Date(atts[MAX_ATT-1].attempted_at).getTime() + LOCK_MS;
-        if (exp > Date.now()) { showLoginLockout(exp); }
-      }
-    });
-    // Allow Enter key to submit
-    document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
-    document.getElementById('loginUser').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('loginPass').focus(); });
+  async function getSessionToken() {
+    const raw = PASS_H + 'adm' + new Date().toDateString();
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
+    return Array.from(new Uint8Array(buf)).map(x=>x.toString(16).padStart(2,'0')).join('');
   }
+  (async function boot() {
+    const expected = await getSessionToken();
+    if (sessionStorage.getItem('adm_auth') === expected) {
+      document.getElementById('loginScreen').style.display='none';
+      document.getElementById('app').style.display='flex';
+      init();
+    } else {
+      sessionStorage.removeItem('adm_auth'); // clear any stale/forged value
+      fetchIP().then(async () => {
+        const atts = await getAttempts();
+        if (atts.length >= MAX_ATT) {
+          const exp = new Date(atts[MAX_ATT-1].attempted_at).getTime() + LOCK_MS;
+          if (exp > Date.now()) { showLoginLockout(exp); }
+        }
+      });
+      document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+      document.getElementById('loginUser').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('loginPass').focus(); });
+    }
+  })();
 
   async function doLogin() {
     if (locked) return;
@@ -933,7 +941,8 @@
     btn.disabled = true; btn.textContent = 'Signing in…';
     const [uh, ph] = await Promise.all([hashPin(user), hashPin(pass)]);
     if (uh === USER_H && ph === PASS_H) {
-      sessionStorage.setItem('adm_auth','1');
+      const tok = await getSessionToken();
+      sessionStorage.setItem('adm_auth', tok);
       const ls = document.getElementById('loginScreen');
       ls.style.transition='opacity .4s'; ls.style.opacity='0';
       setTimeout(() => { ls.style.display='none'; document.getElementById('app').style.display='flex'; init(); }, 400);

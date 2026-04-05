@@ -7,6 +7,12 @@
 const RESTAURANT_EMAIL = 'cesardom200714@gmail.com';
 const SHEET_NAME       = 'Orders'; // tab name in your Google Sheet
 
+function escHtml(s) {
+  return String(s || '').replace(/[<>&"']/g, function(c) {
+    return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
@@ -98,19 +104,19 @@ function emailRestaurant(data) {
 
     <div style="background:#181818;border-radius:6px;padding:20px;margin-bottom:20px;">
       <div style="font-size:11px;color:#686868;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">New Order</div>
-      <div style="font-size:24px;font-weight:700;color:#d4941a;">${data.orderNum}</div>
-      <div style="font-size:14px;color:#a8a8a8;margin-top:4px;">${data.timestamp}</div>
+      <div style="font-size:24px;font-weight:700;color:#d4941a;">${escHtml(data.orderNum)}</div>
+      <div style="font-size:14px;color:#a8a8a8;margin-top:4px;">${escHtml(data.timestamp)}</div>
     </div>
 
     <div style="background:#181818;border-radius:6px;padding:20px;margin-bottom:20px;">
       <div style="font-size:11px;color:#686868;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Customer</div>
-      <div style="font-size:16px;font-weight:600;margin-bottom:4px;">${data.name}</div>
-      <div style="font-size:14px;color:#d4941a;margin-bottom:4px;"><a href="tel:${data.phone}" style="color:#d4941a;">${data.phone}</a></div>
-      ${data.email ? `<div style="font-size:13px;color:#686868;">${data.email}</div>` : ''}
+      <div style="font-size:16px;font-weight:600;margin-bottom:4px;">${escHtml(data.name)}</div>
+      <div style="font-size:14px;color:#d4941a;margin-bottom:4px;"><a href="tel:${escHtml(data.phone)}" style="color:#d4941a;">${escHtml(data.phone)}</a></div>
+      ${data.email ? `<div style="font-size:13px;color:#686868;">${escHtml(data.email)}</div>` : ''}
     </div>
 
     <div style="background:#d4941a;color:#000;border-radius:6px;padding:16px 20px;margin-bottom:20px;font-weight:700;font-size:16px;">
-      Ready ~ ${data.readyTime || data.pickupLabel || "ASAP"}
+      Ready ~ ${escHtml(data.readyTime || data.pickupLabel || 'ASAP')}
     </div>
 
     <div style="background:#181818;border-radius:6px;padding:20px;margin-bottom:20px;">
@@ -139,7 +145,7 @@ function emailRestaurant(data) {
       </div>
     </div>
 
-    ${data.notes ? `<div style="background:#181818;border-radius:6px;padding:16px 20px;margin-bottom:20px;border-left:3px solid #d4941a;"><div style="font-size:11px;color:#686868;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">Order Notes</div><div style="font-size:14px;color:#f5f2ec;">${data.notes}</div></div>` : ''}
+    ${data.notes ? `<div style="background:#181818;border-radius:6px;padding:16px 20px;margin-bottom:20px;border-left:3px solid #d4941a;"><div style="font-size:11px;color:#686868;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">Order Notes</div><div style="font-size:14px;color:#f5f2ec;">${escHtml(data.notes)}</div></div>` : ''}
 
     <div style="text-align:center;font-size:12px;color:#444;margin-top:24px;">
       Payment at pickup — cash or card<br>
@@ -149,7 +155,7 @@ function emailRestaurant(data) {
 
   MailApp.sendEmail({
     to:      RESTAURANT_EMAIL,
-    subject: `🧾 Order ${data.orderNum} — ${data.name} | Ready ~${data.readyTime || data.pickupLabel || "ASAP"}`,
+    subject: `🧾 Order ${escHtml(data.orderNum)} — ${escHtml(data.name)} | Ready ~${escHtml(data.readyTime || data.pickupLabel || 'ASAP')}`,
     htmlBody: html
   });
 }
@@ -207,11 +213,11 @@ function emailCustomer(data) {
             <tr>
               <td style="padding:16px 24px;width:50%;">
                 <div style="font-family:Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(0,0,0,0.6);margin-bottom:4px;">Order</div>
-                <div style="font-family:Arial,sans-serif;font-size:15px;font-weight:700;color:#000;">${data.orderNum}</div>
+                <div style="font-family:Arial,sans-serif;font-size:15px;font-weight:700;color:#000;">${escHtml(data.orderNum)}</div>
               </td>
               <td style="padding:16px 24px;text-align:right;">
                 <div style="font-family:Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(0,0,0,0.6);margin-bottom:4px;">Ready Around</div>
-                <div style="font-family:Arial,sans-serif;font-size:15px;font-weight:700;color:#000;">${data.readyTime || data.pickupLabel || 'ASAP'}</div>
+                <div style="font-family:Arial,sans-serif;font-size:15px;font-weight:700;color:#000;">${escHtml(data.readyTime || data.pickupLabel || 'ASAP')}</div>
               </td>
             </tr>
           </table>
@@ -221,7 +227,7 @@ function emailCustomer(data) {
       <!-- Greeting -->
       <tr>
         <td style="padding:28px 32px 8px;">
-          <p style="font-size:16px;color:#1a1a1a;margin:0 0 8px;">Hey <strong>${data.name.split(' ')[0]}</strong>,</p>
+          <p style="font-size:16px;color:#1a1a1a;margin:0 0 8px;">Hey <strong>${escHtml(data.name.split(' ')[0])}</strong>,</p>
           <p style="font-family:Arial,sans-serif;font-size:14px;color:#666;line-height:1.7;margin:0;">Your order has been received and is being prepared. Come pick it up at the counter &mdash; we&rsquo;ll have it waiting for you.</p>
         </td>
       </tr>
