@@ -674,17 +674,6 @@
             <div class="metric-foot"><div class="metric-note" id="m-pend-sub">&nbsp;</div></div>
           </div>
 
-          <div class="metric-card" style="--mc-accent:#4ade80;--mc-icon-bg:rgba(74,222,128,.08);grid-column:span 2;">
-            <div class="metric-top">
-              <div class="metric-lbl">Your Commission (4%)</div>
-              <div class="metric-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-              </div>
-            </div>
-            <div class="metric-val" id="m-commission" style="color:#4ade80;">—</div>
-            <div class="metric-foot"><div class="metric-note" id="m-commission-sub">&nbsp;</div></div>
-          </div>
-
         </div>
 
         <!-- FINANCIAL BREAKDOWN -->
@@ -714,10 +703,36 @@
               <div class="finance-val fv-white" id="f-total">—</div>
               <div class="finance-note">gross customer total</div>
             </div>
-            <div class="finance-cell" style="border-top:1px solid rgba(74,222,128,.15);background:rgba(74,222,128,.04);border-radius:8px;padding:12px;">
-              <div class="finance-lbl" style="color:#4ade80;">Your Commission (4%)</div>
-              <div class="finance-val" style="color:#4ade80;font-size:22px;font-weight:700;margin:4px 0;" id="f-commission">—</div>
-              <div class="finance-note" id="f-commission-n">4% of food subtotal</div>
+          </div>
+        </div>
+
+        <!-- CESAR'S COMMISSION -->
+        <div style="background:linear-gradient(135deg,#0a1a0a 0%,#0d1f0d 50%,#081208 100%);border:1px solid rgba(74,222,128,.25);border-radius:14px;padding:24px 28px;margin-bottom:12px;position:relative;overflow:hidden;">
+          <div style="position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-family:'Oswald',sans-serif;font-size:120px;font-weight:900;color:rgba(74,222,128,.04);letter-spacing:-4px;pointer-events:none;white-space:nowrap;">4%</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;position:relative;">
+            <div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <div style="width:32px;height:32px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="1.8" width="16" height="16"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+                </div>
+                <div style="font-size:10px;font-weight:700;color:#4ade80;text-transform:uppercase;letter-spacing:2.5px;">Cesar's Commission</div>
+              </div>
+              <div style="font-family:'Oswald',sans-serif;font-size:48px;font-weight:700;color:#4ade80;line-height:1;letter-spacing:-1px;" id="m-commission">—</div>
+              <div style="font-size:12px;color:rgba(74,222,128,.5);margin-top:6px;" id="m-commission-sub">&nbsp;</div>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+              <div style="background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.12);border-radius:10px;padding:14px 18px;text-align:center;min-width:100px;">
+                <div style="font-size:10px;color:rgba(74,222,128,.5);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Revenue Base</div>
+                <div style="font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;color:var(--white);" id="m-comm-base">—</div>
+              </div>
+              <div style="background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.12);border-radius:10px;padding:14px 18px;text-align:center;min-width:100px;">
+                <div style="font-size:10px;color:rgba(74,222,128,.5);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Rate</div>
+                <div style="font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;color:var(--white);">4%</div>
+              </div>
+              <div style="background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.12);border-radius:10px;padding:14px 18px;text-align:center;min-width:100px;">
+                <div style="font-size:10px;color:rgba(74,222,128,.5);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Orders</div>
+                <div style="font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;color:var(--white);" id="m-comm-orders">—</div>
+              </div>
             </div>
           </div>
         </div>
@@ -1144,8 +1159,10 @@
     document.getElementById('m-tips').textContent       = fmt(tips);
     document.getElementById('m-pend').textContent       = pend;
     document.getElementById('m-pend-sub').textContent   = pend>0?'need attention':'all caught up ✓';
-    document.getElementById('m-commission').textContent = fmt(commission);
-    document.getElementById('m-commission-sub').textContent = fmt(sub)+' food revenue × 4%';
+    document.getElementById('m-commission').textContent     = fmt(commission);
+    document.getElementById('m-commission-sub').textContent = fmt(sub) + ' food revenue × 4% = ' + fmt(commission);
+    document.getElementById('m-comm-base').textContent      = fmt(sub);
+    document.getElementById('m-comm-orders').textContent    = orders.length;
   }
 
   /* ─── FINANCE ─── */
@@ -1159,11 +1176,10 @@
     document.getElementById('f-tax').textContent        = fmt(tax);
     document.getElementById('f-tips').textContent       = fmt(tips);
     document.getElementById('f-total').textContent      = fmt(tot);
-    document.getElementById('f-commission').textContent = fmt(commission);
+
     document.getElementById('f-sub-n').textContent      = tot?pct(sub,tot)+' of total':'';
     document.getElementById('f-tax-n').textContent      = tot?pct(tax,tot)+' of total':'';
     document.getElementById('f-tips-n').textContent     = tot?pct(tips,tot)+' of total':'';
-    document.getElementById('f-commission-n').textContent = orders.length ? '4% of $'+sub.toFixed(2)+' food revenue' : '4% of food subtotal';
     document.getElementById('f-ct').textContent         = orders.length+' order'+(orders.length!==1?'s':'');
   }
 
