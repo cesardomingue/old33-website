@@ -38,35 +38,46 @@
 
     html, body { height:100%; background:var(--bg); font-family:'Inter',sans-serif; color:var(--white); overflow-x:hidden; -webkit-font-smoothing:antialiased; }
 
-    /* ── PIN SCREEN ── */
-    #pinScreen {
+    /* ── LOGIN SCREEN ── */
+    #loginScreen {
       position:fixed; inset:0; background:var(--bg);
       display:flex; align-items:center; justify-content:center; z-index:9999;
-      background-image: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(200,136,26,.06) 0%, transparent 70%);
+      background-image: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(200,136,26,.07) 0%, transparent 65%);
     }
-    .pin-wrap { display:flex; flex-direction:column; align-items:center; gap:32px; }
-    .pin-logo-wrap { text-align:center; }
-    .pin-logo { height:72px; width:auto; object-fit:contain; display:block; margin:0 auto 20px; filter:brightness(1.05); }
-    .pin-brand-rule { width:32px; height:1px; background:rgba(200,136,26,.5); margin:14px auto; }
-    .pin-brand-sub  { font-size:10px; color:var(--muted); letter-spacing:3px; text-transform:uppercase; }
-    .pin-label { font-size:11px; color:var(--muted); letter-spacing:3px; text-transform:uppercase; font-weight:500; }
-    .pin-dots  { display:flex; gap:16px; }
-    .pin-dot   { width:11px; height:11px; border-radius:50%; border:1px solid rgba(255,255,255,.15); background:transparent; transition:all .2s; }
-    .pin-dot.filled { background:var(--gold); border-color:var(--gold); box-shadow:0 0 10px rgba(200,136,26,.5); }
-    .pin-error { font-size:12px; color:var(--red); height:16px; text-align:center; font-weight:500; letter-spacing:.2px; }
-    .pin-pad   { display:grid; grid-template-columns:repeat(3, 76px); gap:8px; }
-    .pin-btn   {
-      width:76px; height:76px; border-radius:50%; background:rgba(255,255,255,.04);
-      border:1px solid var(--border2); color:var(--white);
-      font-family:'Inter',sans-serif; font-size:24px; font-weight:300; cursor:pointer;
-      transition:all .15s; display:flex; align-items:center; justify-content:center;
-      user-select:none; letter-spacing:0;
+    .login-card {
+      width:100%; max-width:380px; padding:40px 36px 36px;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:16px; display:flex; flex-direction:column; align-items:center; gap:0;
+      box-shadow:0 24px 80px rgba(0,0,0,.5);
     }
-    .pin-btn:hover  { background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.18); }
-    .pin-btn:active { background:var(--gold); border-color:var(--gold); color:#000; transform:scale(.93); }
-    .pin-btn.zero   { grid-column:2; }
-    .pin-btn.del    { background:transparent; border-color:transparent; color:var(--muted); font-size:19px; }
-    .pin-btn.del:hover { color:var(--white); background:transparent; border-color:transparent; }
+    .login-logo { height:68px; width:auto; display:block; margin-bottom:16px; filter:brightness(1.05); }
+    .login-rule { width:30px; height:1px; background:rgba(200,136,26,.45); margin-bottom:10px; }
+    .login-sub  { font-size:10px; color:var(--muted); letter-spacing:3px; text-transform:uppercase; margin-bottom:32px; }
+    .login-fields { width:100%; display:flex; flex-direction:column; gap:14px; margin-bottom:8px; }
+    .login-field { display:flex; flex-direction:column; gap:6px; width:100%; }
+    .login-label { font-size:11px; font-weight:600; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+    .login-input {
+      width:100%; background:var(--card); border:1px solid var(--border2);
+      border-radius:8px; color:var(--white); font-family:'Inter',sans-serif;
+      font-size:14px; padding:11px 14px; outline:none;
+      transition:border-color .2s, box-shadow .2s;
+    }
+    .login-input:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(200,136,26,.1); }
+    .login-input::placeholder { color:var(--dim); }
+    .login-error {
+      font-size:12px; color:var(--red); text-align:center;
+      min-height:18px; font-weight:500; margin-top:6px;
+    }
+    .login-btn {
+      width:100%; padding:13px; margin-top:10px;
+      background:var(--gold); border:none; border-radius:8px;
+      color:#000; font-family:'Inter',sans-serif; font-size:13px;
+      font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+      cursor:pointer; transition:background .15s, transform .1s, opacity .15s;
+    }
+    .login-btn:hover  { background:#d49820; }
+    .login-btn:active { transform:scale(.98); }
+    .login-btn:disabled { opacity:.4; cursor:not-allowed; transform:none; }
 
     /* ── APP SHELL ── */
     #app { display:none; height:100vh; overflow:hidden; }
@@ -157,6 +168,8 @@
       cursor:pointer; transition:all .15s; width:100%; font-weight:500;
     }
     .sb-btn:hover { border-color:rgba(255,255,255,.18); color:var(--white); background:rgba(255,255,255,.03); }
+    .sb-btn-signout { color:var(--muted); }
+    .sb-btn-signout:hover { border-color:rgba(248,113,113,.3); color:var(--red); background:rgba(248,113,113,.06); }
     .sb-btn-green { border-color:var(--green-bdr); color:var(--green); }
     .sb-btn-green:hover { background:var(--green-lt); border-color:rgba(34,197,94,.35); }
 
@@ -481,35 +494,24 @@
 </head>
 <body>
 
-<!-- PIN SCREEN -->
-<div id="pinScreen">
-  <div class="pin-wrap">
-    <div class="pin-logo-wrap">
-      <img src="images/logo-clean.png" alt="Old 33" class="pin-logo">
-      <div class="pin-brand-rule"></div>
-      <div class="pin-brand-sub">Owner Portal &nbsp;·&nbsp; Elkton, VA</div>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <img src="images/logo-clean.png" alt="Old 33" class="login-logo">
+    <div class="login-rule"></div>
+    <div class="login-sub">Owner Portal &nbsp;·&nbsp; Elkton, VA</div>
+    <div class="login-fields">
+      <div class="login-field">
+        <label class="login-label" for="loginUser">Username</label>
+        <input class="login-input" id="loginUser" type="text" placeholder="Enter username" autocomplete="username" spellcheck="false">
+      </div>
+      <div class="login-field">
+        <label class="login-label" for="loginPass">Password</label>
+        <input class="login-input" id="loginPass" type="password" placeholder="Enter password" autocomplete="current-password">
+      </div>
     </div>
-    <div class="pin-label">Enter Your PIN</div>
-    <div class="pin-dots">
-      <div class="pin-dot" id="d0"></div>
-      <div class="pin-dot" id="d1"></div>
-      <div class="pin-dot" id="d2"></div>
-      <div class="pin-dot" id="d3"></div>
-    </div>
-    <div class="pin-error" id="pinError"></div>
-    <div class="pin-pad">
-      <button class="pin-btn" onclick="pp('1')">1</button>
-      <button class="pin-btn" onclick="pp('2')">2</button>
-      <button class="pin-btn" onclick="pp('3')">3</button>
-      <button class="pin-btn" onclick="pp('4')">4</button>
-      <button class="pin-btn" onclick="pp('5')">5</button>
-      <button class="pin-btn" onclick="pp('6')">6</button>
-      <button class="pin-btn" onclick="pp('7')">7</button>
-      <button class="pin-btn" onclick="pp('8')">8</button>
-      <button class="pin-btn" onclick="pp('9')">9</button>
-      <button class="pin-btn zero" onclick="pp('0')">0</button>
-      <button class="pin-btn del" onclick="pd()">&#9003;</button>
-    </div>
+    <div class="login-error" id="loginError"></div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Sign In</button>
   </div>
 </div>
 
@@ -575,6 +577,10 @@
       <button class="sb-btn" onclick="loadData(true)">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
         Refresh Now
+      </button>
+      <button class="sb-btn sb-btn-signout" onclick="signOut()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
       </button>
     </div>
   </aside>
@@ -817,7 +823,8 @@
   /* ─── CONFIG ─── */
   const SB_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
   const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
-  const PIN_H  = 'd3b63363e3c4234a3fa5ad9e7dac9449c7fc9a4b3c28236247d3bace953f9de7';
+  const USER_H = 'b380a69535d1f2161ce6630ce685b1899785cc7ac9222583dbf95db3e72e308a'; // old33admin
+  const PASS_H = '372662d1e1aa7729e2c54247d8c7d4bb40cbeef8fb3806728a9149e1d67692fe'; // Old33!2026
   const H      = { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY };
 
   /* ─── STATE ─── */
@@ -869,7 +876,7 @@
 
   /* ─── BOOT ─── */
   if (sessionStorage.getItem('adm_auth')==='1') {
-    document.getElementById('pinScreen').style.display='none';
+    document.getElementById('loginScreen').style.display='none';
     document.getElementById('app').style.display='flex';
     init();
   } else {
@@ -877,41 +884,78 @@
       const atts = await getAttempts();
       if (atts.length >= MAX_ATT) {
         const exp = new Date(atts[MAX_ATT-1].attempted_at).getTime() + LOCK_MS;
-        if (exp > Date.now()) { showLockout(exp); return; }
-      }
-      if (atts.length > 0) {
-        const rem = MAX_ATT - atts.length;
-        document.getElementById('pinError').textContent = `${rem} attempt${rem===1?'':'s'} remaining`;
+        if (exp > Date.now()) { showLoginLockout(exp); }
       }
     });
+    // Allow Enter key to submit
+    document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+    document.getElementById('loginUser').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('loginPass').focus(); });
   }
 
-  let pinStr = '';
-  function pp(n) {
-    if (locked || pinStr.length >= 4) return;
-    pinStr += n;
-    document.getElementById('d' + (pinStr.length-1)).classList.add('filled');
-    if (pinStr.length === 4) {
-      setTimeout(async () => {
-        if (await hashPin(pinStr) === PIN_H) {
-          sessionStorage.setItem('adm_auth','1');
-          const ps = document.getElementById('pinScreen');
-          ps.style.transition='opacity .4s'; ps.style.opacity='0';
-          setTimeout(() => { ps.style.display='none'; document.getElementById('app').style.display='flex'; init(); }, 400);
-        } else {
-          await logAttempt();
-          const atts = await getAttempts();
-          const rem  = MAX_ATT - atts.length;
-          if (rem <= 0) showLockout(new Date(atts[MAX_ATT-1].attempted_at).getTime() + LOCK_MS);
-          else {
-            document.getElementById('pinError').textContent = `Incorrect PIN — ${rem} attempt${rem===1?'':'s'} remaining`;
-            setTimeout(() => { const e=document.getElementById('pinError'); if(e.textContent.startsWith('Incorrect')) e.textContent=''; }, 2500);
-          }
-          pinStr = '';
-          for(let i=0;i<4;i++) document.getElementById('d'+i).classList.remove('filled');
-        }
-      }, 180);
+  async function doLogin() {
+    if (locked) return;
+    const btn  = document.getElementById('loginBtn');
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    const err  = document.getElementById('loginError');
+    if (!user || !pass) { err.textContent = 'Please enter username and password.'; return; }
+    btn.disabled = true; btn.textContent = 'Signing in…';
+    const [uh, ph] = await Promise.all([hashPin(user), hashPin(pass)]);
+    if (uh === USER_H && ph === PASS_H) {
+      sessionStorage.setItem('adm_auth','1');
+      const ls = document.getElementById('loginScreen');
+      ls.style.transition='opacity .4s'; ls.style.opacity='0';
+      setTimeout(() => { ls.style.display='none'; document.getElementById('app').style.display='flex'; init(); }, 400);
+    } else {
+      await logAttempt();
+      const atts = await getAttempts();
+      const rem  = MAX_ATT - atts.length;
+      if (rem <= 0) {
+        showLoginLockout(new Date(atts[MAX_ATT-1].attempted_at).getTime() + LOCK_MS);
+      } else {
+        err.textContent = `Incorrect credentials — ${rem} attempt${rem===1?'':'s'} remaining`;
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginPass').focus();
+      }
+      btn.disabled = false; btn.textContent = 'Sign In';
     }
+  }
+
+  function showLoginLockout(exp) {
+    locked = true;
+    const btn = document.getElementById('loginBtn');
+    const err = document.getElementById('loginError');
+    document.getElementById('loginUser').disabled = true;
+    document.getElementById('loginPass').disabled = true;
+    btn.disabled = true;
+    (function tick() {
+      const left = Math.max(0, Math.ceil((exp - Date.now()) / 1000));
+      if (!left) {
+        locked = false; err.textContent = '';
+        document.getElementById('loginUser').disabled = false;
+        document.getElementById('loginPass').disabled = false;
+        btn.disabled = false; btn.textContent = 'Sign In';
+        return;
+      }
+      err.textContent = `Too many attempts — try again in ${Math.floor(left/60)}:${(left%60).toString().padStart(2,'0')}`;
+      setTimeout(tick, 1000);
+    })();
+  }
+
+  function signOut() {
+    sessionStorage.removeItem('adm_auth');
+    document.getElementById('app').style.display = 'none';
+    const ls = document.getElementById('loginScreen');
+    ls.style.opacity = '0'; ls.style.display = 'flex';
+    requestAnimationFrame(() => { ls.style.transition='opacity .3s'; ls.style.opacity='1'; });
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginError').textContent = '';
+    document.getElementById('loginBtn').disabled = false;
+    document.getElementById('loginBtn').textContent = 'Sign In';
+    document.getElementById('loginUser').disabled = false;
+    document.getElementById('loginPass').disabled = false;
+  }
   }
   function pd() {
     if (locked || !pinStr.length) return;
