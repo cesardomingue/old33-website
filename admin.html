@@ -379,7 +379,8 @@
     .ord-item-mods { font-size:11px; color:var(--muted); margin-top:3px; line-height:1.5; }
     .ord-item-price{ font-size:12.5px; font-weight:600; color:var(--white); white-space:nowrap; }
     .ord-extras    { margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,.06); display:flex; gap:16px; flex-wrap:wrap; }
-    .ord-extras-item { font-size:11px; color:var(--muted); }
+    .ord-extras-item { font-size:11px; color:var(--muted); display:flex; align-items:center; gap:5px; }
+    .ord-extras-item svg { opacity:.5; flex-shrink:0; }
     .ord-extras-item span { color:rgba(255,255,255,.5); }
     .ord-note { font-size:12px; color:var(--muted); font-style:italic; }
 
@@ -448,7 +449,7 @@
     .toast.out { animation:tOut .3s ease forwards; }
     @keyframes tIn  { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
     @keyframes tOut { from{opacity:1;transform:translateY(0)} to{opacity:0;transform:translateY(8px)} }
-    .t-icon  { font-size:17px; flex-shrink:0; line-height:1.2; }
+    .t-icon  { flex-shrink:0; display:flex; align-items:center; justify-content:center; width:20px; color:var(--gold); }
     .t-body  { flex:1; }
     .t-title { font-size:12px; font-weight:700; color:var(--white); }
     .t-msg   { font-size:11px; color:var(--muted); margin-top:2px; line-height:1.4; }
@@ -942,11 +943,17 @@
   }
 
   /* ─── TOAST ─── */
-  function toast(icon, title, msg, ms=5000) {
+  const TOAST_ICONS = {
+    order:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>`,
+    success: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>`,
+    warning: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+    export:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`,
+  };
+  function toast(type, title, msg, ms=5000) {
     const wrap = document.getElementById('toast');
     const el = document.createElement('div');
     el.className = 'toast';
-    el.innerHTML = `<div class="t-icon">${icon}</div>
+    el.innerHTML = `<div class="t-icon">${TOAST_ICONS[type] || TOAST_ICONS.success}</div>
       <div class="t-body"><div class="t-title">${title}</div><div class="t-msg">${msg}</div></div>
       <button class="t-close" onclick="this.closest('.toast').remove()">&#10005;</button>`;
     wrap.appendChild(el);
@@ -1026,7 +1033,7 @@
       if (knownIds !== null) {
         fresh.filter(o=>!knownIds.has(o.id)).forEach(o=>{
           playBell();
-          toast('🔔','New Order — '+(o.order_num||''),
+          toast('order','New Order — '+(o.order_num||''),
             (o.customer_name||'Someone')+' &middot; $'+parseFloat(o.total||0).toFixed(2));
         });
       }
@@ -1041,7 +1048,7 @@
         'Updated '+new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/New_York'});
 
       render();
-      if(manual) toast('✅','Data Refreshed','All data is up to date.',3000);
+      if(manual) toast('success','Data Refreshed','All data is up to date.',3000);
     } catch {
       document.getElementById('ordersWrap').innerHTML='<div class="no-data">Connection error — check your network and try again.</div>';
     }
@@ -1187,9 +1194,9 @@
       }).join('');
 
       const extras=[];
-      if(o.notes) extras.push(`<div class="ord-extras-item">📝 Note: <span>${esc(o.notes)}</span></div>`);
-      if(o.customer_email) extras.push(`<div class="ord-extras-item">✉️ Email: <span>${esc(o.customer_email)}</span></div>`);
-      if(o.customer_phone) extras.push(`<div class="ord-extras-item">📞 Phone: <span>${esc(o.customer_phone)}</span></div>`);
+      if(o.notes) extras.push(`<div class="ord-extras-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Note: <span>${esc(o.notes)}</span></div>`);
+      if(o.customer_email) extras.push(`<div class="ord-extras-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Email: <span>${esc(o.customer_email)}</span></div>`);
+      if(o.customer_phone) extras.push(`<div class="ord-extras-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.64A2 2 0 012 .18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg> Phone: <span>${esc(o.customer_phone)}</span></div>`);
       const extrasHtml=extras.length?`<div class="ord-extras">${extras.join('')}</div>`:'';
 
       return `
@@ -1245,19 +1252,12 @@
         const o=allOrders.find(x=>x.id===id);
         if(o) o.status='done';
         render();
-        toast('✅','Order Completed','Order '+(o?.order_num||'')+' marked as done.',3000);
+        toast('success','Order Completed','Order '+(o?.order_num||'')+' marked as done.',3000);
       }
     } catch {}
   }
 
   /* ─── MESSAGES ─── */
-  async function loadMessages() {
-    try {
-      const r=await fetch(SB_URL+'/rest/v1/contacts?order=created_at.desc&limit=200',{headers:H});
-      renderMessages(Array.isArray(await r.json())?await (await fetch(SB_URL+'/rest/v1/contacts?order=created_at.desc&limit=200',{headers:H})).json():[]);
-    } catch { document.getElementById('msgWrap').innerHTML='<div class="no-data">Could not load messages.</div>'; }
-  }
-
   async function loadMessages() {
     try {
       const r = await fetch(SB_URL+'/rest/v1/contacts?order=created_at.desc&limit=200',{headers:H});
@@ -1344,7 +1344,7 @@
   /* ─── EXPORT CSV ─── */
   function exportCSV() {
     const orders=filterOrders(allOrders);
-    if(!orders.length){toast('⚠️','Nothing to Export','No orders for the current filter.',3500);return;}
+    if(!orders.length){toast('warning','Nothing to Export','No orders for the current filter.',3500);return;}
     const hdr=['Order #','Date','Time','Name','Phone','Email','Items','Subtotal','Tax','Tip','Total','Status','Notes'];
     const rows=orders.map(o=>{
       const items=(Array.isArray(o.items)?o.items:[]).map(i=>i.qty+'x '+i.name).join(' | ');
@@ -1363,7 +1363,7 @@
     a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
     a.download=`old33-orders-${period}-${new Date().toISOString().slice(0,10)}.csv`;
     a.click();
-    toast('📥','Export Ready',orders.length+' orders saved to CSV.',3000);
+    toast('export','Export Ready',orders.length+' orders saved to CSV.',3000);
   }
 </script>
 </body>

@@ -105,7 +105,7 @@
     }
     .sound-btn:hover { border-color:rgba(255,255,255,.2); color:var(--white); }
     .sound-btn.on  { background:rgba(22,163,74,.08); border-color:rgba(22,163,74,.25); color:#22c55e; }
-    .sound-icon { font-size:13px; }
+    .sound-icon { display:flex; align-items:center; }
 
     .kds-hdr-right {}
     .kds-time-big  { font-family:'Oswald',sans-serif; font-size:28px; font-weight:600; color:var(--white); letter-spacing:1px; line-height:1; text-align:right; }
@@ -330,7 +330,9 @@
       <span class="live-txt" id="liveLabel">Live</span>
     </div>
     <button class="sound-btn on" id="soundBtn" onclick="toggleSound()">
-      <span class="sound-icon" id="soundIcon">🔔</span>
+      <span class="sound-icon" id="soundIcon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      </span>
       <span id="soundLbl">Sound On</span>
     </button>
   </div>
@@ -487,8 +489,10 @@
   function toggleSound() {
     soundOn = !soundOn;
     const btn = document.getElementById('soundBtn');
-    document.getElementById('soundIcon').textContent = soundOn ? '🔔' : '🔕';
-    document.getElementById('soundLbl').textContent  = soundOn ? 'Sound On' : 'Sound Off';
+    const bellOn  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>`;
+    const bellOff = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M13.73 21a2 2 0 01-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0118 8"/><path d="M6.26 6.26A5.86 5.86 0 006 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 00-9.33-5"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+    document.getElementById('soundIcon').innerHTML = soundOn ? bellOn : bellOff;
+    document.getElementById('soundLbl').textContent = soundOn ? 'Sound On' : 'Sound Off';
     btn.classList.toggle('on', soundOn);
   }
   function playBell() {
