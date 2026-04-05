@@ -956,13 +956,6 @@
     document.getElementById('loginUser').disabled = false;
     document.getElementById('loginPass').disabled = false;
   }
-  }
-  function pd() {
-    if (locked || !pinStr.length) return;
-    pinStr = pinStr.slice(0,-1);
-    document.getElementById('d'+pinStr.length).classList.remove('filled');
-    document.getElementById('pinError').textContent = '';
-  }
 
   /* ─── SOUND ─── */
   function toggleSound() {
