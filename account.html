@@ -13,171 +13,161 @@
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-M4X8E48D0W');</script>
 
   <style>
-    /* ============================================================
-       33 CLUB — Premium Redesign
-    ============================================================ */
+    /* ── PAGE SHELL ── */
+    .club-page {
+      padding-top: var(--nav-h);
+      min-height: 100vh;
+    }
 
-    /* ── HERO ── */
-    .ch {
-      position: relative;
-      background: #000;
-      overflow: hidden;
-      padding: 100px 0 0;
+    /* ── SPLIT LAYOUT ── */
+    .club-split {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 64px 28px 80px;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 80px;
+      align-items: start;
     }
-    .ch-noise {
-      position: absolute;
-      inset: 0;
-      background-image:
-        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(200,149,26,.18) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 30% at 80% 100%, rgba(200,149,26,.06) 0%, transparent 50%);
-      pointer-events: none;
-    }
-    .ch-inner {
-      position: relative;
-      text-align: center;
-      padding-bottom: 0;
-    }
-    .ch-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: rgba(200,149,26,.1);
-      border: 1px solid rgba(200,149,26,.25);
-      border-radius: 100px;
-      padding: 6px 16px;
+
+    /* ── LEFT COLUMN ── */
+    .cl-eyebrow {
       font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+
+    .cl-title {
+      font-family: var(--fh);
+      font-size: clamp(38px, 5vw, 54px);
       font-weight: 700;
-      color: #c8951a;
+      color: var(--white);
+      letter-spacing: -.5px;
+      margin: 0 0 16px;
+      line-height: 1.1;
+    }
+
+    .cl-sub {
+      font-size: 15px;
+      color: rgba(255,255,255,.48);
+      line-height: 1.75;
+      max-width: 420px;
+      margin-bottom: 36px;
+    }
+
+    .cl-benefits {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .cl-benefits li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: rgba(255,255,255,.65);
+      line-height: 1.5;
+    }
+
+    .cl-benefit-dot {
+      width: 4px;
+      height: 4px;
+      background: var(--gold);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Tier table */
+    .cl-tiers-label {
+      font-size: 10px;
+      font-weight: 600;
       letter-spacing: 2.5px;
       text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-    .ch-badge-dot {
-      width: 6px; height: 6px;
-      background: #c8951a;
-      border-radius: 50%;
-      animation: pulse-dot 2s ease-in-out infinite;
-    }
-    @keyframes pulse-dot {
-      0%,100% { opacity:1; transform:scale(1); }
-      50%      { opacity:.4; transform:scale(.7); }
-    }
-    .ch h1 {
-      font-family: var(--fh);
-      font-size: clamp(52px, 10vw, 96px);
-      font-weight: 900;
-      color: #fff;
-      letter-spacing: -3px;
-      line-height: .95;
-      margin: 0 0 6px;
-    }
-    .ch h1 em {
-      font-style: normal;
-      background: linear-gradient(135deg, #c8951a 0%, #f0c040 50%, #c8951a 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .ch-sub {
-      font-size: 15px;
-      color: rgba(255,255,255,.45);
-      max-width: 400px;
-      margin: 14px auto 40px;
-      line-height: 1.75;
-      font-weight: 400;
+      color: rgba(255,255,255,.22);
+      margin-bottom: 14px;
     }
 
-    /* Benefit pills */
-    .ch-pills {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 48px;
-    }
-    .ch-pill {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 100px;
-      padding: 8px 18px;
-      font-size: 13px;
-      color: rgba(255,255,255,.7);
-      font-weight: 500;
-    }
-    .ch-pill-icon {
-      width: 18px; height: 18px;
-      background: rgba(200,149,26,.15);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .ch-pill-icon svg { color: #c8951a; }
-    .ch-pill strong { color: #fff; font-weight: 700; }
-
-    /* Bottom fade into page */
-    .ch-bottom {
-      height: 80px;
-      background: linear-gradient(to bottom, transparent, var(--bg));
-    }
-
-    /* ── PAGE BODY ── */
-    .club-body { padding: 0 0 100px; background: var(--bg); }
-
-    /* ── JOIN WRAP ── */
-    .join-wrap {
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* Join card — premium dark glass */
-    .join-card {
-      background: linear-gradient(160deg, #0e0e0e 0%, #0a0a0a 100%);
+    .tier-rows {
       border: 1px solid rgba(255,255,255,.07);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 32px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(200,149,26,.05);
-    }
-    .join-card-top {
-      padding: 28px 32px 0;
-    }
-    .join-card-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 22px;
-    }
-    .join-card-logo-mark {
-      width: 36px; height: 36px;
-      background: linear-gradient(135deg, #c8951a, #f0c040);
       border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
+      overflow: hidden;
     }
-    .join-card-logo-mark svg { color: #000; }
-    .join-card-logo-text {
+
+    .tier-row {
+      display: grid;
+      grid-template-columns: 76px 90px 1fr;
+      gap: 0;
+      padding: 13px 18px;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      align-items: center;
+    }
+
+    .tier-row:last-child { border-bottom: none; }
+
+    .tier-row:hover { background: rgba(255,255,255,.02); }
+
+    .tr-name {
       font-size: 11px;
       font-weight: 700;
-      color: rgba(255,255,255,.5);
       text-transform: uppercase;
-      letter-spacing: 2px;
-      line-height: 1.4;
+      letter-spacing: .8px;
     }
-    .join-card-logo-text span { display: block; color: rgba(255,255,255,.9); font-size: 13px; }
 
-    /* Tabs — underline style */
+    .tr-name.regular { color: rgba(255,255,255,.38); }
+    .tr-name.gold    { color: var(--gold); }
+    .tr-name.vip     { color: #e8c86b; }
+
+    .tr-req {
+      font-size: 12px;
+      color: rgba(255,255,255,.28);
+      padding-left: 8px;
+      border-left: 1px solid rgba(255,255,255,.06);
+    }
+
+    .tr-perk {
+      font-size: 12px;
+      color: rgba(255,255,255,.55);
+      padding-left: 16px;
+    }
+
+    /* ── RIGHT COLUMN: FORM CARD ── */
+    .join-card {
+      background: #111;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 12px;
+      overflow: hidden;
+      position: sticky;
+      top: calc(var(--nav-h) + 20px);
+    }
+
+    .jc-header {
+      padding: 22px 28px 0;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+
+    .jc-brand {
+      font-size: 10px;
+      font-weight: 500;
+      color: rgba(255,255,255,.28);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
     .join-tabs {
       display: flex;
-      gap: 0;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-      margin-bottom: 0;
     }
+
     .join-tab {
       flex: 1;
-      padding: 12px 0 11px;
+      padding: 11px 0;
       font-size: 13px;
       font-weight: 600;
       color: rgba(255,255,255,.3);
@@ -185,265 +175,240 @@
       border: none;
       border-bottom: 2px solid transparent;
       cursor: pointer;
-      transition: color .2s, border-color .2s;
+      transition: color .15s, border-color .15s;
+      font-family: inherit;
       margin-bottom: -1px;
-      letter-spacing: .3px;
+      letter-spacing: .1px;
     }
-    .join-tab.active {
-      color: #c8951a;
-      border-bottom-color: #c8951a;
-    }
-    .join-tab:hover:not(.active) { color: rgba(255,255,255,.6); }
 
-    .join-card-body { padding: 28px 32px 32px; }
+    .join-tab.active {
+      color: var(--white);
+      border-bottom-color: var(--gold);
+    }
+
+    .join-tab:hover:not(.active) {
+      color: rgba(255,255,255,.6);
+    }
+
+    .jc-body { padding: 24px 28px 28px; }
 
     .join-form-panel { display: none; }
     .join-form-panel.active { display: block; }
 
-    .join-field { margin-bottom: 18px; }
+    .join-field { margin-bottom: 16px; }
+
     .join-label {
       display: block;
       font-size: 11px;
       font-weight: 600;
-      color: rgba(255,255,255,.35);
+      color: rgba(255,255,255,.3);
       text-transform: uppercase;
-      letter-spacing: 1.2px;
-      margin-bottom: 8px;
+      letter-spacing: 1px;
+      margin-bottom: 7px;
     }
+
     .join-input {
       width: 100%;
       background: rgba(255,255,255,.04);
       border: 1px solid rgba(255,255,255,.08);
-      border-radius: 10px;
-      color: #fff;
+      border-radius: 8px;
+      color: var(--white);
       font-size: 15px;
-      padding: 13px 16px;
+      padding: 12px 14px;
       outline: none;
-      transition: border-color .2s, background .2s, box-shadow .2s;
+      transition: border-color .15s, box-shadow .15s;
       box-sizing: border-box;
       font-family: inherit;
     }
+
     .join-input:focus {
-      border-color: rgba(200,149,26,.5);
-      background: rgba(200,149,26,.04);
-      box-shadow: 0 0 0 3px rgba(200,149,26,.08);
+      border-color: rgba(212,148,26,.6);
+      box-shadow: 0 0 0 3px rgba(212,148,26,.08);
     }
-    .join-input::placeholder { color: rgba(255,255,255,.2); }
+
+    .join-input::placeholder { color: rgba(255,255,255,.16); }
 
     .join-error {
       background: rgba(220,38,38,.07);
-      border: 1px solid rgba(220,38,38,.2);
-      border-radius: 8px;
-      padding: 11px 14px;
+      border: 1px solid rgba(220,38,38,.18);
+      border-radius: 7px;
+      padding: 10px 14px;
       font-size: 13px;
       color: #f87171;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       display: none;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     .join-btn {
       width: 100%;
-      background: linear-gradient(135deg, #c8951a 0%, #d4a830 100%);
+      background: var(--gold);
       color: #000;
       font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 1.2px;
+      font-weight: 700;
+      letter-spacing: .8px;
       text-transform: uppercase;
-      padding: 15px;
+      padding: 14px;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: opacity .15s, transform .1s;
+      transition: background .15s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       font-family: inherit;
     }
-    .join-btn:hover:not(:disabled) { opacity: .9; transform: translateY(-1px); }
-    .join-btn:active:not(:disabled) { transform: translateY(0); }
+
+    .join-btn:hover:not(:disabled) { background: var(--gold2); }
     .join-btn:disabled { opacity: .4; cursor: default; }
 
     .join-note {
       font-size: 12px;
       color: rgba(255,255,255,.2);
       text-align: center;
-      margin-top: 14px;
-      line-height: 1.7;
+      margin-top: 12px;
+      line-height: 1.65;
     }
 
     /* ── OTP PANEL ── */
-    .otp-center { text-align: center; padding: 8px 0 4px; }
-    .otp-envelope {
-      width: 64px; height: 64px;
-      background: rgba(200,149,26,.08);
-      border: 1px solid rgba(200,149,26,.18);
-      border-radius: 18px;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 18px;
+    .otp-center { text-align: center; padding: 4px 0 8px; }
+
+    .otp-icon {
+      width: 48px;
+      height: 48px;
+      border: 1px solid rgba(212,148,26,.22);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      color: var(--gold);
     }
-    .otp-envelope svg { color: #c8951a; }
+
     .otp-heading {
       font-family: var(--fh);
-      font-size: 22px;
-      color: #fff;
+      font-size: 21px;
+      color: var(--white);
       margin-bottom: 6px;
-      letter-spacing: -.3px;
     }
+
     .otp-sub {
       font-size: 13px;
       color: rgba(255,255,255,.35);
       line-height: 1.7;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
-    .otp-sub strong { color: #c8951a; font-weight: 600; }
+
+    .otp-sub strong { color: var(--gold); font-weight: 500; }
+
     .otp-boxes {
       display: flex;
       gap: 8px;
       justify-content: center;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
+
     .otp-box {
-      width: 46px; height: 56px;
+      width: 44px;
+      height: 52px;
       background: rgba(255,255,255,.04);
       border: 1px solid rgba(255,255,255,.1);
-      border-radius: 10px;
-      color: #fff;
-      font-size: 24px;
-      font-weight: 700;
+      border-radius: 8px;
+      color: var(--white);
+      font-size: 22px;
+      font-weight: 600;
       text-align: center;
       outline: none;
-      transition: border-color .2s, background .2s, box-shadow .2s;
-      caret-color: #c8951a;
+      transition: border-color .15s, box-shadow .15s;
+      caret-color: var(--gold);
       font-family: inherit;
     }
+
     .otp-box:focus {
-      border-color: rgba(200,149,26,.6);
-      background: rgba(200,149,26,.05);
-      box-shadow: 0 0 0 3px rgba(200,149,26,.1);
+      border-color: rgba(212,148,26,.6);
+      box-shadow: 0 0 0 3px rgba(212,148,26,.08);
     }
+
     .otp-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 16px;
-      padding-top: 16px;
+      margin-top: 14px;
+      padding-top: 14px;
       border-top: 1px solid rgba(255,255,255,.05);
     }
+
     .otp-link {
-      background: none; border: none;
-      font-size: 12px; color: rgba(255,255,255,.3);
-      cursor: pointer; padding: 4px 0;
-      transition: color .15s; font-family: inherit;
+      background: none;
+      border: none;
+      font-size: 12px;
+      color: rgba(255,255,255,.28);
+      cursor: pointer;
+      padding: 0;
+      transition: color .15s;
+      font-family: inherit;
     }
-    .otp-link:hover { color: rgba(255,255,255,.7); }
+
+    .otp-link:hover { color: rgba(255,255,255,.6); }
+
     .otp-resend {
-      background: none; border: none;
-      font-size: 12px; color: #c8951a;
-      cursor: pointer; padding: 4px 0; font-family: inherit;
+      background: none;
+      border: none;
+      font-size: 12px;
+      color: var(--gold);
+      cursor: pointer;
+      padding: 0;
+      font-family: inherit;
       font-weight: 600;
     }
-    .otp-resend:disabled { opacity: .35; cursor: default; }
 
-    @media (max-width: 360px) {
-      .otp-box { width: 38px; height: 48px; font-size: 20px; }
-      .otp-boxes { gap: 5px; }
-    }
-
-    /* ── TIER CARDS (below join form) ── */
-    .tier-cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 20px;
-    }
-    .tier-card {
-      background: rgba(255,255,255,.02);
-      border: 1px solid rgba(255,255,255,.06);
-      border-radius: 14px;
-      padding: 16px 14px;
-      text-align: center;
-      transition: border-color .2s;
-    }
-    .tier-card:hover { border-color: rgba(200,149,26,.2); }
-    .tier-card-icon {
-      width: 32px; height: 32px;
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 10px;
-      font-size: 15px;
-    }
-    .tier-card-icon.regular { background: rgba(120,120,120,.1); }
-    .tier-card-icon.gold    { background: rgba(200,149,26,.12); }
-    .tier-card-icon.vip     { background: rgba(232,200,107,.1); }
-    .tier-card-name {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 4px;
-    }
-    .tier-card-name.regular { color: rgba(255,255,255,.4); }
-    .tier-card-name.gold    { color: #c8951a; }
-    .tier-card-name.vip     { color: #e8c86b; }
-    .tier-card-req {
-      font-size: 10px;
-      color: rgba(255,255,255,.2);
-      margin-bottom: 6px;
-    }
-    .tier-card-perk {
-      font-size: 11px;
-      font-weight: 700;
-      color: rgba(255,255,255,.6);
-    }
-    @media (max-width: 400px) {
-      .tier-cards { grid-template-columns: 1fr; }
-      .tier-card { display: flex; align-items: center; gap: 12px; text-align: left; padding: 12px 14px; }
-      .tier-card-icon { margin: 0; flex-shrink: 0; }
-    }
+    .otp-resend:disabled { opacity: .3; cursor: default; }
 
     /* ── MEMBER DASHBOARD ── */
-    .dash-wrap { max-width: 680px; margin: 0 auto; padding: 0 20px; display: none; }
+    .dash-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 56px 28px 80px;
+      display: none;
+    }
 
-    /* Physical membership card */
+    .dash-header {
+      margin-bottom: 28px;
+    }
+
+    .dash-header h2 {
+      font-family: var(--fh);
+      font-size: 28px;
+      color: var(--white);
+      margin: 0 0 4px;
+      letter-spacing: -.3px;
+    }
+
+    .dash-header p {
+      font-size: 13px;
+      color: rgba(255,255,255,.35);
+      margin: 0;
+    }
+
+    /* Membership card */
     .mem-card {
-      background: linear-gradient(135deg, #1c1200 0%, #261800 40%, #1a1000 100%);
-      border: 1px solid rgba(200,149,26,.2);
-      border-radius: 20px;
-      padding: 28px 28px 22px;
+      background: #111;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 12px;
+      padding: 24px 28px 20px;
       margin-bottom: 16px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,.5), inset 0 1px 0 rgba(200,149,26,.15);
     }
-    /* Subtle texture lines */
+
+    /* Gold top line */
     .mem-card::before {
       content: '';
       position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 40px,
-        rgba(200,149,26,.015) 40px,
-        rgba(200,149,26,.015) 41px
-      );
-      pointer-events: none;
-    }
-    /* Watermark */
-    .mem-card::after {
-      content: '33';
-      position: absolute;
-      right: -8px;
-      bottom: -20px;
-      font-family: var(--fh);
-      font-size: 140px;
-      font-weight: 900;
-      color: rgba(200,149,26,.06);
-      letter-spacing: -5px;
-      pointer-events: none;
-      line-height: 1;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--gold) 30%, var(--gold2) 60%, transparent 100%);
     }
 
     .mem-card-top {
@@ -451,118 +416,127 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 16px;
-      position: relative;
+      margin-bottom: 20px;
     }
+
     .mem-card-left { flex: 1; min-width: 0; }
 
     .mem-tier-badge {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      border-radius: 100px;
-      padding: 4px 10px;
+      border-radius: 5px;
+      padding: 3px 9px;
       font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: 12px;
+      letter-spacing: 1.2px;
+      margin-bottom: 10px;
     }
+
     .mem-tier-badge.regular {
-      background: rgba(150,150,150,.1);
-      border: 1px solid rgba(150,150,150,.2);
-      color: rgba(255,255,255,.5);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.38);
     }
+
     .mem-tier-badge.gold {
-      background: rgba(200,149,26,.15);
-      border: 1px solid rgba(200,149,26,.3);
-      color: #c8951a;
+      background: rgba(212,148,26,.14);
+      color: var(--gold);
     }
+
     .mem-tier-badge.vip {
-      background: rgba(232,200,107,.12);
-      border: 1px solid rgba(232,200,107,.3);
+      background: rgba(232,200,107,.11);
       color: #e8c86b;
-      box-shadow: 0 0 12px rgba(232,200,107,.1);
     }
 
     .mem-name {
       font-family: var(--fh);
-      font-size: 28px;
-      color: #fff;
-      letter-spacing: -.5px;
-      margin: 0 0 3px;
+      font-size: 26px;
+      color: var(--white);
+      letter-spacing: -.3px;
+      margin: 0 0 4px;
       line-height: 1.1;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     .mem-email {
       font-size: 12px;
-      color: rgba(200,149,26,.5);
+      color: rgba(255,255,255,.28);
       margin: 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .mem-card-right { text-align: right; flex-shrink: 0; }
-    .mem-points-num {
-      font-family: var(--fh);
-      font-size: 44px;
-      color: #c8951a;
-      line-height: 1;
-      letter-spacing: -2px;
-    }
-    .mem-points-lbl {
-      font-size: 10px;
-      color: rgba(255,255,255,.25);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-top: 3px;
+    .mem-card-right {
+      text-align: right;
+      flex-shrink: 0;
     }
 
-    /* Progress */
-    .mem-progress { margin-top: 20px; position: relative; }
+    .mem-points-num {
+      font-family: var(--fd);
+      font-size: 42px;
+      color: var(--gold);
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+
+    .mem-points-lbl {
+      font-size: 10px;
+      color: rgba(255,255,255,.22);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-top: 2px;
+    }
+
+    .mem-progress { }
+
     .mem-progress-hdr {
       display: flex;
       justify-content: space-between;
       font-size: 11px;
       margin-bottom: 7px;
+      color: rgba(255,255,255,.28);
     }
-    .mem-progress-hdr span:first-child { color: rgba(255,255,255,.3); }
-    .mem-progress-hdr span:last-child  { color: rgba(200,149,26,.7); font-weight: 600; }
+
+    .mem-progress-hdr span:last-child { color: rgba(212,148,26,.65); }
+
     .mem-bar {
-      height: 3px;
+      height: 2px;
       background: rgba(255,255,255,.06);
       border-radius: 2px;
       overflow: hidden;
     }
+
     .mem-bar-fill {
       height: 100%;
-      background: linear-gradient(90deg, #c8951a, #f0c040);
+      background: var(--gold);
       border-radius: 2px;
       transition: width .8s cubic-bezier(.4,0,.2,1);
     }
 
-    /* Card footer */
     .mem-card-foot {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-top: 18px;
-      padding-top: 16px;
+      padding-top: 14px;
       border-top: 1px solid rgba(255,255,255,.05);
-      position: relative;
     }
+
     .mem-card-foot-brand {
       font-size: 10px;
-      color: rgba(255,255,255,.15);
+      color: rgba(255,255,255,.14);
       letter-spacing: 2px;
       text-transform: uppercase;
     }
+
     .mem-signout-btn {
       background: transparent;
-      border: 1px solid rgba(255,255,255,.08);
-      color: rgba(255,255,255,.25);
+      border: 1px solid rgba(255,255,255,.07);
+      color: rgba(255,255,255,.28);
       font-size: 11px;
       padding: 5px 12px;
       border-radius: 6px;
@@ -570,42 +544,48 @@
       transition: border-color .15s, color .15s;
       font-family: inherit;
     }
-    .mem-signout-btn:hover { border-color: rgba(255,255,255,.2); color: rgba(255,255,255,.6); }
 
-    /* ── STATS ── */
+    .mem-signout-btn:hover {
+      border-color: rgba(255,255,255,.18);
+      color: rgba(255,255,255,.6);
+    }
+
+    /* Stats */
     .mem-stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 28px;
+      gap: 8px;
+      margin-bottom: 36px;
     }
+
     .mem-stat {
-      background: rgba(255,255,255,.03);
+      background: #111;
       border: 1px solid rgba(255,255,255,.06);
-      border-radius: 14px;
+      border-radius: 10px;
       padding: 16px 12px;
       text-align: center;
     }
+
     .mem-stat-val {
-      font-family: var(--fh);
+      font-family: var(--fd);
       font-size: 24px;
-      color: #fff;
-      font-weight: 900;
+      color: var(--white);
       line-height: 1;
     }
+
     .mem-stat-lbl {
       font-size: 10px;
-      color: rgba(255,255,255,.3);
+      color: rgba(255,255,255,.28);
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-top: 5px;
     }
 
-    /* ── SECTION HEADER ── */
+    /* Section headers */
     .dash-section-hdr {
       font-size: 10px;
-      font-weight: 700;
-      color: rgba(255,255,255,.25);
+      font-weight: 600;
+      color: rgba(255,255,255,.22);
       text-transform: uppercase;
       letter-spacing: 2px;
       margin-bottom: 12px;
@@ -613,69 +593,83 @@
       align-items: center;
       gap: 10px;
     }
+
     .dash-section-hdr::after {
       content: '';
       flex: 1;
       height: 1px;
       background: rgba(255,255,255,.05);
     }
-    .dash-section-hdr strong { color: rgba(255,255,255,.5); }
 
-    /* ── PERK CARDS ── */
+    .dash-section-hdr strong { color: rgba(255,255,255,.42); font-weight: 600; }
+
+    /* Perk cards */
     .perk-cards {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px;
       margin-bottom: 32px;
     }
+
     .perk-card {
-      background: rgba(255,255,255,.025);
+      background: #111;
       border: 1px solid rgba(255,255,255,.06);
-      border-radius: 14px;
+      border-radius: 10px;
       padding: 16px;
-      transition: border-color .2s, background .2s;
+      transition: border-color .15s;
     }
-    .perk-card:hover { border-color: rgba(200,149,26,.2); background: rgba(200,149,26,.03); }
+
+    .perk-card:hover { border-color: rgba(212,148,26,.18); }
+
     .perk-card-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 10px;
     }
+
     .perk-card-badge {
       font-size: 9px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: #c8951a;
-      background: rgba(200,149,26,.1);
+      color: var(--gold);
+      background: rgba(212,148,26,.1);
       padding: 3px 8px;
-      border-radius: 100px;
+      border-radius: 4px;
     }
+
     .perk-card-val {
-      font-family: var(--fh);
+      font-family: var(--fd);
       font-size: 18px;
-      color: #c8951a;
-      font-weight: 900;
+      color: var(--gold);
     }
+
     .perk-card-name {
       font-size: 13px;
-      font-weight: 700;
-      color: #fff;
+      font-weight: 600;
+      color: var(--white);
       margin-bottom: 4px;
     }
-    .perk-card-desc { font-size: 11px; color: rgba(255,255,255,.3); line-height: 1.55; }
 
-    /* ── ORDER HISTORY ── */
-    .order-card {
-      background: rgba(255,255,255,.025);
-      border: 1px solid rgba(255,255,255,.06);
-      border-radius: 14px;
-      margin-bottom: 10px;
-      overflow: hidden;
-      transition: border-color .2s;
+    .perk-card-desc {
+      font-size: 12px;
+      color: rgba(255,255,255,.3);
+      line-height: 1.55;
     }
+
+    /* Order history */
+    .order-card {
+      background: #111;
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      overflow: hidden;
+      transition: border-color .15s;
+    }
+
     .order-card:hover { border-color: rgba(255,255,255,.1); }
+
     .order-card-hdr {
       display: flex;
       align-items: center;
@@ -685,75 +679,93 @@
       flex-wrap: wrap;
       gap: 8px;
     }
+
     .order-card-num {
-      font-family: var(--fh);
+      font-family: var(--fd);
       font-size: 13px;
-      color: #fff;
-      letter-spacing: 1px;
+      color: var(--white);
+      letter-spacing: .5px;
     }
+
     .order-card-meta span { font-size: 12px; color: rgba(255,255,255,.3); }
-    .order-card-total { font-size: 14px; font-weight: 700; color: #c8951a; }
+    .order-card-total { font-size: 14px; font-weight: 600; color: var(--gold); }
+
     .order-card-body { padding: 12px 18px; }
+
     .order-item-row {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      padding: 4px 0;
+      padding: 5px 0;
       border-bottom: 1px solid rgba(255,255,255,.03);
       font-size: 13px;
     }
+
     .order-item-row:last-child { border-bottom: none; }
-    .order-item-name { color: rgba(255,255,255,.8); }
-    .order-item-qty  { color: rgba(255,255,255,.3); font-size: 11px; margin-left: 4px; }
+    .order-item-name { color: rgba(255,255,255,.75); }
+    .order-item-qty { color: rgba(255,255,255,.3); font-size: 11px; margin-left: 4px; }
     .order-item-price { color: rgba(255,255,255,.3); font-size: 12px; flex-shrink: 0; margin-left: 10px; }
 
-    /* ── EMPTY / SPINNER ── */
+    /* Empty / spinner */
     .acc-empty { text-align: center; padding: 48px 20px; }
     .acc-empty svg { color: rgba(255,255,255,.1); margin-bottom: 14px; }
-    .acc-empty h3 { font-family: var(--fh); font-size: 20px; color: #fff; margin: 0 0 6px; }
+    .acc-empty h3 { font-family: var(--fh); font-size: 20px; color: var(--white); margin: 0 0 6px; }
     .acc-empty p  { font-size: 13px; color: rgba(255,255,255,.3); margin: 0 0 20px; }
-    .acc-spinner  { text-align: center; padding: 40px; color: rgba(255,255,255,.2); font-size: 13px; }
+
+    .acc-spinner { text-align: center; padding: 40px; color: rgba(255,255,255,.2); font-size: 13px; }
     .acc-spinner::before {
-      content: ''; display: block; width: 28px; height: 28px;
-      border: 2px solid rgba(255,255,255,.06); border-top-color: #c8951a;
+      content: ''; display: block; width: 24px; height: 24px;
+      border: 1.5px solid rgba(255,255,255,.06); border-top-color: var(--gold);
       border-radius: 50%; animation: spin .7s linear infinite;
       margin: 0 auto 12px;
     }
+
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── ORDER NOW BUTTON ── */
     .dash-cta {
       text-align: center;
       margin-top: 32px;
-      padding: 28px 24px;
-      background: rgba(200,149,26,.04);
-      border: 1px solid rgba(200,149,26,.1);
-      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 10px;
     }
+
     .dash-cta p {
       font-size: 13px;
       color: rgba(255,255,255,.3);
       margin: 0 0 14px;
     }
 
-    /* ── MOBILE ── */
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .club-split {
+        grid-template-columns: 1fr;
+        gap: 48px;
+        padding: 48px 20px 60px;
+      }
+      .join-card { position: static; }
+      .cl-title { font-size: clamp(34px, 8vw, 48px); }
+    }
+
     @media (max-width: 600px) {
-      .ch { padding: 80px 0 0; }
-      .ch h1 { font-size: clamp(44px, 12vw, 72px); }
-      .mem-card { padding: 20px 20px 18px; }
+      .club-split { padding: 36px 16px 48px; gap: 36px; }
+      .mem-card { padding: 20px 18px 16px; }
       .mem-name { font-size: 22px; }
-      .mem-points-num { font-size: 36px; }
+      .mem-points-num { font-size: 34px; }
       .mem-stats { gap: 8px; }
       .mem-stat { padding: 12px 8px; }
       .mem-stat-val { font-size: 20px; }
       .perk-cards { grid-template-columns: 1fr 1fr; }
-      .join-card-body { padding: 22px 22px 26px; }
-      .join-card-top { padding: 22px 22px 0; }
-      .dash-wrap { padding: 0 16px; }
-      .join-wrap { padding: 0 16px; }
+      .jc-body { padding: 20px 20px 24px; }
+      .jc-header { padding: 18px 20px 0; }
+      .dash-wrap { padding: 36px 16px 60px; }
+      .tier-row { grid-template-columns: 68px 80px 1fr; padding: 12px 14px; }
     }
+
     @media (max-width: 400px) {
       .perk-cards { grid-template-columns: 1fr; }
+      .otp-boxes { gap: 5px; }
+      .otp-box { width: 38px; height: 48px; font-size: 20px; }
     }
   </style>
 </head>
@@ -791,153 +803,138 @@
   <a href="menu.html" class="mob-order">Order Online</a>
 </div>
 
-<!-- HERO -->
-<div class="ch">
-  <div class="ch-noise"></div>
-  <div class="ch-inner container">
-    <div class="ch-badge">
-      <div class="ch-badge-dot"></div>
-      Members Only
+<div class="club-page">
+
+  <!-- ══ JOIN PANEL ══ -->
+  <div class="club-split" id="joinPanel">
+
+    <!-- Left: value props + tiers -->
+    <div class="club-left">
+      <div class="cl-eyebrow">Old 33 Beer &amp; Burger Grill</div>
+      <h1 class="cl-title">The 33 Club</h1>
+      <p class="cl-sub">Free to join. Members save on every online order, earn points toward rewards, and get exclusive perks — no credit card, no catch.</p>
+
+      <ul class="cl-benefits">
+        <li><span class="cl-benefit-dot"></span>10% off every online order, applied automatically at checkout</li>
+        <li><span class="cl-benefit-dot"></span>1 point earned per $1 spent toward future rewards</li>
+        <li><span class="cl-benefit-dot"></span>500 points = $5 off your next order</li>
+        <li><span class="cl-benefit-dot"></span>Free fountain drink on your very first order</li>
+      </ul>
+
+      <div class="cl-tiers-label">Member Tiers</div>
+      <div class="tier-rows">
+        <div class="tier-row">
+          <span class="tr-name regular">Regular</span>
+          <span class="tr-req">Any spend</span>
+          <span class="tr-perk">10% off all online orders</span>
+        </div>
+        <div class="tier-row">
+          <span class="tr-name gold">Gold</span>
+          <span class="tr-req">$100+ total</span>
+          <span class="tr-perk">12% off + free drink upgrade</span>
+        </div>
+        <div class="tier-row">
+          <span class="tr-name vip">VIP</span>
+          <span class="tr-req">$300+ total</span>
+          <span class="tr-perk">15% off + priority queue</span>
+        </div>
+      </div>
     </div>
-    <h1>The <em>33</em><br>Club</h1>
-    <p class="ch-sub">Earn points on every order, unlock exclusive deals, and save every time you order online.</p>
-    <div class="ch-pills">
-      <div class="ch-pill">
-        <div class="ch-pill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-        <strong>10%</strong>&nbsp;off every online order
-      </div>
-      <div class="ch-pill">
-        <div class="ch-pill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-        <strong>1 pt</strong>&nbsp;per $1 spent
-      </div>
-      <div class="ch-pill">
-        <div class="ch-pill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-        <strong>Free</strong>&nbsp;to join
-      </div>
-    </div>
-  </div>
-  <div class="ch-bottom"></div>
-</div>
 
-<!-- BODY -->
-<div class="club-body">
+    <!-- Right: form card -->
+    <div class="club-right">
+      <div class="join-card">
 
-  <!-- JOIN PANEL -->
-  <div class="join-wrap" id="joinPanel">
-    <div class="join-card">
-      <div class="join-card-top">
-        <div class="join-card-logo">
-          <div class="join-card-logo-mark">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          </div>
-          <div class="join-card-logo-text">
-            Old 33 Beer &amp; Burger Grill
-            <span>Member Portal</span>
+        <div class="jc-header">
+          <div class="jc-brand">Member Portal</div>
+          <div class="join-tabs" id="join-tabs-row">
+            <button class="join-tab active" id="tabJoin" onclick="switchTab('join')">Join Free</button>
+            <button class="join-tab" id="tabSignin" onclick="switchTab('signin')">Sign In</button>
           </div>
         </div>
-        <div class="join-tabs" id="join-tabs-row">
-          <button class="join-tab active" id="tabJoin" onclick="switchTab('join')">Join Free</button>
-          <button class="join-tab" id="tabSignin" onclick="switchTab('signin')">Sign In</button>
-        </div>
-      </div>
 
-      <div class="join-card-body">
+        <div class="jc-body">
 
-        <!-- Join tab -->
-        <div class="join-form-panel active" id="panelJoin">
-          <div class="join-field">
-            <label class="join-label">Your Name</label>
-            <input type="text" id="joinName" class="join-input" placeholder="First &amp; Last Name" autocomplete="name" />
-          </div>
-          <div class="join-field">
-            <label class="join-label">Email Address</label>
-            <input type="email" id="joinEmail" class="join-input" placeholder="you@email.com" autocomplete="email" />
-          </div>
-          <div id="joinError" class="join-error"></div>
-          <button class="join-btn" id="joinBtn" onclick="doJoin()">
-            Join the 33 Club
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-          </button>
-          <p class="join-note">Free forever · No spam · Discount applies instantly at checkout</p>
-        </div>
-
-        <!-- Sign In tab -->
-        <div class="join-form-panel" id="panelSignin">
-          <div class="join-field">
-            <label class="join-label">Email Address</label>
-            <input type="email" id="signinEmail" class="join-input" placeholder="you@email.com" autocomplete="email" />
-          </div>
-          <div id="signinError" class="join-error"></div>
-          <button class="join-btn" id="signinBtn" onclick="doSignin()">
-            Sign In
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-          </button>
-          <p class="join-note">We'll send a verification code to confirm it's you</p>
-        </div>
-
-        <!-- OTP panel -->
-        <div class="join-form-panel" id="panelOtp">
-          <div class="otp-center">
-            <div class="otp-envelope">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <!-- Join tab -->
+          <div class="join-form-panel active" id="panelJoin">
+            <div class="join-field">
+              <label class="join-label">Your Name</label>
+              <input type="text" id="joinName" class="join-input" placeholder="First &amp; Last Name" autocomplete="name" />
             </div>
-            <div class="otp-heading">Check your inbox</div>
-            <div class="otp-sub">We sent a 6-digit code to<br><strong id="otpEmailDisplay">your email</strong></div>
+            <div class="join-field">
+              <label class="join-label">Email Address</label>
+              <input type="email" id="joinEmail" class="join-input" placeholder="you@email.com" autocomplete="email" />
+            </div>
+            <div id="joinError" class="join-error"></div>
+            <button class="join-btn" id="joinBtn" onclick="doJoin()">
+              Join the 33 Club
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </button>
+            <p class="join-note">Free forever &middot; No spam &middot; Discount applies at checkout</p>
           </div>
-          <div class="otp-boxes">
-            <input class="otp-box" type="tel" maxlength="1" id="otp0" inputmode="numeric" pattern="[0-9]" />
-            <input class="otp-box" type="tel" maxlength="1" id="otp1" inputmode="numeric" pattern="[0-9]" />
-            <input class="otp-box" type="tel" maxlength="1" id="otp2" inputmode="numeric" pattern="[0-9]" />
-            <input class="otp-box" type="tel" maxlength="1" id="otp3" inputmode="numeric" pattern="[0-9]" />
-            <input class="otp-box" type="tel" maxlength="1" id="otp4" inputmode="numeric" pattern="[0-9]" />
-            <input class="otp-box" type="tel" maxlength="1" id="otp5" inputmode="numeric" pattern="[0-9]" />
+
+          <!-- Sign In tab -->
+          <div class="join-form-panel" id="panelSignin">
+            <div class="join-field">
+              <label class="join-label">Email Address</label>
+              <input type="email" id="signinEmail" class="join-input" placeholder="you@email.com" autocomplete="email" />
+            </div>
+            <div id="signinError" class="join-error"></div>
+            <button class="join-btn" id="signinBtn" onclick="doSignin()">
+              Send Sign-In Code
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </button>
+            <p class="join-note">We'll send a code to confirm it's you</p>
           </div>
-          <div id="otpError" class="join-error"></div>
-          <button class="join-btn" id="otpBtn" onclick="verifyOTP()">
-            Verify &amp; Continue
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          </button>
-          <div class="otp-footer">
-            <button class="otp-link" onclick="backToForm()">← Wrong email?</button>
-            <button class="otp-resend" id="resendBtn" onclick="resendOTP()" disabled>Resend (<span id="resendTimer">60</span>s)</button>
+
+          <!-- OTP panel -->
+          <div class="join-form-panel" id="panelOtp">
+            <div class="otp-center">
+              <div class="otp-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="otp-heading">Check your inbox</div>
+              <div class="otp-sub">We sent a 6-digit code to<br><strong id="otpEmailDisplay">your email</strong></div>
+            </div>
+            <div class="otp-boxes">
+              <input class="otp-box" type="tel" maxlength="1" id="otp0" inputmode="numeric" pattern="[0-9]" />
+              <input class="otp-box" type="tel" maxlength="1" id="otp1" inputmode="numeric" pattern="[0-9]" />
+              <input class="otp-box" type="tel" maxlength="1" id="otp2" inputmode="numeric" pattern="[0-9]" />
+              <input class="otp-box" type="tel" maxlength="1" id="otp3" inputmode="numeric" pattern="[0-9]" />
+              <input class="otp-box" type="tel" maxlength="1" id="otp4" inputmode="numeric" pattern="[0-9]" />
+              <input class="otp-box" type="tel" maxlength="1" id="otp5" inputmode="numeric" pattern="[0-9]" />
+            </div>
+            <div id="otpError" class="join-error"></div>
+            <button class="join-btn" id="otpBtn" onclick="verifyOTP()">
+              Verify &amp; Continue
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </button>
+            <div class="otp-footer">
+              <button class="otp-link" onclick="backToForm()">&#8592; Wrong email?</button>
+              <button class="otp-resend" id="resendBtn" onclick="resendOTP()" disabled>Resend (<span id="resendTimer">60</span>s)</button>
+            </div>
           </div>
+
         </div>
-
       </div>
     </div>
 
-    <!-- Tier cards -->
-    <div class="tier-cards" style="padding:0;">
-      <div class="tier-card">
-        <div class="tier-card-icon regular">⬡</div>
-        <div class="tier-card-name regular">Regular</div>
-        <div class="tier-card-req">Any spend</div>
-        <div class="tier-card-perk">10% off online</div>
-      </div>
-      <div class="tier-card">
-        <div class="tier-card-icon gold">★</div>
-        <div class="tier-card-name gold">Gold</div>
-        <div class="tier-card-req">$100+ spent</div>
-        <div class="tier-card-perk">12% + free drink</div>
-      </div>
-      <div class="tier-card">
-        <div class="tier-card-icon vip">◆</div>
-        <div class="tier-card-name vip">VIP</div>
-        <div class="tier-card-req">$300+ spent</div>
-        <div class="tier-card-perk">15% + priority</div>
-      </div>
-    </div>
   </div>
 
-  <!-- DASHBOARD -->
+  <!-- ══ MEMBER DASHBOARD ══ -->
   <div class="dash-wrap" id="dashPanel">
+
+    <div class="dash-header">
+      <h2>Your Membership</h2>
+      <p>Old 33 Beer &amp; Burger Grill &mdash; 33 Club</p>
+    </div>
 
     <!-- Membership card -->
     <div class="mem-card">
       <div class="mem-card-top">
         <div class="mem-card-left">
           <div class="mem-tier-badge regular" id="dashTierBadge">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="9" height="9"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" width="8" height="8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             <span id="dashTierName">Regular Member</span>
           </div>
           <div class="mem-name" id="dashName">—</div>
@@ -956,7 +953,7 @@
         <div class="mem-bar"><div class="mem-bar-fill" id="dashProgressBar" style="width:0%"></div></div>
       </div>
       <div class="mem-card-foot">
-        <div class="mem-card-foot-brand">Old 33 · 33 Club</div>
+        <div class="mem-card-foot-brand">Old 33 &middot; 33 Club</div>
         <button class="mem-signout-btn" onclick="doSignOut()">Sign Out</button>
       </div>
     </div>
@@ -1126,14 +1123,14 @@
       document.getElementById('tabSignin').classList.remove('active');
       var btn = document.getElementById('joinBtn');
       btn.disabled = false;
-      btn.innerHTML = 'Join the 33 Club <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>';
+      btn.innerHTML = 'Join the 33 Club <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>';
     } else {
       document.getElementById('panelSignin').classList.add('active');
       document.getElementById('tabSignin').classList.add('active');
       document.getElementById('tabJoin').classList.remove('active');
       var btn = document.getElementById('signinBtn');
       btn.disabled = false;
-      btn.innerHTML = 'Sign In <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>';
+      btn.innerHTML = 'Send Sign-In Code <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>';
     }
   }
 
@@ -1203,7 +1200,7 @@
         err.textContent = 'Incorrect or expired code. Try again or resend.';
         err.style.display = 'block';
         btn.disabled = false;
-        btn.innerHTML = 'Verify &amp; Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
+        btn.innerHTML = 'Verify &amp; Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
         for (var i = 0; i < 6; i++) document.getElementById('otp'+i).value = '';
         document.getElementById('otp0').focus();
         return;
@@ -1223,7 +1220,7 @@
       err.textContent = 'Something went wrong. Please try again.';
       err.style.display = 'block';
       btn.disabled = false;
-      btn.innerHTML = 'Verify &amp; Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
+      btn.innerHTML = 'Verify &amp; Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
     }
   }
 
@@ -1260,7 +1257,7 @@
       err.textContent = e.message || 'Could not send code. Please try again.';
       err.style.display = 'block';
       btn.disabled = false;
-      btn.innerHTML = 'Join the 33 Club <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>';
+      btn.innerHTML = 'Join the 33 Club <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>';
     }
   }
 
@@ -1280,7 +1277,7 @@
       err.textContent = e.message || 'Could not send code. Please try again.';
       err.style.display = 'block';
       btn.disabled = false;
-      btn.innerHTML = 'Sign In <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>';
+      btn.innerHTML = 'Send Sign-In Code <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>';
     }
   }
 
@@ -1315,11 +1312,9 @@
     document.getElementById('dashTotalSpent').textContent    = '$' + totalSpent.toFixed(0);
     document.getElementById('dashDiscount').textContent      = tier.discount + '%';
 
-    // Update tier badge class
     var badge = document.getElementById('dashTierBadge');
     badge.className = 'mem-tier-badge ' + tier.cls;
 
-    // Perks
     document.getElementById('dashPerks').innerHTML = perks.map(function(p) {
       return '<div class="perk-card"><div class="perk-card-top"><span class="perk-card-badge">' + escHtml(p.badge) +
         '</span><span class="perk-card-val">' + escHtml(p.val) + '</span></div>' +
@@ -1327,7 +1322,6 @@
         '<div class="perk-card-desc">' + escHtml(p.desc) + '</div></div>';
     }).join('');
 
-    // Order history
     document.getElementById('dashOrderLabel').textContent = orders.length ? orders.length + ' order' + (orders.length !== 1 ? 's' : '') : '';
     if (!orders.length) {
       document.getElementById('dashOrders').innerHTML =
