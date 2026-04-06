@@ -17,6 +17,11 @@ function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
 
+    if (data.type === 'otp') {
+      emailOTP(data);
+      return jsonResponse({ success: true });
+    }
+
     if (data.type === 'reservation') {
       logReservation(data);
       try { emailReservation(data); } catch(e) { Logger.log('Res email failed: ' + e); }
@@ -163,6 +168,60 @@ function emailRestaurant(data) {
 // ─────────────────────────────────────────
 //  CONFIRMATION EMAIL TO CUSTOMER
 // ─────────────────────────────────────────
+// ─────────────────────────────────────────
+//  OTP EMAIL — 33 Club verification
+// ─────────────────────────────────────────
+function emailOTP(data) {
+  const name = escHtml(data.name || 'Member');
+  const code = escHtml(data.code || '------');
+  const html = `<!DOCTYPE html>
+<html><head><meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light"></head>
+<body style="margin:0;padding:0;background:#f2ece0;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f2ece0;padding:32px 0;">
+  <tr><td align="center">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);">
+
+      <!-- Header -->
+      <tr><td style="background:#1a1a1a;padding:28px 32px;text-align:center;">
+        <div style="font-family:Arial,sans-serif;font-size:22px;font-weight:900;color:#c8951a;letter-spacing:3px;">OLD 33</div>
+        <div style="font-family:Arial,sans-serif;font-size:10px;color:#666;letter-spacing:3px;text-transform:uppercase;margin-top:2px;">Beer &amp; Burger Grill</div>
+      </td></tr>
+
+      <!-- Gold bar -->
+      <tr><td style="background:#c8951a;padding:12px 32px;text-align:center;">
+        <div style="font-family:Arial,sans-serif;font-size:11px;font-weight:700;color:#000;letter-spacing:2.5px;text-transform:uppercase;">33 Club — Sign In Verification</div>
+      </td></tr>
+
+      <!-- Body -->
+      <tr><td style="padding:36px 32px 28px;text-align:center;">
+        <p style="font-family:Arial,sans-serif;font-size:16px;color:#1a1a1a;margin:0 0 8px;">Hey <strong>${name}</strong>,</p>
+        <p style="font-family:Arial,sans-serif;font-size:14px;color:#666;line-height:1.7;margin:0 0 28px;">Use the code below to verify your email and access your 33 Club account. This code expires in <strong>15 minutes</strong>.</p>
+
+        <!-- Code box -->
+        <div style="background:#1a1a1a;border-radius:10px;padding:24px;margin:0 auto 28px;display:inline-block;min-width:220px;">
+          <div style="font-family:'Courier New',monospace;font-size:38px;font-weight:900;color:#c8951a;letter-spacing:10px;">${code}</div>
+        </div>
+
+        <p style="font-family:Arial,sans-serif;font-size:12px;color:#aaa;margin:0;">If you didn't request this, you can safely ignore this email.</p>
+      </td></tr>
+
+      <!-- Footer -->
+      <tr><td style="background:#1a1a1a;padding:18px 32px;text-align:center;">
+        <div style="font-family:Arial,sans-serif;font-size:11px;color:#555;">Old 33 Beer &amp; Burger Grill · 159 W Rockingham St, Elkton VA</div>
+      </td></tr>
+
+    </table>
+  </td></tr>
+</table>
+</body></html>`;
+
+  MailApp.sendEmail({
+    to:       data.email,
+    subject:  'Your 33 Club verification code: ' + data.code,
+    htmlBody: html
+  });
+}
+
 function emailCustomer(data) {
   const logoUrl = 'https://cesardomingue.github.io/old33-website/images/logo-clean.png';
 

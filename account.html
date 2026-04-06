@@ -548,6 +548,42 @@
       .perk-cards { grid-template-columns: 1fr; }
       .mem-stats { grid-template-columns: repeat(3, 1fr); }
     }
+
+    /* ── OTP panel ── */
+    .otp-icon {
+      width: 56px; height: 56px;
+      background: rgba(200,168,75,.1);
+      border: 1px solid rgba(200,168,75,.2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 14px;
+    }
+    .otp-heading { font-family: var(--fh); font-size: 20px; color: var(--white); margin-bottom: 6px; text-align: center; }
+    .otp-sub { font-size: 13px; color: var(--dim); line-height: 1.6; margin-bottom: 22px; text-align: center; }
+    .otp-sub strong { color: var(--gold); }
+    .otp-boxes { display: flex; gap: 8px; justify-content: center; margin-bottom: 18px; }
+    .otp-box {
+      width: 44px; height: 52px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--white);
+      font-size: 22px; font-weight: 700;
+      text-align: center;
+      outline: none;
+      transition: border-color .2s;
+      caret-color: var(--gold);
+    }
+    .otp-box:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,168,75,.12); }
+    .otp-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
+    .otp-link { background: none; border: none; font-size: 12px; color: var(--dim); cursor: pointer; padding: 4px 0; transition: color .15s; }
+    .otp-link:hover { color: var(--white); }
+    .otp-resend { background: none; border: none; font-size: 12px; color: var(--gold); cursor: pointer; padding: 4px 0; }
+    .otp-resend:disabled { opacity: .4; cursor: default; }
+    @media (max-width: 360px) {
+      .otp-box { width: 36px; height: 44px; font-size: 18px; }
+      .otp-boxes { gap: 5px; }
+    }
   </style>
 </head>
 <body>
@@ -624,7 +660,7 @@
           <p>New member? Join free. Returning? Sign in to see your points.</p>
         </div>
         <div class="join-card-body">
-          <div class="join-tabs">
+          <div class="join-tabs" id="join-tabs-row">
             <button class="join-tab active" id="tabJoin" onclick="switchTab('join')">Join Free</button>
             <button class="join-tab" id="tabSignin" onclick="switchTab('signin')">Sign In</button>
           </div>
@@ -659,6 +695,32 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
             </button>
             <p class="join-note">Enter your email to pull up your account and order history.</p>
+          </div>
+
+          <!-- OTP verification panel (shown after email submitted) -->
+          <div class="join-form-panel" id="panelOtp">
+            <div class="otp-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="26" height="26" style="color:var(--gold)"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="otp-heading">Check your inbox</div>
+            <div class="otp-sub">We sent a 6-digit code to<br><strong id="otpEmailDisplay">your email</strong></div>
+            <div class="otp-boxes">
+              <input class="otp-box" type="tel" maxlength="1" id="otp0" inputmode="numeric" pattern="[0-9]" />
+              <input class="otp-box" type="tel" maxlength="1" id="otp1" inputmode="numeric" pattern="[0-9]" />
+              <input class="otp-box" type="tel" maxlength="1" id="otp2" inputmode="numeric" pattern="[0-9]" />
+              <input class="otp-box" type="tel" maxlength="1" id="otp3" inputmode="numeric" pattern="[0-9]" />
+              <input class="otp-box" type="tel" maxlength="1" id="otp4" inputmode="numeric" pattern="[0-9]" />
+              <input class="otp-box" type="tel" maxlength="1" id="otp5" inputmode="numeric" pattern="[0-9]" />
+            </div>
+            <div id="otpError" class="join-error"></div>
+            <button class="join-btn" id="otpBtn" onclick="verifyOTP()">
+              Verify Code
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </button>
+            <div class="otp-footer">
+              <button class="otp-link" onclick="backToForm()">← Wrong email?</button>
+              <button class="otp-resend" id="resendBtn" onclick="resendOTP()" disabled>Resend code (<span id="resendTimer">60</span>s)</button>
+            </div>
           </div>
         </div>
       </div>
@@ -825,12 +887,203 @@
     return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'America/New_York' });
   }
 
+  /* ── OTP state ── */
+  var _pendingEmail = '';
+  var _pendingName  = '';
+  var _pendingTab   = 'join'; // 'join' | 'signin'
+  var _resendInt    = null;
+
   /* ── Tab switching ── */
   function switchTab(tab) {
     document.getElementById('tabJoin').classList.toggle('active', tab === 'join');
     document.getElementById('tabSignin').classList.toggle('active', tab === 'signin');
     document.getElementById('panelJoin').classList.toggle('active', tab === 'join');
     document.getElementById('panelSignin').classList.toggle('active', tab === 'signin');
+    document.getElementById('panelOtp').classList.remove('active');
+    document.getElementById('join-tabs-row').style.display = '';
+  }
+
+  /* ── Show OTP panel ── */
+  function showOtpPanel(email) {
+    var masked = email.replace(/(.{2})(.*)(@.*)/, function(_, a, b, c) {
+      return a + b.replace(/./g, '*') + c;
+    });
+    document.getElementById('otpEmailDisplay').textContent = masked;
+    document.getElementById('join-tabs-row').style.display = 'none';
+    document.getElementById('panelJoin').classList.remove('active');
+    document.getElementById('panelSignin').classList.remove('active');
+    document.getElementById('panelOtp').classList.add('active');
+    document.getElementById('otpError').style.display = 'none';
+    // Clear boxes
+    for (var i = 0; i < 6; i++) document.getElementById('otp'+i).value = '';
+    document.getElementById('otp0').focus();
+    startResendTimer();
+  }
+
+  /* ── Resend countdown ── */
+  function startResendTimer() {
+    var btn = document.getElementById('resendBtn');
+    var timerEl = document.getElementById('resendTimer');
+    btn.disabled = true;
+    var secs = 60;
+    timerEl.textContent = secs;
+    clearInterval(_resendInt);
+    _resendInt = setInterval(function() {
+      secs--;
+      timerEl.textContent = secs;
+      if (secs <= 0) {
+        clearInterval(_resendInt);
+        btn.disabled = false;
+        btn.textContent = 'Resend code';
+      }
+    }, 1000);
+  }
+
+  /* ── Back to form ── */
+  function backToForm() {
+    clearInterval(_resendInt);
+    document.getElementById('join-tabs-row').style.display = '';
+    document.getElementById('panelOtp').classList.remove('active');
+    if (_pendingTab === 'join') {
+      document.getElementById('panelJoin').classList.add('active');
+      document.getElementById('tabJoin').classList.add('active');
+      document.getElementById('tabSignin').classList.remove('active');
+      var btn = document.getElementById('joinBtn');
+      btn.disabled = false; btn.innerHTML = 'Join the 33 Club <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>';
+    } else {
+      document.getElementById('panelSignin').classList.add('active');
+      document.getElementById('tabSignin').classList.add('active');
+      document.getElementById('tabJoin').classList.remove('active');
+      var btn = document.getElementById('signinBtn');
+      btn.disabled = false; btn.innerHTML = 'Sign In <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>';
+    }
+  }
+
+  /* ── OTP box auto-advance ── */
+  document.addEventListener('DOMContentLoaded', function() {
+    for (var i = 0; i < 6; i++) {
+      (function(idx) {
+        var box = document.getElementById('otp'+idx);
+        box.addEventListener('input', function() {
+          var v = this.value.replace(/\D/g,'');
+          this.value = v.slice(-1);
+          if (v && idx < 5) document.getElementById('otp'+(idx+1)).focus();
+        });
+        box.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && !this.value && idx > 0) document.getElementById('otp'+(idx-1)).focus();
+          if (e.key === 'Enter') verifyOTP();
+        });
+        box.addEventListener('paste', function(e) {
+          var text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+          for (var j = 0; j < text.length; j++) {
+            var el = document.getElementById('otp'+j);
+            if (el) el.value = text[j];
+          }
+          var last = document.getElementById('otp'+(Math.min(text.length,5)));
+          if (last) last.focus();
+          e.preventDefault();
+        });
+      })(i);
+    }
+  });
+
+  /* ── Send OTP ── */
+  var EMAIL_URL = 'https://script.google.com/macros/s/AKfycbwfmAVyQd8mKymGgTaoEQ2obyGcUiCmBX90z49nQDw7bCSlTpkEiZ0CXKadeB7o0dKWpQ/exec';
+
+  async function sendOTP(email, name) {
+    var code = String(Math.floor(100000 + Math.random() * 900000));
+    var expires = new Date(Date.now() + 15 * 60 * 1000).toISOString();
+
+    // Store in Supabase
+    var res = await fetch(SUPA_URL + '/rest/v1/otp_codes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ email: email, code: code, expires_at: expires })
+    });
+    if (!res.ok) throw new Error('Could not generate code. Make sure RLS is disabled on otp_codes table.');
+
+    // Send email via Apps Script
+    fetch(EMAIL_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ type: 'otp', email: email, name: name || 'Member', code: code })
+    }).catch(function(){});
+
+    return true;
+  }
+
+  /* ── Verify OTP ── */
+  async function verifyOTP() {
+    var code = '';
+    for (var i = 0; i < 6; i++) code += (document.getElementById('otp'+i).value || '');
+    var err = document.getElementById('otpError');
+    var btn = document.getElementById('otpBtn');
+    err.style.display = 'none';
+
+    if (code.length < 6) { err.textContent = 'Please enter all 6 digits.'; err.style.display = 'block'; return; }
+
+    btn.disabled = true; btn.textContent = 'Verifying...';
+
+    try {
+      var now = new Date().toISOString();
+      var url = SUPA_URL + '/rest/v1/otp_codes?email=eq.' + encodeURIComponent(_pendingEmail) +
+                '&code=eq.' + encodeURIComponent(code) +
+                '&used=eq.false&expires_at=gte.' + encodeURIComponent(now) +
+                '&order=created_at.desc&limit=1';
+      var res = await fetch(url, { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY } });
+      var rows = await res.json();
+
+      if (!rows.length) {
+        err.textContent = 'Incorrect or expired code. Try again or resend.';
+        err.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Verify Code';
+        // Clear boxes and refocus
+        for (var i = 0; i < 6; i++) document.getElementById('otp'+i).value = '';
+        document.getElementById('otp0').focus();
+        return;
+      }
+
+      // Mark used
+      await fetch(SUPA_URL + '/rest/v1/otp_codes?id=eq.' + rows[0].id, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY },
+        body: JSON.stringify({ used: true })
+      });
+
+      // Verified — proceed
+      clearInterval(_resendInt);
+      if (_pendingTab === 'join') {
+        var member = { name: _pendingName, email: _pendingEmail, joined: new Date().toISOString() };
+        localStorage.setItem('ol33_member', JSON.stringify(member));
+        var orders = await fetchOrders(_pendingEmail);
+        showDashboard(member, orders);
+      } else {
+        var orders = await fetchOrders(_pendingEmail);
+        var memberName = (orders.length && orders[0].customer_name) ? orders[0].customer_name : _pendingName || _pendingEmail.split('@')[0];
+        var member = { name: memberName, email: _pendingEmail, joined: new Date().toISOString() };
+        localStorage.setItem('ol33_member', JSON.stringify(member));
+        showDashboard(member, orders);
+      }
+    } catch(e) {
+      err.textContent = 'Something went wrong. Please try again.';
+      err.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Verify Code';
+    }
+  }
+
+  /* ── Resend OTP ── */
+  async function resendOTP() {
+    var btn = document.getElementById('resendBtn');
+    btn.disabled = true;
+    document.getElementById('otpError').style.display = 'none';
+    try {
+      await sendOTP(_pendingEmail, _pendingName);
+      startResendTimer();
+    } catch(e) {
+      document.getElementById('otpError').textContent = 'Could not resend. Please try again.';
+      document.getElementById('otpError').style.display = 'block';
+      btn.disabled = false;
+    }
   }
 
   /* ── Join (new member) ── */
@@ -844,14 +1097,20 @@
     if (!name) { err.textContent = 'Please enter your name.'; err.style.display = 'block'; return; }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = 'Please enter a valid email.'; err.style.display = 'block'; return; }
 
-    btn.disabled = true;
-    btn.textContent = 'Joining...';
+    btn.disabled = true; btn.textContent = 'Sending code...';
 
-    // Check if this email already has orders (returning customer joining the club)
-    var orders = await fetchOrders(email);
-    var member = { name: name, email: email, joined: new Date().toISOString() };
-    localStorage.setItem('ol33_member', JSON.stringify(member));
-    showDashboard(member, orders);
+    try {
+      _pendingEmail = email;
+      _pendingName  = name;
+      _pendingTab   = 'join';
+      await sendOTP(email, name);
+      showOtpPanel(email);
+    } catch(e) {
+      err.textContent = e.message || 'Could not send code. Please try again.';
+      err.style.display = 'block';
+      btn.disabled = false;
+      btn.innerHTML = 'Join the 33 Club <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>';
+    }
   }
 
   /* ── Sign in (existing member) ── */
@@ -863,29 +1122,20 @@
     err.style.display = 'none';
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = 'Please enter a valid email.'; err.style.display = 'block'; return; }
 
-    btn.disabled = true;
-    btn.textContent = 'Signing in...';
+    btn.disabled = true; btn.textContent = 'Sending code...';
 
-    var orders = await fetchOrders(email);
-    if (!orders.length) {
-      // No orders — still let them sign in / join
-      err.textContent = "No orders found for that email. Use 'Join Free' to create your account.";
+    try {
+      _pendingEmail = email;
+      _pendingName  = '';
+      _pendingTab   = 'signin';
+      await sendOTP(email, '');
+      showOtpPanel(email);
+    } catch(e) {
+      err.textContent = e.message || 'Could not send code. Please try again.';
       err.style.display = 'block';
       btn.disabled = false;
-      btn.textContent = 'Sign In';
-      return;
+      btn.innerHTML = 'Sign In <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>';
     }
-
-    // Restore or create member record
-    var existing = null;
-    try { existing = JSON.parse(localStorage.getItem('ol33_member') || 'null'); } catch(e) {}
-    if (!existing || existing.email !== email) {
-      // Use name from most recent order
-      var memberName = orders[0].customer_name || email.split('@')[0];
-      existing = { name: memberName, email: email, joined: new Date().toISOString() };
-      localStorage.setItem('ol33_member', JSON.stringify(existing));
-    }
-    showDashboard(existing, orders);
   }
 
   /* ── Fetch orders from Supabase ── */
