@@ -1323,7 +1323,7 @@
         '</span><span class="perk-card-val">' + escHtml(p.val) + '</span></div>' +
         '<div class="perk-card-name">' + escHtml(p.name) + '</div>' +
         '<div class="perk-card-desc">' + escHtml(p.desc) + '</div></div>';
-    }).join('');
+    }).join(''));
 
     set('dashOrderLabel', orders.length ? orders.length + ' order' + (orders.length !== 1 ? 's' : '') : '');
     if (!orders.length) {
