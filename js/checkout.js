@@ -35,11 +35,32 @@ function getMemberDiscount() {
 
 /* --- Is the restaurant open right now? --- */
 function getOpenStatus() {
-  // DEMO MODE: always open for testing
-  const now = new Date();
+  const now    = new Date();
+  const nyNow  = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+  const day    = nyNow.getDay();
+  const hour   = nyNow.getHours();
+  const minute = nyNow.getMinutes();
+  const nowMins = hour * 60 + minute;
+  const hours  = BIZ_HOURS[day];
+
+  const orderStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
+
+  if (!hours || nowMins < hours.open * 60 || nowMins >= hours.close * 60) {
+    // Find next open day/time
+    let nextDay = null, daysAhead = 0;
+    for (let i = 1; i <= 7; i++) {
+      const d = (day + i) % 7;
+      if (BIZ_HOURS[d]) { nextDay = d; daysAhead = i; break; }
+    }
+    const nextHours = BIZ_HOURS[nextDay];
+    const nextLabel = daysAhead === 1 ? 'Tomorrow' : DAY_NAMES[nextDay];
+    const nextTime  = (nextHours.open > 12 ? nextHours.open - 12 : nextHours.open) +
+                      ':00 ' + (nextHours.open >= 12 ? 'PM' : 'AM');
+    return { open: false, nextLabel, nextTime, reason: `We\'re closed right now. Opens ${nextLabel} at ${nextTime}.` };
+  }
+
   const readyTime = new Date(now.getTime() + PREP_MINS * 60000);
   const readyStr  = readyTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
-  const orderStr  = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
   return { open: true, orderTime: orderStr, readyTime: readyStr };
 }
 
