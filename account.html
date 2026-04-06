@@ -1215,6 +1215,12 @@
       var memberName = _pendingName || (orders.length && orders[0].customer_name) || _pendingEmail.split('@')[0];
       var member = { name: memberName, email: _pendingEmail, joined: new Date().toISOString() };
       localStorage.setItem('ol33_member', JSON.stringify(member));
+      // Save/update member in Supabase
+      fetch(SUPA_URL + '/rest/v1/members', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Prefer': 'resolution=merge-duplicates' },
+        body: JSON.stringify({ email: _pendingEmail, name: memberName, last_seen_at: new Date().toISOString() })
+      }).catch(function(){});
       showDashboard(member, orders);
     } catch(e) {
       err.textContent = 'Something went wrong. Please try again.';
