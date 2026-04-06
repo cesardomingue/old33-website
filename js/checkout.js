@@ -308,13 +308,13 @@ const Checkout = (() => {
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({
           name, email,
-          order_num: orderNum,
+          orderNum,
           items,
-          subtotal: payload.subtotal,
-          tax:      payload.tax,
-          tip:      payload.tip,
-          total:    payload.total,
-          ready_time: payload.readyTime
+          subtotal:  payload.subtotal,
+          tax:       payload.tax,
+          tip:       payload.tip,
+          total:     payload.total,
+          readyTime: payload.readyTime
         })
       }).catch(() => {});
     }
