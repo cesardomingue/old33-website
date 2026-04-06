@@ -1301,35 +1301,38 @@
     var ptsInCycle  = points % REWARD_AT;
     var pct         = Math.min(100, (ptsInCycle / REWARD_AT) * 100);
 
-    document.getElementById('dashName').textContent          = member.name;
-    document.getElementById('dashEmail').textContent         = member.email;
-    document.getElementById('dashPoints').textContent        = points.toLocaleString();
-    document.getElementById('dashTierName').textContent      = tier.name;
-    document.getElementById('dashProgressVal').textContent   = ptsInCycle + ' / ' + REWARD_AT + ' pts';
-    document.getElementById('dashProgressBar').style.width   = pct + '%';
-    document.getElementById('dashProgressLabel').textContent = points >= REWARD_AT ? 'Rewards earned: ' + Math.floor(points / REWARD_AT) : 'Points to next $5 reward';
-    document.getElementById('dashOrderCount').textContent    = orders.length;
-    document.getElementById('dashTotalSpent').textContent    = '$' + totalSpent.toFixed(0);
-    document.getElementById('dashDiscount').textContent      = tier.discount + '%';
+    function set(id, val)       { var el = document.getElementById(id); if (el) el.textContent = val; }
+    function setH(id, val)      { var el = document.getElementById(id); if (el) el.innerHTML   = val; }
+    function setCls(id, val)    { var el = document.getElementById(id); if (el) el.className   = val; }
+    function setStyle(id, prop, val) { var el = document.getElementById(id); if (el) el.style[prop] = val; }
 
-    var badge = document.getElementById('dashTierBadge');
-    badge.className = 'mem-tier-badge ' + tier.cls;
+    set('dashName',          member.name || '');
+    set('dashEmail',         member.email || '');
+    set('dashPoints',        points.toLocaleString());
+    set('dashTierName',      tier.name);
+    set('dashProgressVal',   ptsInCycle + ' / ' + REWARD_AT + ' pts');
+    set('dashProgressLabel', points >= REWARD_AT ? 'Rewards earned: ' + Math.floor(points / REWARD_AT) : 'Points to next $5 reward');
+    set('dashOrderCount',    orders.length);
+    set('dashTotalSpent',    '$' + totalSpent.toFixed(0));
+    set('dashDiscount',      tier.discount + '%');
+    setStyle('dashProgressBar', 'width', pct + '%');
+    setCls('dashTierBadge',  'mem-tier-badge ' + tier.cls);
 
-    document.getElementById('dashPerks').innerHTML = perks.map(function(p) {
+    setH('dashPerks', perks.map(function(p) {
       return '<div class="perk-card"><div class="perk-card-top"><span class="perk-card-badge">' + escHtml(p.badge) +
         '</span><span class="perk-card-val">' + escHtml(p.val) + '</span></div>' +
         '<div class="perk-card-name">' + escHtml(p.name) + '</div>' +
         '<div class="perk-card-desc">' + escHtml(p.desc) + '</div></div>';
     }).join('');
 
-    document.getElementById('dashOrderLabel').textContent = orders.length ? orders.length + ' order' + (orders.length !== 1 ? 's' : '') : '';
+    set('dashOrderLabel', orders.length ? orders.length + ' order' + (orders.length !== 1 ? 's' : '') : '');
     if (!orders.length) {
-      document.getElementById('dashOrders').innerHTML =
+      setH('dashOrders',
         '<div class="acc-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="44" height="44"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>' +
         '<h3>No Orders Yet</h3><p>Place your first order to start earning points.</p>' +
-        '<a href="menu.html" class="btn btn-red">Order Now</a></div>';
+        '<a href="menu.html" class="btn btn-red">Order Now</a></div>');
     } else {
-      document.getElementById('dashOrders').innerHTML = orders.map(function(o) {
+      setH('dashOrders', orders.map(function(o) {
         var items = Array.isArray(o.items) ? o.items : [];
         var rows = items.map(function(it) {
           return '<div class="order-item-row"><div><span class="order-item-name">' + escHtml(it.name) +
@@ -1341,11 +1344,13 @@
           '<div class="order-card-meta"><span>' + escHtml(formatDate(o.created_at)) + '</span></div>' +
           '<span class="order-card-total">$' + parseFloat(o.total||0).toFixed(2) + '</span></div>' +
           (rows ? '<div class="order-card-body">' + rows + '</div>' : '') + '</div>';
-      }).join('');
+      }).join(''));
     }
 
-    document.getElementById('joinPanel').style.display = 'none';
-    document.getElementById('dashPanel').style.display = 'block';
+    var jp = document.getElementById('joinPanel');
+    var dp = document.getElementById('dashPanel');
+    if (jp) jp.style.display = 'none';
+    if (dp) dp.style.display = 'block';
   }
 
   /* ── Sign Out ── */
@@ -1356,21 +1361,34 @@
   }
 
   /* ── Auto-load if already signed in ── */
-  (function init() {
+  function init() {
     var member = null;
     try { member = JSON.parse(localStorage.getItem('ol33_member') || 'null'); } catch(e) {}
     var saved = {};
     try { saved = JSON.parse(localStorage.getItem('ol33_info') || '{}'); } catch(e) {}
-    if (saved.name)  document.getElementById('joinName').value  = saved.name;
-    if (saved.email) { document.getElementById('joinEmail').value = saved.email; document.getElementById('signinEmail').value = saved.email; }
+    var jn = document.getElementById('joinName');
+    var je = document.getElementById('joinEmail');
+    var se = document.getElementById('signinEmail');
+    if (saved.name  && jn) jn.value = saved.name;
+    if (saved.email && je) je.value = saved.email;
+    if (saved.email && se) se.value = saved.email;
     if (member && member.email) {
-      document.getElementById('joinPanel').style.display = 'none';
-      document.getElementById('dashPanel').style.display = 'block';
-      document.getElementById('dashName').textContent  = member.name;
-      document.getElementById('dashEmail').textContent = member.email;
+      var jp = document.getElementById('joinPanel');
+      var dp = document.getElementById('dashPanel');
+      var dn = document.getElementById('dashName');
+      var de = document.getElementById('dashEmail');
+      if (jp) jp.style.display = 'none';
+      if (dp) dp.style.display = 'block';
+      if (dn) dn.textContent = member.name || '';
+      if (de) de.textContent = member.email || '';
       fetchOrders(member.email).then(function(orders) { showDashboard(member, orders); });
     }
-  })();
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 </script>
 
 </body>
