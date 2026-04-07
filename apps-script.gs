@@ -22,6 +22,11 @@ function doPost(e) {
       return jsonResponse({ success: true });
     }
 
+    if (data.type === 'welcome') {
+      emailWelcome(data);
+      return jsonResponse({ success: true });
+    }
+
     if (data.type === 'reservation') {
       logReservation(data);
       try { emailReservation(data); } catch(e) { Logger.log('Res email failed: ' + e); }
@@ -166,8 +171,41 @@ function emailRestaurant(data) {
 }
 
 // ─────────────────────────────────────────
-//  CONFIRMATION EMAIL TO CUSTOMER
+//  WELCOME EMAIL — 33 Club new member
 // ─────────────────────────────────────────
+function emailWelcome(data) {
+  const name = escHtml(data.name || 'Member');
+  const html =
+    '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f2ece0;padding:32px 0;">' +
+    '<tr><td align="center">' +
+    '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);">' +
+    '<tr><td style="background:#1a1a1a;padding:28px 32px;text-align:center;">' +
+    '<div style="font-family:Arial,sans-serif;font-size:22px;font-weight:900;color:#c8951a;letter-spacing:3px;">OLD 33</div>' +
+    '<div style="font-family:Arial,sans-serif;font-size:10px;color:#666;letter-spacing:3px;text-transform:uppercase;margin-top:2px;">Beer &amp; Burger Grill</div>' +
+    '</td></tr>' +
+    '<tr><td style="background:#c8951a;padding:12px 32px;text-align:center;">' +
+    '<div style="font-family:Arial,sans-serif;font-size:11px;font-weight:700;color:#000;letter-spacing:2.5px;text-transform:uppercase;">Welcome to the 33 Club</div>' +
+    '</td></tr>' +
+    '<tr><td style="padding:36px 32px 28px;text-align:center;">' +
+    '<p style="font-family:Arial,sans-serif;font-size:16px;color:#1a1a1a;margin:0 0 8px;">Hey <strong>' + name + '</strong>,</p>' +
+    '<p style="font-family:Arial,sans-serif;font-size:14px;color:#666;line-height:1.7;margin:0 0 24px;">You\'re officially a 33 Club member. Here\'s what you get starting right now:</p>' +
+    '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fdf8ef;border-radius:10px;padding:0;margin-bottom:24px;">' +
+    '<tr><td style="padding:14px 20px;border-bottom:1px solid #f0e8d8;font-family:Arial,sans-serif;font-size:13px;color:#333;">&#10003;&nbsp; <strong>10% off</strong> every online order, applied automatically</td></tr>' +
+    '<tr><td style="padding:14px 20px;border-bottom:1px solid #f0e8d8;font-family:Arial,sans-serif;font-size:13px;color:#333;">&#10003;&nbsp; <strong>1 point per $1</strong> spent toward future rewards</td></tr>' +
+    '<tr><td style="padding:14px 20px;border-bottom:1px solid #f0e8d8;font-family:Arial,sans-serif;font-size:13px;color:#333;">&#10003;&nbsp; <strong>$5 reward</strong> every 500 points</td></tr>' +
+    '<tr><td style="padding:14px 20px;font-family:Arial,sans-serif;font-size:13px;color:#333;">&#10003;&nbsp; <strong>Free fountain drink</strong> on your very first order</td></tr>' +
+    '</table>' +
+    '<a href="https://old33bbg.com/menu.html" style="display:inline-block;background:#c8951a;color:#000;font-family:Arial,sans-serif;font-size:13px;font-weight:800;padding:14px 32px;border-radius:8px;text-decoration:none;letter-spacing:1px;text-transform:uppercase;">Order Now &amp; Save 10%</a>' +
+    '</td></tr>' +
+    '<tr><td style="background:#1a1a1a;padding:18px 32px;text-align:center;">' +
+    '<div style="font-family:Arial,sans-serif;font-size:11px;color:#555;">Old 33 Beer &amp; Burger Grill &middot; 159 W Rockingham St, Elkton VA</div>' +
+    '</td></tr>' +
+    '</table>' +
+    '</td></tr></table>';
+
+  GmailApp.sendEmail(data.email, 'Welcome to the 33 Club — Old 33 Beer & Burger Grill', '', { htmlBody: html });
+}
+
 // ─────────────────────────────────────────
 //  OTP EMAIL — 33 Club verification
 // ─────────────────────────────────────────

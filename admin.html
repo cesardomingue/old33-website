@@ -708,7 +708,7 @@
 
         <!-- CESAR'S COMMISSION -->
         <div style="background:linear-gradient(135deg,#0a1a0a 0%,#0d1f0d 50%,#081208 100%);border:1px solid rgba(74,222,128,.25);border-radius:14px;padding:24px 28px;margin-bottom:12px;position:relative;overflow:hidden;">
-          <div style="position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-family:'Oswald',sans-serif;font-size:120px;font-weight:900;color:rgba(74,222,128,.04);letter-spacing:-4px;pointer-events:none;white-space:nowrap;">4%</div>
+          <div style="position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-family:'Oswald',sans-serif;font-size:120px;font-weight:900;color:rgba(74,222,128,.04);letter-spacing:-4px;pointer-events:none;white-space:nowrap;">2%</div>
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;position:relative;">
             <div>
               <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
@@ -727,7 +727,7 @@
               </div>
               <div style="background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.12);border-radius:10px;padding:14px 18px;text-align:center;min-width:100px;">
                 <div style="font-size:10px;color:rgba(74,222,128,.5);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Rate</div>
-                <div style="font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;color:var(--white);">4%</div>
+                <div style="font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;color:var(--white);">2%</div>
               </div>
               <div style="background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.12);border-radius:10px;padding:14px 18px;text-align:center;min-width:100px;">
                 <div style="font-size:10px;color:rgba(74,222,128,.5);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Orders</div>
@@ -1156,7 +1156,7 @@
     const done       = orders.filter(o=>o.status==='done').length;
     const pend       = orders.filter(o=>o.status!=='done').length;
     const rate       = orders.length ? Math.round(done/orders.length*100) : 0;
-    const commission = sub * 0.04;
+    const commission = sub * 0.02;
 
     document.getElementById('m-revenue').textContent    = fmt(rev);
     document.getElementById('m-rev-sub').textContent    = done+' order'+(done!==1?'s':'')+' completed';
@@ -1169,7 +1169,7 @@
     document.getElementById('m-pend').textContent       = pend;
     document.getElementById('m-pend-sub').textContent   = pend>0?'need attention':'all caught up ✓';
     document.getElementById('m-commission').textContent     = fmt(commission);
-    document.getElementById('m-commission-sub').textContent = fmt(sub) + ' food revenue × 4% = ' + fmt(commission);
+    document.getElementById('m-commission-sub').textContent = fmt(sub) + ' food revenue × 2% = ' + fmt(commission);
     document.getElementById('m-comm-base').textContent      = fmt(sub);
     document.getElementById('m-comm-orders').textContent    = orders.length;
   }
@@ -1180,7 +1180,7 @@
     const tax        = orders.reduce((s,o)=>s+parseFloat(o.tax||0),0);
     const tips       = orders.reduce((s,o)=>s+parseFloat(o.tip||0),0);
     const tot        = orders.reduce((s,o)=>s+parseFloat(o.total||0),0);
-    const commission = sub * 0.04;
+    const commission = sub * 0.02;
     document.getElementById('f-sub').textContent        = fmt(sub);
     document.getElementById('f-tax').textContent        = fmt(tax);
     document.getElementById('f-tips').textContent       = fmt(tips);

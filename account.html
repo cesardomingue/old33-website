@@ -1215,12 +1215,27 @@
       var memberName = _pendingName || (orders.length && orders[0].customer_name) || _pendingEmail.split('@')[0];
       var member = { name: memberName, email: _pendingEmail, joined: new Date().toISOString() };
       localStorage.setItem('ol33_member', JSON.stringify(member));
-      // Save/update member in Supabase
+      // Check if new member, then save to Supabase
+      var isNewMember = false;
+      try {
+        var chk = await fetch(SUPA_URL + '/rest/v1/members?email=eq.' + encodeURIComponent(_pendingEmail) + '&select=id',
+          { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY } });
+        var existing = await chk.json();
+        isNewMember = !existing.length;
+      } catch(e) {}
       fetch(SUPA_URL + '/rest/v1/members', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Prefer': 'resolution=merge-duplicates' },
         body: JSON.stringify({ email: _pendingEmail, name: memberName, last_seen_at: new Date().toISOString() })
       }).catch(function(){});
+      // Send welcome email only on first join
+      if (isNewMember) {
+        fetch(EMAIL_URL, {
+          method: 'POST', mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({ type: 'welcome', email: _pendingEmail, name: memberName })
+        }).catch(function(){});
+      }
       showDashboard(member, orders);
     } catch(e) {
       err.textContent = 'Something went wrong. Please try again.';
