@@ -45,7 +45,10 @@ function getOpenStatus() {
 
   const orderStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
 
-  if (!hours || nowMins < hours.open * 60 || nowMins >= hours.close * 60) {
+  // Block orders if ready time would go past closing (last order = close - prep time)
+  const lastOrderMins = hours ? hours.close * 60 - PREP_MINS : 0;
+
+  if (!hours || nowMins < hours.open * 60 || nowMins >= hours.close * 60 || nowMins >= lastOrderMins) {
     // Find next open day/time
     let nextDay = null, daysAhead = 0;
     for (let i = 1; i <= 7; i++) {
