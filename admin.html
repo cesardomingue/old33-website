@@ -854,8 +854,8 @@
   /* ─── CONFIG ─── */
   const SB_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
   const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
-  const USER_H = 'b380a69535d1f2161ce6630ce685b1899785cc7ac9222583dbf95db3e72e308a'; // old33admin
-  const PASS_H = '372662d1e1aa7729e2c54247d8c7d4bb40cbeef8fb3806728a9149e1d67692fe'; // Old33!2026
+  const USER_H = 'b380a69535d1f2161ce6630ce685b1899785cc7ac9222583dbf95db3e72e308a';
+  const PASS_H = '372662d1e1aa7729e2c54247d8c7d4bb40cbeef8fb3806728a9149e1d67692fe';
   const H      = { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY };
 
   /* ─── STATE ─── */
@@ -906,14 +906,14 @@
   }
 
   /* ─── BOOT ─── */
-  async function getSessionToken() {
-    const raw = PASS_H + 'adm' + new Date().toDateString();
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
-    return Array.from(new Uint8Array(buf)).map(x=>x.toString(16).padStart(2,'0')).join('');
+  function genSessionToken() {
+    const arr = new Uint8Array(32);
+    crypto.getRandomValues(arr);
+    return Array.from(arr).map(x => x.toString(16).padStart(2,'0')).join('');
   }
   (async function boot() {
-    const expected = await getSessionToken();
-    if (sessionStorage.getItem('adm_auth') === expected) {
+    const tok = sessionStorage.getItem('adm_auth');
+    if (tok && tok.length === 64 && /^[0-9a-f]+$/.test(tok)) {
       document.getElementById('loginScreen').style.display='none';
       document.getElementById('app').style.display='flex';
       init();
@@ -941,7 +941,7 @@
     btn.disabled = true; btn.textContent = 'Signing in…';
     const [uh, ph] = await Promise.all([hashPin(user), hashPin(pass)]);
     if (uh === USER_H && ph === PASS_H) {
-      const tok = await getSessionToken();
+      const tok = genSessionToken();
       sessionStorage.setItem('adm_auth', tok);
       const ls = document.getElementById('loginScreen');
       ls.style.transition='opacity .4s'; ls.style.opacity='0';
@@ -984,6 +984,7 @@
 
   function signOut() {
     sessionStorage.removeItem('adm_auth');
+    allOrders = []; knownIds = null;
     document.getElementById('app').style.display = 'none';
     const ls = document.getElementById('loginScreen');
     ls.style.opacity = '0'; ls.style.display = 'flex';
@@ -1441,7 +1442,7 @@
         parseFloat(o.subtotal||0).toFixed(2),parseFloat(o.tax||0).toFixed(2),
         parseFloat(o.tip||0).toFixed(2),parseFloat(o.total||0).toFixed(2),
         o.status||'pending',o.notes||''
-      ].map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(',');
+      ].map(v=>'"'+String(v||'').replace(/\r?\n/g,' ').replace(/"/g,'""')+'"').join(',');
     });
     const csv=[hdr.join(','),...rows].join('\n');
     const a=document.createElement('a');

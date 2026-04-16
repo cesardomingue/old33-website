@@ -294,6 +294,25 @@ const Checkout = (() => {
     /* Save to Supabase for dashboard */
     const SUPA_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
     const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
+
+    /* Verify member discount against Supabase — prevents localStorage spoofing */
+    let verifiedDiscountAmt = 0;
+    if (subMember && subMember.email) {
+      try {
+        const mchk = await fetch(
+          SUPA_URL + '/rest/v1/members?email=eq.' + encodeURIComponent(subMember.email) + '&select=id',
+          { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY } }
+        );
+        const mrows = mchk.ok ? await mchk.json() : [];
+        if (mrows.length) {
+          verifiedDiscountAmt = discountAmt;
+        } else {
+          localStorage.removeItem('ol33_member'); // stale or forged — clear it
+        }
+      } catch(e) {}
+    }
+    const verifiedTotal = sub - verifiedDiscountAmt + tax + tip;
+
     try {
       const res = await fetch(SUPA_URL + '/rest/v1/orders', {
         method: 'POST',
@@ -306,11 +325,11 @@ const Checkout = (() => {
           notes: payload.notes || null,
           items: payload.items,
           subtotal: parseFloat(payload.subtotal),
-          discount: discountAmt > 0 ? parseFloat(discountAmt.toFixed(2)) : null,
+          discount: verifiedDiscountAmt > 0 ? parseFloat(verifiedDiscountAmt.toFixed(2)) : null,
           tax: parseFloat(payload.tax),
           tip: parseFloat(payload.tip),
-          total: parseFloat(payload.total),
-          is_member: subMember ? true : null,
+          total: parseFloat(verifiedTotal.toFixed(2)),
+          is_member: verifiedDiscountAmt > 0 ? true : null,
           order_time: payload.orderTime,
           ready_time: payload.readyTime
         })
@@ -318,7 +337,7 @@ const Checkout = (() => {
       if (!res.ok) throw new Error('Supabase error ' + res.status);
     } catch(e) {
       console.error('Order save failed:', e);
-      if (btn) { btn.disabled = false; btn.textContent = `Confirm Order · $${total.toFixed(2)}`; }
+      if (btn) { btn.disabled = false; btn.textContent = `Confirm Order · $${verifiedTotal.toFixed(2)}`; }
       showError('Could not send your order. Please call us at (540) 713-9050 to place it.');
       return;
     }
@@ -337,23 +356,14 @@ const Checkout = (() => {
           subtotal:  payload.subtotal,
           tax:       payload.tax,
           tip:       payload.tip,
-          total:     payload.total,
+          total:     verifiedTotal.toFixed(2),
           readyTime: payload.readyTime
         })
       }).catch(() => {});
     }
 
-    // Auto-enroll as member if not already signed in
-    if (name && email) {
-      try {
-        if (!localStorage.getItem('ol33_member')) {
-          localStorage.setItem('ol33_member', JSON.stringify({ name, email, joined: new Date().toISOString() }));
-        }
-      } catch(e) {}
-    }
-
     Cart.clear();
-    showSuccess(payload);
+    showSuccess({ ...payload, total: verifiedTotal.toFixed(2) });
   }
 
   function showSuccess(data) {
