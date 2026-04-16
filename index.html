@@ -595,8 +595,7 @@
 
 <script>
 /* ===== MEMBERS CLUB ===== */
-var SUPA_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
-var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
+var EDGE_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co/functions/v1';
 
 function getMember() {
   try { return JSON.parse(localStorage.getItem('ol33_member') || 'null'); } catch(e) { return null; }
@@ -709,16 +708,18 @@ async function applyMember(member) {
   section.style.display = 'block';
   updateNavForMember(member);
 
-  // Fetch order count from Supabase
+  // Fetch order count via edge function (authenticated with member JWT)
   var orderCount = 0;
   try {
-    var url = SUPA_URL + '/rest/v1/orders?customer_email=eq.' + encodeURIComponent(member.email) + '&select=id';
-    var res = await fetch(url, {
-      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Accept': 'application/json' }
-    });
-    if (res.ok) {
-      var orders = await res.json();
-      orderCount = orders.length;
+    var token = localStorage.getItem('ol33_token') || '';
+    if (token) {
+      var res = await fetch(EDGE_URL + '/get-orders', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (res.ok) {
+        var data = await res.json();
+        orderCount = (data.orders || []).length;
+      }
     }
   } catch(e) {}
 

@@ -852,11 +852,20 @@
 
 <script>
   /* ─── CONFIG ─── */
-  const SB_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
-  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
-  const USER_H = 'b380a69535d1f2161ce6630ce685b1899785cc7ac9222583dbf95db3e72e308a';
-  const PASS_H = '372662d1e1aa7729e2c54247d8c7d4bb40cbeef8fb3806728a9149e1d67692fe';
-  const H      = { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY };
+  // All credentials and data access go through Edge Functions — no keys or hashes in the browser.
+  const EDGE_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co/functions/v1';
+
+  // Helper: call admin-data edge function with the stored admin JWT
+  async function adminFetch(action, params = {}) {
+    const token = sessionStorage.getItem('adm_auth') || '';
+    const res = await fetch(EDGE_URL + '/admin-data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ action, params })
+    });
+    if (res.status === 401) { signOut(); throw new Error('Session expired'); }
+    return res.json();
+  }
 
   /* ─── STATE ─── */
   let allOrders   = [];
@@ -865,70 +874,31 @@
   let knownIds    = null;
   let soundOn     = true;
 
-  /* ─── HASH ─── */
-  async function hashPin(v) {
-    const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(v));
-    return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
-  }
-
-  /* ─── PIN LOCKOUT ─── */
-  const MAX_ATT = 5, LOCK_MS = 15*60*1000, PG = 'admin';
-  let clientIP = null, locked = false;
-
-  async function fetchIP() {
-    try { clientIP = (await (await fetch('https://api.ipify.org?format=json')).json()).ip; }
-    catch { clientIP = null; }
-  }
-  async function getAttempts() {
-    if (!clientIP) return [];
-    const since = new Date(Date.now() - LOCK_MS).toISOString();
-    try {
-      const r = await fetch(`${SB_URL}/rest/v1/pin_attempts?ip=eq.${clientIP}&page=eq.${PG}&attempted_at=gte.${encodeURIComponent(since)}&order=attempted_at.asc`, { headers: H });
-      return r.ok ? await r.json() : [];
-    } catch { return []; }
-  }
-  async function logAttempt() {
-    if (!clientIP) return;
-    try { await fetch(`${SB_URL}/rest/v1/pin_attempts`, { method:'POST', headers:{...H,'Content-Type':'application/json'}, body:JSON.stringify({page:PG,ip:clientIP}) }); }
-    catch {}
-  }
-  function showLockout(exp) {
-    locked = true;
-    const err = document.getElementById('pinError');
-    const pad = document.querySelector('.pin-pad');
-    pad.style.opacity = '0.3'; pad.style.pointerEvents = 'none';
-    (function tick() {
-      const left = Math.max(0, Math.ceil((exp - Date.now()) / 1000));
-      if (!left) { locked=false; err.textContent=''; pad.style.opacity='1'; pad.style.pointerEvents=''; return; }
-      err.textContent = `Too many attempts — locked ${Math.floor(left/60)}:${(left%60).toString().padStart(2,'0')}`;
-      setTimeout(tick, 1000);
-    })();
-  }
+  let locked = false;
 
   /* ─── BOOT ─── */
-  function genSessionToken() {
-    const arr = new Uint8Array(32);
-    crypto.getRandomValues(arr);
-    return Array.from(arr).map(x => x.toString(16).padStart(2,'0')).join('');
-  }
   (async function boot() {
+    // If we have a stored token, try using it — admin-data will reject it if expired
     const tok = sessionStorage.getItem('adm_auth');
-    if (tok && tok.length === 64 && /^[0-9a-f]+$/.test(tok)) {
-      document.getElementById('loginScreen').style.display='none';
-      document.getElementById('app').style.display='flex';
-      init();
-    } else {
-      sessionStorage.removeItem('adm_auth'); // clear any stale/forged value
-      fetchIP().then(async () => {
-        const atts = await getAttempts();
-        if (atts.length >= MAX_ATT) {
-          const exp = new Date(atts[MAX_ATT-1].attempted_at).getTime() + LOCK_MS;
-          if (exp > Date.now()) { showLoginLockout(exp); }
+    if (tok) {
+      // Quick validate by making a lightweight call; if 401 → fall through to login
+      try {
+        const r = await fetch(EDGE_URL + '/admin-data', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+          body: JSON.stringify({ action: 'get_orders', params: { limit: 1 } })
+        });
+        if (r.ok) {
+          document.getElementById('loginScreen').style.display = 'none';
+          document.getElementById('app').style.display = 'flex';
+          init();
+          return;
         }
-      });
-      document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
-      document.getElementById('loginUser').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('loginPass').focus(); });
+      } catch {}
+      sessionStorage.removeItem('adm_auth');
     }
+    document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+    document.getElementById('loginUser').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('loginPass').focus(); });
   })();
 
   async function doLogin() {
@@ -939,26 +909,33 @@
     const err  = document.getElementById('loginError');
     if (!user || !pass) { err.textContent = 'Please enter username and password.'; return; }
     btn.disabled = true; btn.textContent = 'Signing in…';
-    const [uh, ph] = await Promise.all([hashPin(user), hashPin(pass)]);
-    if (uh === USER_H && ph === PASS_H) {
-      const tok = genSessionToken();
-      sessionStorage.setItem('adm_auth', tok);
-      const ls = document.getElementById('loginScreen');
-      ls.style.transition='opacity .4s'; ls.style.opacity='0';
-      setTimeout(() => { ls.style.display='none'; document.getElementById('app').style.display='flex'; init(); }, 400);
-    } else {
-      await logAttempt();
-      const atts = await getAttempts();
-      const rem  = MAX_ATT - atts.length;
-      if (rem <= 0) {
-        showLoginLockout(new Date(atts[MAX_ATT-1].attempted_at).getTime() + LOCK_MS);
+    try {
+      const res  = await fetch(EDGE_URL + '/admin-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: user, password: pass })
+      });
+      const data = await res.json();
+      if (data.success && data.token) {
+        sessionStorage.setItem('adm_auth', data.token);
+        const ls = document.getElementById('loginScreen');
+        ls.style.transition = 'opacity .4s'; ls.style.opacity = '0';
+        setTimeout(() => { ls.style.display='none'; document.getElementById('app').style.display='flex'; init(); }, 400);
+        return;
+      }
+      if (data.locked) {
+        const exp = new Date(data.unlocksAt).getTime();
+        showLoginLockout(exp);
       } else {
+        const rem = data.remaining ?? '?';
         err.textContent = `Incorrect credentials — ${rem} attempt${rem===1?'':'s'} remaining`;
         document.getElementById('loginPass').value = '';
         document.getElementById('loginPass').focus();
       }
-      btn.disabled = false; btn.textContent = 'Sign In';
+    } catch {
+      err.textContent = 'Could not reach server. Check your connection.';
     }
+    btn.disabled = false; btn.textContent = 'Sign In';
   }
 
   function showLoginLockout(exp) {
@@ -1103,9 +1080,7 @@
   /* ─── LOAD ─── */
   async function loadData(manual=false) {
     try {
-      const r = await fetch(SB_URL+'/rest/v1/orders?order=created_at.desc&limit=1000',{headers:H});
-      if(!r.ok) throw new Error();
-      const fresh = await r.json();
+      const fresh = await adminFetch('get_orders', { limit: 1000 });
       if(!Array.isArray(fresh)) throw new Error();
 
       if (knownIds !== null) {
@@ -1329,12 +1304,8 @@
   async function markDone(id,e) {
     e.stopPropagation();
     try {
-      const r=await fetch(`${SB_URL}/rest/v1/orders?id=eq.${id}`,{
-        method:'PATCH',
-        headers:{...H,'Content-Type':'application/json',Prefer:'return=minimal'},
-        body:JSON.stringify({status:'done'})
-      });
-      if(r.ok){
+      const r=await adminFetch('update_order',{id,status:'done'});
+      if(r.success){
         const o=allOrders.find(x=>x.id===id);
         if(o) o.status='done';
         render();
@@ -1346,8 +1317,7 @@
   /* ─── MESSAGES ─── */
   async function loadMessages() {
     try {
-      const r = await fetch(SB_URL+'/rest/v1/contacts?order=created_at.desc&limit=200',{headers:H});
-      const data = await r.json();
+      const data = await adminFetch('get_contacts');
       renderMessages(Array.isArray(data)?data:[]);
     } catch { document.getElementById('msgWrap').innerHTML='<div class="no-data">Could not load messages.</div>'; }
   }
@@ -1384,18 +1354,14 @@
 
   async function markRead(id,btn) {
     btn.disabled=true; btn.textContent='…';
-    await fetch(SB_URL+'/rest/v1/contacts?id=eq.'+id,{
-      method:'PATCH',headers:{...H,'Content-Type':'application/json',Prefer:'return=minimal'},
-      body:JSON.stringify({read:true})
-    });
+    await adminFetch('update_contact',{id,status:'read'});
     loadMessages();
   }
 
   /* ─── MEMBERS ─── */
   async function loadMembers() {
     try {
-      const r=await fetch(SB_URL+'/rest/v1/members?order=created_at.desc&limit=500',{headers:H});
-      const data=await r.json();
+      const data=await adminFetch('get_members');
       renderMembers(Array.isArray(data)?data:[]);
     } catch { document.getElementById('membersWrap').innerHTML='<div class="no-data">Could not load members.</div>'; }
   }

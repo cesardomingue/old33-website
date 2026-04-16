@@ -247,38 +247,17 @@ const Checkout = (() => {
     if (phone.replace(/\D/g,'').length < 10) { showError('Please enter a valid 10-digit phone number.'); return; }
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('Please enter a valid email address.'); return; }
 
-    const cart     = Cart.load();
-    const sub      = Cart.getSubtotal();
-    const tax      = Cart.getTax();
-    const tip      = Cart.getTipAmt();
-    const { member: subMember, pct: subDiscountPct } = getMemberDiscount();
-    const discountAmt = subDiscountPct > 0 ? sub * (subDiscountPct / 100) : 0;
-    const total    = sub - discountAmt + tax + tip;
-    const orderNum = genOrderNum();
+    const cart  = Cart.load();
+    const tip   = Cart.getTipAmt();
 
-    const items = cart.items.map(item => {
-      const mods = [];
-      if (item.bun)            mods.push(item.bun + ' bun');
-      if (item.side)           mods.push('Side: ' + item.side);
-      if (item.temp)           mods.push(item.temp);
-      if (item.sauce)          mods.push(item.sauce);
-      if (item.extras?.length) mods.push(...item.extras.map(e => e.name));
-      if (item.notes)          mods.push('Note: ' + item.notes);
-      const linePrice = (item.basePrice + item.extraPerItem + (item.bunPrice||0) + (item.sidePrice||0)) * item.qty;
-      return { name: item.name, qty: item.qty, price: linePrice.toFixed(2), mods: mods.join(', ') };
-    });
-
-    const payload = {
-      orderNum, name, phone, email, notes, items,
-      orderTime:  status.orderTime,
-      readyTime:  status.readyTime,
-      subtotal:   sub.toFixed(2),
-      discount:   discountAmt > 0 ? discountAmt.toFixed(2) : null,
-      tax:        tax.toFixed(2),
-      tip:        tip > 0 ? tip.toFixed(2) : '0.00',
-      total:      total.toFixed(2),
-      timestamp:  new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })
-    };
+    // Build item list to send — server recalculates all prices
+    const items = cart.items.map(item => ({
+      name:   item.name,
+      qty:    item.qty,
+      bun:    item.bun   || undefined,
+      side:   item.side  || undefined,
+      extras: item.extras?.length ? item.extras : undefined,
+    }));
 
     // Save info to localStorage if "remember me" checked
     const remember = document.getElementById('ckRemember')?.checked;
@@ -291,79 +270,37 @@ const Checkout = (() => {
     const btn = document.getElementById('ckSubmit');
     if (btn) { btn.disabled = true; btn.textContent = 'Sending order…'; }
 
-    /* Save to Supabase for dashboard */
-    const SUPA_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
-    const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
+    // Send to edge function — server validates prices, verifies member, saves order, sends emails
+    const EDGE_URL  = 'https://nfanxvqfyfqcbsdgxowq.supabase.co/functions/v1';
+    const memberToken = localStorage.getItem('ol33_token') || undefined;
 
-    /* Verify member discount against Supabase — prevents localStorage spoofing */
-    let verifiedDiscountAmt = 0;
-    if (subMember && subMember.email) {
-      try {
-        const mchk = await fetch(
-          SUPA_URL + '/rest/v1/members?email=eq.' + encodeURIComponent(subMember.email) + '&select=id',
-          { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY } }
-        );
-        const mrows = mchk.ok ? await mchk.json() : [];
-        if (mrows.length) {
-          verifiedDiscountAmt = discountAmt;
-        } else {
-          localStorage.removeItem('ol33_member'); // stale or forged — clear it
-        }
-      } catch(e) {}
-    }
-    const verifiedTotal = sub - verifiedDiscountAmt + tax + tip;
-
+    let data;
     try {
-      const res = await fetch(SUPA_URL + '/rest/v1/orders', {
+      const res = await fetch(EDGE_URL + '/place-order', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Prefer': 'return=minimal' },
-        body: JSON.stringify({
-          order_num: payload.orderNum,
-          customer_name: payload.name,
-          customer_phone: payload.phone,
-          customer_email: payload.email || null,
-          notes: payload.notes || null,
-          items: payload.items,
-          subtotal: parseFloat(payload.subtotal),
-          discount: verifiedDiscountAmt > 0 ? parseFloat(verifiedDiscountAmt.toFixed(2)) : null,
-          tax: parseFloat(payload.tax),
-          tip: parseFloat(payload.tip),
-          total: parseFloat(verifiedTotal.toFixed(2)),
-          is_member: verifiedDiscountAmt > 0 ? true : null,
-          order_time: payload.orderTime,
-          ready_time: payload.readyTime
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items, tip, name, phone, email, notes, memberToken })
       });
-      if (!res.ok) throw new Error('Supabase error ' + res.status);
+      data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'Order failed');
     } catch(e) {
-      console.error('Order save failed:', e);
-      if (btn) { btn.disabled = false; btn.textContent = `Confirm Order · $${verifiedTotal.toFixed(2)}`; }
-      showError('Could not send your order. Please call us at (540) 713-9050 to place it.');
+      console.error('Order failed:', e);
+      if (btn) { btn.disabled = false; btn.textContent = 'Confirm Order'; }
+      showError(e.message && e.message !== 'Order failed'
+        ? e.message
+        : 'Could not send your order. Please call us at (540) 713-9050 to place it.');
       return;
     }
 
-    // Send email receipt if customer provided email
-    if (email) {
-      const EMAIL_URL = 'https://script.google.com/macros/s/AKfycbwfmAVyQd8mKymGgTaoEQ2obyGcUiCmBX90z49nQDw7bCSlTpkEiZ0CXKadeB7o0dKWpQ/exec';
-      fetch(EMAIL_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({
-          name, email,
-          orderNum,
-          items,
-          subtotal:  payload.subtotal,
-          tax:       payload.tax,
-          tip:       payload.tip,
-          total:     verifiedTotal.toFixed(2),
-          readyTime: payload.readyTime
-        })
-      }).catch(() => {});
-    }
-
     Cart.clear();
-    showSuccess({ ...payload, total: verifiedTotal.toFixed(2) });
+    showSuccess({
+      orderNum:  data.orderNum,
+      orderTime: data.orderTime,
+      readyTime: data.readyTime,
+      total:     data.total,
+      name,
+      email,
+    });
   }
 
   function showSuccess(data) {

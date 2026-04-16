@@ -1027,8 +1027,8 @@
 <script src="js/members.js"></script>
 
 <script>
-  var SUPA_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
-  var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
+  // All sensitive operations now go through Edge Functions — no Supabase key in the browser.
+  var EDGE_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co/functions/v1';
 
   /* ── Tier logic ── */
   function getTier(totalSpent) {
@@ -1159,27 +1159,19 @@
     }
   });
 
-  /* ── Send OTP ── */
-  var EMAIL_URL = 'https://script.google.com/macros/s/AKfycbwfmAVyQd8mKymGgTaoEQ2obyGcUiCmBX90z49nQDw7bCSlTpkEiZ0CXKadeB7o0dKWpQ/exec';
-
+  /* ── Send OTP — calls edge function, code never touches the browser ── */
   async function sendOTP(email, name) {
-    var code = String(Math.floor(100000 + Math.random() * 900000));
-    var expires = new Date(Date.now() + 15 * 60 * 1000).toISOString();
-    var res = await fetch(SUPA_URL + '/rest/v1/otp_codes', {
+    var res = await fetch(EDGE_URL + '/send-otp', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Prefer': 'return=minimal' },
-      body: JSON.stringify({ email: email, code: code, expires_at: expires })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, name: name || 'Member' })
     });
-    if (!res.ok) throw new Error('Could not generate code. Make sure RLS is disabled on otp_codes.');
-    fetch(EMAIL_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ type: 'otp', email: email, name: name || 'Member', code: code })
-    }).catch(function(){});
+    var data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Could not send code. Please try again.');
     return true;
   }
 
-  /* ── Verify OTP ── */
+  /* ── Verify OTP — server checks the code and returns a signed JWT ── */
   async function verifyOTP() {
     var code = '';
     for (var i = 0; i < 6; i++) code += (document.getElementById('otp'+i).value || '');
@@ -1189,15 +1181,14 @@
     if (code.length < 6) { err.textContent = 'Please enter all 6 digits.'; err.style.display = 'block'; return; }
     btn.disabled = true; btn.textContent = 'Verifying...';
     try {
-      var now = new Date().toISOString();
-      var url = SUPA_URL + '/rest/v1/otp_codes?email=eq.' + encodeURIComponent(_pendingEmail) +
-                '&code=eq.' + encodeURIComponent(code) +
-                '&used=eq.false&expires_at=gte.' + encodeURIComponent(now) +
-                '&order=created_at.desc&limit=1';
-      var res = await fetch(url, { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY } });
-      var rows = await res.json();
-      if (!rows.length) {
-        err.textContent = 'Incorrect or expired code. Try again or resend.';
+      var res = await fetch(EDGE_URL + '/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: _pendingEmail, code: code })
+      });
+      var data = await res.json();
+      if (!data.success) {
+        err.textContent = data.error || 'Incorrect or expired code. Try again or resend.';
         err.style.display = 'block';
         btn.disabled = false;
         btn.innerHTML = 'Verify &amp; Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
@@ -1205,38 +1196,12 @@
         document.getElementById('otp0').focus();
         return;
       }
-      await fetch(SUPA_URL + '/rest/v1/otp_codes?id=eq.' + rows[0].id, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY },
-        body: JSON.stringify({ used: true })
-      });
       clearInterval(_resendInt);
-      var orders = await fetchOrders(_pendingEmail);
-      var memberName = _pendingName || (orders.length && orders[0].customer_name) || _pendingEmail.split('@')[0];
-      var member = { name: memberName, email: _pendingEmail, joined: new Date().toISOString() };
-      localStorage.setItem('ol33_member', JSON.stringify(member));
-      // Check if new member, then save to Supabase
-      var isNewMember = false;
-      try {
-        var chk = await fetch(SUPA_URL + '/rest/v1/members?email=eq.' + encodeURIComponent(_pendingEmail) + '&select=id',
-          { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY } });
-        var existing = await chk.json();
-        isNewMember = !existing.length;
-      } catch(e) {}
-      fetch(SUPA_URL + '/rest/v1/members', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Prefer': 'resolution=merge-duplicates' },
-        body: JSON.stringify({ email: _pendingEmail, name: memberName, last_seen_at: new Date().toISOString() })
-      }).catch(function(){});
-      // Send welcome email only on first join
-      if (isNewMember) {
-        fetch(EMAIL_URL, {
-          method: 'POST', mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify({ type: 'welcome', email: _pendingEmail, name: memberName })
-        }).catch(function(){});
-      }
-      showDashboard(member, orders);
+      // Store JWT and member info
+      localStorage.setItem('ol33_token', data.token);
+      localStorage.setItem('ol33_member', JSON.stringify(data.member));
+      var orders = await fetchOrders(data.token);
+      showDashboard(data.member, orders);
     } catch(e) {
       err.textContent = 'Something went wrong. Please try again.';
       err.style.display = 'block';
@@ -1302,13 +1267,15 @@
     }
   }
 
-  /* ── Fetch orders ── */
-  async function fetchOrders(email) {
+  /* ── Fetch orders — authenticated with JWT, returns only this member's orders ── */
+  async function fetchOrders(token) {
     try {
-      var res = await fetch(SUPA_URL + '/rest/v1/orders?customer_email=eq.' + encodeURIComponent(email) + '&order=created_at.desc&limit=50',
-        { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY } });
+      var res = await fetch(EDGE_URL + '/get-orders', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
       if (!res.ok) return [];
-      return await res.json();
+      var data = await res.json();
+      return data.orders || [];
     } catch(e) { return []; }
   }
 
@@ -1378,12 +1345,14 @@
   function doSignOut() {
     if (!confirm('Sign out of the 33 Club?')) return;
     localStorage.removeItem('ol33_member');
+    localStorage.removeItem('ol33_token');
     window.location.reload();
   }
 
   /* ── Auto-load if already signed in ── */
   function init() {
     var member = null;
+    var token = localStorage.getItem('ol33_token') || '';
     try { member = JSON.parse(localStorage.getItem('ol33_member') || 'null'); } catch(e) {}
     var saved = {};
     try { saved = JSON.parse(localStorage.getItem('ol33_info') || '{}'); } catch(e) {}
@@ -1393,7 +1362,7 @@
     if (saved.name  && jn) jn.value = saved.name;
     if (saved.email && je) je.value = saved.email;
     if (saved.email && se) se.value = saved.email;
-    if (member && member.email) {
+    if (member && member.email && token) {
       var jp = document.getElementById('joinPanel');
       var dp = document.getElementById('dashPanel');
       var dn = document.getElementById('dashName');
@@ -1402,7 +1371,7 @@
       if (dp) dp.style.display = 'block';
       if (dn) dn.textContent = member.name || '';
       if (de) de.textContent = member.email || '';
-      fetchOrders(member.email).then(function(orders) { showDashboard(member, orders); });
+      fetchOrders(token).then(function(orders) { showDashboard(member, orders); });
     }
   }
   if (document.readyState === 'loading') {

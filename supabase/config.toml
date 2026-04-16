@@ -1,0 +1,28 @@
+project_id = "nfanxvqfyfqcbsdgxowq"
+
+[functions.send-otp]
+verify_jwt = false
+
+[functions.verify-otp]
+verify_jwt = false
+
+[functions.get-orders]
+verify_jwt = false
+
+[functions.place-order]
+verify_jwt = false
+
+[functions.admin-login]
+verify_jwt = false
+
+[functions.admin-data]
+verify_jwt = false
+
+[functions.kitchen-auth]
+verify_jwt = false
+
+[functions.kitchen-data]
+verify_jwt = false
+
+[functions.submit-contact]
+verify_jwt = false

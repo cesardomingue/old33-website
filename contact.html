@@ -273,8 +273,7 @@
 <script src="js/checkout.js"></script>
 <script src="js/members.js"></script>
 <script>
-const CF_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
-const CF_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
+const EDGE_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co/functions/v1';
 
 async function submitContact(e) {
   e.preventDefault();
@@ -289,18 +288,12 @@ async function submitContact(e) {
     phone:   document.getElementById('cf-phone').value.trim() || null,
     subject: document.getElementById('cf-subject').value,
     message: document.getElementById('cf-message').value.trim(),
-    read:    false
   };
 
   try {
-    const res = await fetch(CF_URL + '/rest/v1/contacts', {
+    const res = await fetch(EDGE_URL + '/submit-contact', {
       method: 'POST',
-      headers: {
-        'apikey': CF_KEY,
-        'Authorization': 'Bearer ' + CF_KEY,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 

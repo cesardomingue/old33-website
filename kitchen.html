@@ -383,87 +383,49 @@
 
 <script>
   /* ─── CONFIG ─── */
-  const SB_URL  = 'https://nfanxvqfyfqcbsdgxowq.supabase.co';
-  const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYW54dnFmeWZxY2JzZGd4b3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5Nzk3OTAsImV4cCI6MjA5MDU1NTc5MH0.mdcX5W246-ccjyQTeEXFTupa0lWE1nHXBAWN9r16OCs';
-  const SMS_URL = 'https://script.google.com/macros/s/AKfycbyRhSuHPCUWK3ua_2mokRI8X3IUHWMkrqVP11l7zj1Tn-qUhzGFqNnXOipXxUj7r0m6/exec';
-  const PIN_H   = 'd3b63363e3c4234a3fa5ad9e7dac9449c7fc9a4b3c28236247d3bace953f9de7';
-  const H       = { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY };
+  // No Supabase key or PIN hash in the browser — all auth goes through Edge Functions.
+  const EDGE_URL = 'https://nfanxvqfyfqcbsdgxowq.supabase.co/functions/v1';
+  const SMS_URL  = 'https://script.google.com/macros/s/AKfycbyRhSuHPCUWK3ua_2mokRI8X3IUHWMkrqVP11l7zj1Tn-qUhzGFqNnXOipXxUj7r0m6/exec';
 
   /* ─── STATE ─── */
-  let knownIds  = null; // null = first load (no bell on initial draw)
-  let soundOn   = localStorage.getItem('kds_sound') !== 'off';
+  let knownIds = null;
+  let soundOn  = localStorage.getItem('kds_sound') !== 'off';
+  let locked   = false;
 
-  /* ─── HASH ─── */
-  async function hashPin(v) {
-    const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(v));
-    return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
-  }
-
-  /* ─── PIN LOCKOUT ─── */
-  const MAX_ATT = 5, LOCK_MS = 15*60*1000, PG = 'kitchen';
-  let clientIP = null, locked = false;
-
-  async function fetchIP() {
-    try { clientIP = (await (await fetch('https://api.ipify.org?format=json')).json()).ip; }
-    catch { clientIP = null; }
-  }
-  async function getAttempts() {
-    if (!clientIP) return [];
-    const since = new Date(Date.now() - LOCK_MS).toISOString();
-    try {
-      const r = await fetch(
-        `${SB_URL}/rest/v1/pin_attempts?ip=eq.${clientIP}&page=eq.${PG}&attempted_at=gte.${encodeURIComponent(since)}&order=attempted_at.asc`,
-        { headers: H }
-      );
-      return r.ok ? await r.json() : [];
-    } catch { return []; }
-  }
-  async function logAttempt() {
-    if (!clientIP) return;
-    try {
-      await fetch(`${SB_URL}/rest/v1/pin_attempts`, {
-        method:'POST', headers:{...H,'Content-Type':'application/json'},
-        body: JSON.stringify({ page:PG, ip:clientIP })
-      });
-    } catch {}
-  }
-  function showLockout(exp) {
-    locked = true;
-    const err = document.getElementById('pinError');
-    const pad = document.querySelector('.pin-pad');
-    pad.style.opacity = '0.3'; pad.style.pointerEvents = 'none';
-    (function tick() {
-      const left = Math.max(0, Math.ceil((exp - Date.now()) / 1000));
-      if (!left) { locked=false; err.textContent=''; pad.style.opacity='1'; pad.style.pointerEvents=''; return; }
-      err.textContent = `Locked — ${Math.floor(left/60)}:${(left%60).toString().padStart(2,'0')}`;
-      setTimeout(tick, 1000);
-    })();
+  // Helper: call kitchen-data edge function with stored JWT
+  async function kitchenFetch(action, params = {}) {
+    const token = sessionStorage.getItem('kds_auth') || '';
+    const res = await fetch(EDGE_URL + '/kitchen-data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ action, params })
+    });
+    if (res.status === 401) {
+      sessionStorage.removeItem('kds_auth');
+      location.reload();
+      throw new Error('Session expired');
+    }
+    return res.json();
   }
 
   /* ─── BOOT ─── */
-  function genKdsToken() {
-    const arr = new Uint8Array(32);
-    crypto.getRandomValues(arr);
-    return Array.from(arr).map(x => x.toString(16).padStart(2,'0')).join('');
-  }
   (async function boot() {
     const tok = sessionStorage.getItem('kds_auth');
-    if (tok && tok.length === 64 && /^[0-9a-f]+$/.test(tok)) {
-      document.getElementById('pinScreen').style.display = 'none';
-      startKDS();
-    } else {
-      sessionStorage.removeItem('kds_auth'); // clear any stale/forged value
-      fetchIP().then(async () => {
-        const atts = await getAttempts();
-        if (atts.length >= MAX_ATT) {
-          const exp = new Date(atts[MAX_ATT-1].attempted_at).getTime() + LOCK_MS;
-          if (exp > Date.now()) { showLockout(exp); return; }
+    if (tok) {
+      // Validate stored token by making a lightweight call
+      try {
+        const r = await fetch(EDGE_URL + '/kitchen-data', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+          body: JSON.stringify({ action: 'get_orders' })
+        });
+        if (r.ok) {
+          document.getElementById('pinScreen').style.display = 'none';
+          startKDS();
+          return;
         }
-        if (atts.length > 0) {
-          const rem = MAX_ATT - atts.length;
-          document.getElementById('pinError').textContent = `${rem} attempt${rem===1?'':'s'} remaining`;
-        }
-      });
+      } catch {}
+      sessionStorage.removeItem('kds_auth');
     }
   })();
 
@@ -474,23 +436,40 @@
     document.getElementById('d' + (pinStr.length-1)).classList.add('filled');
     if (pinStr.length === 4) {
       setTimeout(async () => {
-        if (await hashPin(pinStr) === PIN_H) {
-          sessionStorage.setItem('kds_auth', genKdsToken());
-          const ps = document.getElementById('pinScreen');
-          ps.style.transition = 'opacity .35s'; ps.style.opacity = '0';
-          setTimeout(() => { ps.style.display = 'none'; startKDS(); }, 350);
-        } else {
-          await logAttempt();
-          const atts = await getAttempts();
-          const rem  = MAX_ATT - atts.length;
-          if (rem <= 0) showLockout(new Date(atts[MAX_ATT-1].attempted_at).getTime() + LOCK_MS);
-          else {
+        try {
+          const res  = await fetch(EDGE_URL + '/kitchen-auth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pin: pinStr })
+          });
+          const data = await res.json();
+          if (data.success && data.token) {
+            sessionStorage.setItem('kds_auth', data.token);
+            const ps = document.getElementById('pinScreen');
+            ps.style.transition = 'opacity .35s'; ps.style.opacity = '0';
+            setTimeout(() => { ps.style.display = 'none'; startKDS(); }, 350);
+          } else if (data.locked) {
+            const exp = new Date(data.unlocksAt).getTime();
+            locked = true;
+            const err = document.getElementById('pinError');
+            const pad = document.querySelector('.pin-pad');
+            pad.style.opacity = '0.3'; pad.style.pointerEvents = 'none';
+            (function tick() {
+              const left = Math.max(0, Math.ceil((exp - Date.now()) / 1000));
+              if (!left) { locked=false; err.textContent=''; pad.style.opacity='1'; pad.style.pointerEvents=''; return; }
+              err.textContent = `Locked — ${Math.floor(left/60)}:${(left%60).toString().padStart(2,'0')}`;
+              setTimeout(tick, 1000);
+            })();
+          } else {
+            const rem = data.remaining ?? '?';
             document.getElementById('pinError').textContent = `Incorrect PIN — ${rem} attempt${rem===1?'':'s'} remaining`;
             setTimeout(() => { const e=document.getElementById('pinError'); if(e.textContent.startsWith('Incorrect')) e.textContent=''; }, 2500);
           }
-          pinStr = '';
-          for (let i=0;i<4;i++) document.getElementById('d'+i).classList.remove('filled');
+        } catch {
+          document.getElementById('pinError').textContent = 'Could not reach server. Check connection.';
         }
+        pinStr = '';
+        for (let i=0;i<4;i++) document.getElementById('d'+i).classList.remove('filled');
       }, 180);
     }
   }
@@ -570,13 +549,8 @@
     const phone = digits.length===10 ? '+1'+digits : (digits.length===11&&digits[0]==='1' ? '+'+digits : rawPh);
 
     try {
-      const r = await fetch(`${SB_URL}/rest/v1/orders?id=eq.${id}`, {
-        method:'PATCH',
-        headers:{...H,'Content-Type':'application/json',Prefer:'return=minimal'},
-        body: JSON.stringify({ status:'done' })
-      });
-
-      if (!r.ok) throw new Error('HTTP '+r.status);
+      const r = await kitchenFetch('update_order', { id, status: 'done' });
+      if (!r.success) throw new Error('Update failed');
 
       // SMS — fire and forget
       fetch(SMS_URL, {
@@ -705,13 +679,7 @@
   /* ─── FETCH ─── */
   async function fetchOrders() {
     try {
-      // Get pending orders OR orders with null status (handles edge cases)
-      const r = await fetch(
-        `${SB_URL}/rest/v1/orders?or=(status.eq.pending,status.is.null)&order=created_at.asc&limit=50`,
-        { headers: H }
-      );
-      if (!r.ok) throw new Error('HTTP '+r.status);
-      const data = await r.json();
+      const data   = await kitchenFetch('get_orders');
       const orders = Array.isArray(data) ? data : [];
 
       // Initialize knownIds on first load (no bell)
