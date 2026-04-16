@@ -1394,7 +1394,7 @@
   /* ─── MEMBERS ─── */
   async function loadMembers() {
     try {
-      const r=await fetch(SB_URL+'/rest/v1/subscribers?order=created_at.desc&limit=500',{headers:H});
+      const r=await fetch(SB_URL+'/rest/v1/members?order=created_at.desc&limit=500',{headers:H});
       const data=await r.json();
       renderMembers(Array.isArray(data)?data:[]);
     } catch { document.getElementById('membersWrap').innerHTML='<div class="no-data">Could not load members.</div>'; }
